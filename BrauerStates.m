@@ -1,16 +1,16 @@
 %%  BRAUERSTATES    Produces all Brauer states
 %   This function has two required arguments:
-%     K: half of the number of parties (i.e., the states will live in
-%     (2*K)-partite space)
-%     N: the local dimension
+%     D: the local dimension
+%     P: half of the number of parties (i.e., the states will live in
+%     (2*P)-partite space)
 %
-%   B = BrauerStates(K,N) is a matrix whose columns are all of the
-%   (unnormalized) "Brauer" states: states that are the K-fold tensor
-%   product of the standard maximally-entangled state pure state on N local
+%   B = BrauerStates(D,P) is a matrix whose columns are all of the
+%   (unnormalized) "Brauer" states: states that are the P-fold tensor
+%   product of the standard maximally-entangled state pure state on D local
 %   dimensions. There are many such states, since there are many different
-%   ways to group the 2*K parties into K pairs (with each pair
+%   ways to group the 2*P parties into P pairs (with each pair
 %   corresponding to one maximally-entangled state). The exact number of
-%   such states is (2*K)!/(K!*2^K), which is the number of columns of B.
+%   such states is (2*P)!/(P!*2^P), which is the number of columns of B.
 %
 %   URL: http://www.qetlab.com/BrauerStates
 
@@ -19,20 +19,20 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: November 6, 2014
+%   version: 0.51
+%   last updated: November 12, 2014
 
-function B = BrauerStates(k,n)
+function B = BrauerStates(d,p)
 
-phi = Tensor(MaxEntangled(n,1,0),k); % sparse, unnormalized
+phi = Tensor(MaxEntangled(d,1,0),p); % sparse, unnormalized
 
 % The Brauer states are computed from perfect matchings of the complete
 % graph. So compute all perfect matchings first.
-pm = perfect_matchings(2*k);
+pm = perfect_matchings(2*p);
 npm = size(pm,1);
-B = sparse(n^(2*k),npm);
+B = sparse(d^(2*p),npm);
 
 % Now just turn these perfect matchings into the corresponding states.
 for j = 1:npm
-    B(:,j) = PermuteSystems(phi,pm(j,:),n*ones(1,2*k));
+    B(:,j) = PermuteSystems(phi,pm(j,:),d*ones(1,2*p));
 end

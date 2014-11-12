@@ -24,8 +24,8 @@
 %             sporth.m, SymmetricProjection.m, Tensor.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: November 6, 2014
+%   version: 0.51
+%   last updated: November 12, 2014
 
 function TX = Twirl(X,varargin)
 
@@ -72,7 +72,7 @@ function TX = Twirl(X,varargin)
     elseif(strcmpi(type,'real'))
         % First, construct the operators that real orthogonal twirling
         % projects down onto.
-        B = BrauerStates(p,d);
+        B = BrauerStates(d,p);
         szBlocal = sqrt(size(B,1));
         
         for j = size(B,2):-1:1
