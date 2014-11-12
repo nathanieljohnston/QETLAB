@@ -19,7 +19,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: November 26, 2012
+%   last updated: November 12, 2014
 
 function rnk = OperatorSchmidtRank(X,varargin)
 
@@ -46,4 +46,4 @@ end
 
 % The operator Schmidt rank is just the Schmidt rank of a related vector
 % obtained by moving matrix elements around.
-rnk = SchmidtRank(Swap(reshape(X,prod(prod(dim)),1),[dim(2,:),dim(1,:)],[2,3]),prod(dim));
+rnk = SchmidtRank(Swap(reshape(X,prod(prod(dim)),1),[2,3],[dim(2,:),dim(1,:)]),prod(dim));

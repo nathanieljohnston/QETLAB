@@ -25,8 +25,8 @@
 %             Swap.m, SwapOperator.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: September 23, 2014
+%   version: 0.51
+%   last updated: November 12, 2014
 
 function rho = WernerState(dim,alpha)
 
@@ -52,5 +52,5 @@ if(n_fac > 2) % multipartite Werner state
     end
     rho = rho/trace(rho);
 else % bipartite Werner state
-    rho = (speye(dim^2) - alpha*SwapOperator(dim,[1,2],1))/(dim*(dim-alpha));
+    rho = (speye(dim^2) - alpha*SwapOperator(dim,1))/(dim*(dim-alpha));
 end

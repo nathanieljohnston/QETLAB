@@ -28,7 +28,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: January 22, 2013
+%   last updated: November 12, 2014
 
 function PhiC = ComplementaryMap(Phi,varargin)
 
@@ -41,7 +41,7 @@ end
 % Kraus operators of PHI into the first of PHIC's Kraus operators, all of
 % the second rows of the Kraus operators of PHI into the second of PHIC's
 % Kraus operators, and so on.
-PhiC = mat2cell(Swap(cell2mat(Phi),[size(Phi,1),size(Phi{1},1)],[1,2],1),size(Phi,1)*ones(1,size(Phi{1},1)),size(Phi{1},2)*ones(1,size(Phi,2)));
+PhiC = mat2cell(Swap(cell2mat(Phi),[1,2],[size(Phi,1),size(Phi{1},1)],1),size(Phi,1)*ones(1,size(Phi{1},1)),size(Phi{1},2)*ones(1,size(Phi,2)));
 
 if(~isc) % return a Choi matrix if that was the input
     PhiC = ChoiMatrix(PhiC);

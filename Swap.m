@@ -8,11 +8,11 @@
 %   dimension.
 %
 %   This function has three optional arguments:
-%     DIM (default [sqrt(length(X)),sqrt(length(X))])
 %     SYS (default [1,2])
+%     DIM (default [sqrt(length(X)),sqrt(length(X))])
 %     ROW_ONLY (default 0)
 %
-%   SX = Swap(X,DIM,SYS,ROW_ONLY) swaps the two subsystems of the vector or
+%   SX = Swap(X,SYS,DIM,ROW_ONLY) swaps the two subsystems of the vector or
 %   matrix X, where the dimensions of the (possibly more than 2) subsystems
 %   are given by DIM and the indices of the two subsystems to be swapped
 %   are specified in the 1-by-2 vector SYS. If X is non-square and not a
@@ -27,16 +27,16 @@
 %   requires: opt_args.m, PermuteSystems.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: November 15, 2012
+%   version: 0.60
+%   last updated: November 12, 2014
 
 function SX = Swap(X,varargin)
 
 dX = size(X);
 round_dim = round(sqrt(dX));
 
-% set optional argument defaults: dim=round(sqrt(length(X))), sys=[1,2], row_only=0
-[dim,sys,row_only] = opt_args({ [round_dim(1),round_dim(1);round_dim(2),round_dim(2)], [1,2], 0 },varargin{:});
+% set optional argument defaults: sys=[1,2], dim=round(sqrt(length(X))), row_only=0
+[sys,dim,row_only] = opt_args({ [1,2], [round_dim(1),round_dim(1);round_dim(2),round_dim(2)], 0 },varargin{:});
 
 % allow the user to enter a single number for dim
 num_sys = length(dim);

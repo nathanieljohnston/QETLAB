@@ -36,13 +36,14 @@
 %             OperatorSchmidtRank.m, opt_args.m, opt_disp.m, PartialMap.m,
 %             PartialTrace.m, PartialTranspose.m, PermutationOperator.m,
 %             PermuteSystems.m, Realignment.m, SchmidtDecomposition.m,
-%             SchmidtRank.m, sporth.m, Swap.m, SymmetricExtension.m,
-%             SymmetricInnerExtension.m, SymmetricProjection.m, TraceNorm.m
+%             SchmidtRank.m, sporth.m, Swap.m, SwapOperator.m,
+%             SymmetricExtension.m, SymmetricInnerExtension.m, SymmetricProjection.m,
+%             TraceNorm.m
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: September 22, 2014
+%   last updated: November 12, 2014
 
 function sep = IsSeparable(X,varargin)
 
@@ -161,7 +162,7 @@ function sep = IsSeparable(X,varargin)
         % For the rest of the block matrix tests, we need the 2-dimensional
         % subsystem to be the *first* subsystem, so swap accordingly.
         if(dim(1) > 2)
-            Xt = Swap(X,dim);
+            Xt = Swap(X,[1,2],dim);
         else
             Xt = X;
         end

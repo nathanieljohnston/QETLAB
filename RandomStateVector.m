@@ -26,7 +26,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: September 30, 2014
+%   last updated: November 12, 2014
 
 function v = RandomStateVector(dim,varargin)
 
@@ -49,7 +49,7 @@ if(k > 0 && k < min(dim)) % Schmidt rank plays a role
         a = a + 1i*randn(dim(1)*k,1);
         b = b + 1i*randn(dim(2)*k,1);
     end
-    v = kron(psi',speye(prod(dim)))*Swap(kron(a,b),[k,dim(1),k,dim(2)],[2,3]);
+    v = kron(psi',speye(prod(dim)))*Swap(kron(a,b),[2,3],[k,dim(1),k,dim(2)]);
     v = v/norm(v);
 else % Schmidt rank is full, so ignore it
     v = randn(dim,1);

@@ -30,7 +30,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: November 26, 2012
+%   last updated: November 12, 2014
 
 function [s,U,V] = OperatorSchmidtDecomposition(X,varargin)
 
@@ -57,7 +57,7 @@ end
 
 % The operator Schmidt decomposition is just the Schmidt decomposition of a
 % related vector obtained by moving matrix elements around.
-[s,u,v] = SchmidtDecomposition(Swap(reshape(X,prod(prod(dim)),1),[dim(2,:),dim(1,:)],[2,3]),prod(dim),k);
+[s,u,v] = SchmidtDecomposition(Swap(reshape(X,prod(prod(dim)),1),[2,3],[dim(2,:),dim(1,:)]),prod(dim),k);
 
 % Now reshape things into the proper output format.
 sr = length(s);

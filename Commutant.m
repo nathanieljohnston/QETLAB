@@ -15,7 +15,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: November 18, 2012
+%   last updated: November 12, 2014
 
 function C = Commutant(A)
 
@@ -30,7 +30,7 @@ num_ops = length(A)/dim;
 % a sneaky (and fast) way of constructing the commutant that works by
 % noting that AX = XA if and only if (kron(A,I) - kron(I,A^T))x = 0, where
 % x is the vectorization of X
-C = reshape(spnull( kron(PartialTranspose(A,2,[num_ops,dim;1,dim]),speye(dim)) - Swap(kron(speye(dim),A),[dim,num_ops,dim],[1,2],1) ),dim,[]);
+C = reshape(spnull( kron(PartialTranspose(A,2,[num_ops,dim;1,dim]),speye(dim)) - Swap(kron(speye(dim),A),[1,2],[dim,num_ops,dim],1) ),dim,[]);
 
 % from here on, we're just reshaping the resulting data into matrices of
 % the proper size and sparsity

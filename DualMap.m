@@ -28,7 +28,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: January 21, 2013
+%   last updated: November 12, 2014
 
 function PhiD = DualMap(Phi,varargin)
 
@@ -56,5 +56,5 @@ else % Phi is provided as a Choi matrix
         dim = [dim;dim];
     end
     
-    PhiD = Swap(conj(Phi),dim);
+    PhiD = Swap(conj(Phi),[1,2],dim);
 end

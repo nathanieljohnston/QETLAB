@@ -18,12 +18,12 @@
 %   URL: http://www.qetlab.com/IsProductOperator
 
 %   requires: opt_args.m, IsProductVector.m, PermuteSystems.m,
-%             SchmidtDecomposition.m
+%             SchmidtDecomposition.m, Swap.m
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: November 28, 2012
+%   last updated: November 12, 2014
 
 function [ipo,dec] = IsProductOperator(X,varargin)
 
@@ -51,7 +51,7 @@ if(min(size(dim)) == 1)
 end
 
 % reshape the operator into the appropriate vector and then test if it's a product vector
-[ipo,dec] = IsProductVector(PermuteSystems(reshape(X,prod(prod(dim)),1),Swap(1:2*num_sys,[2,num_sys]),[dim(2,:),dim(1,:)]),prod(dim));
+[ipo,dec] = IsProductVector(PermuteSystems(reshape(X,prod(prod(dim)),1),Swap(1:2*num_sys,[1,2],[2,num_sys]),[dim(2,:),dim(1,:)]),prod(dim));
 
 % reshape the decomposition into the proper form
 if(ipo)

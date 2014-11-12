@@ -28,7 +28,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: November 6, 2014
+%   last updated: November 12, 2014
 %   URL: http://www.qetlab.com/UPB
 
 function [u,varargout] = UPB(name,varargin)
@@ -63,7 +63,7 @@ function [u,varargout] = UPB(name,varargin)
             % whole space.
             upbp{1} = repmat(eye(name(1)),1,name(2));
             upbp{2} = repmat(eye(name(2)),1,name(1));
-            upbp{revp(1)} = Swap(repmat(eye(name(revp(1))),1,name(revp(2))).',[name(revp(2)),name(revp(1))],[1,2],1).';
+            upbp{revp(1)} = Swap(repmat(eye(name(revp(1))),1,name(revp(2))).',[1,2],[name(revp(2)),name(revp(1))],1).';
 
             ref_ind = 2;
             name = '';

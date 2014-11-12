@@ -17,7 +17,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: January 2, 2013
+%   last updated: November 12, 2014
 
 function PhiX = ApplyMap(X,Phi)
 
@@ -36,7 +36,7 @@ if(iscell(Phi)) % the superoperator was given as a cell of Kraus operators
 else % the superoperator was given as a Choi matrix
     sX = size(X);
     sNX = size(Phi)./sX;
-    PhiX = kron(reshape(X,1,prod(sX)),speye(sNX(1)))*reshape(Swap(Phi.',[sX(2) sNX(2);sX(1) sNX(1)],[1,2],1).',sNX(1)*prod(sX),sNX(2));
+    PhiX = kron(reshape(X,1,prod(sX)),speye(sNX(1)))*reshape(Swap(Phi.',[1,2],[sX(2) sNX(2);sX(1) sNX(1)],1).',sNX(1)*prod(sX),sNX(2));
 end
 if(~issparse(X))
     PhiX = full(PhiX);

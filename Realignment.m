@@ -23,7 +23,7 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: November 17, 2012
+%   last updated: November 12, 2014
 
 function RX = Realignment(X,varargin)
 
@@ -49,4 +49,4 @@ if(min(size(dim)) == 1)
 end
 
 % perform the realignment, using the fact that RX = S*PartialTranspose(S*X,1), where S is the swap operator
-RX = Swap(PartialTranspose(Swap(X,dim,[1,2],1),1,[dim(1,2),dim(1,1);dim(2,1),dim(2,2)]),[dim(2,1),dim(1,1);dim(1,2),dim(2,2)],[1,2],1);
+RX = Swap(PartialTranspose(Swap(X,[1,2],dim,1),1,[dim(1,2),dim(1,1);dim(2,1),dim(2,2)]),[1,2],[dim(2,1),dim(1,1);dim(1,2),dim(2,2)],1);
