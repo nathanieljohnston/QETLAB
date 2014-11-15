@@ -181,11 +181,12 @@ function L_mat = eigen_from_order(X,lam,dim)
     % Reduce the entries in Y so that they are 1, 2, ..., (p-1)*p/2, but in
     % the same order as the original entries of Y.
     [~,ind] = sort(nonzeros(Y(sparsity_pattern).'));
-    Y(sparsity_pattern) = lam(perm_inv(ind)); % Y now contains the eigenvalues that are subtracted in the off-diagonal entries
+    Y(sparsity_pattern) = perm_inv(ind); % Y now contains the indices of the eigenvalues that are subtracted in the off-diagonal entries
+    Y = Y + Y' + diag(prod_dim + 1 - diag(X));
     
     % We have now built all of the pieces we need: put them together to
     % make the eigenvalue matrix in three steps.
     L_mat = lam(prod_dim + 1 - X); % this places all of the eigenvalues that have a positive coefficient
-    L_mat = L_mat - Y - Y'; % this takes off all of the eigenvalues that have a negative coefficient
-    L_mat = L_mat + diag(diag(L_mat)); % values on the diagonal are doubled
+    L_mat = L_mat + 2*diag(diag(L_mat)); % this triples the diagonal (we only really want to double it, but one copy of it will be subtracted at the next step)
+    L_mat = L_mat - lam(Y); % this takes off all of the eigenvalues that have a negative coefficient
 end

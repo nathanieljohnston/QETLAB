@@ -30,7 +30,7 @@
 %       51:082202, 2010.
 %   [2] N. Johnston and D. W. Kribs. A Family of Norms With Applications in
 %       Quantum Information Theory II. Quantum Information & Computation,
-%       11(1 & 2):104–123, 2011.
+%       11(1 & 2):104-123, 2011.
 %   [3] N. Johnston. Norms and Cones in the Theory of Quantum Entanglement.
 %       PhD thesis, University of Guelph, 2012.
 
