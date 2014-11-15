@@ -40,8 +40,8 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: September 10, 2013
+%   version: 0.60
+%   last updated: November 14, 2014
 
 %% WHEN UPDATING FOR NON-HERMITIAN, ALSO UPDATE HOW IT'S USED IN SKOPERATORNORM
 
@@ -68,9 +68,9 @@ db = dim(2);
 % Some of this preparation is unnecessary when k = 1, but it's cheap so we
 % don't really care.
 psi = MaxEntangled(k,1,0);
-psiI = Swap(kron(psi,speye(da*db)),[k,k,da,db],[2,3],1);
+psiI = Swap(kron(psi,speye(da*db)),[2,3],[k,k,da,db],1);
 PSI = psiI*psiI';
-PSIX = Swap(kron(psi*psi',X),[k,k,da,db],[2,3],0);
+PSIX = Swap(kron(psi*psi',X),[2,3],[k,k,da,db],0);
 
 % If the user specified a starting guess v0, parse it; otherwise randomly
 % generate one.

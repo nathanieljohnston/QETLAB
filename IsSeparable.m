@@ -31,25 +31,25 @@
 %   URL: http://www.qetlab.com/IsSeparable
 
 %   requires: ApplyMap.m, cvx (http://cvxr.com/cvx/), FilterNormalForm.m,
-%             iden.m, IsPPT.m, IsPSD.m, jacobi_poly.m, kpNorm.m,
-%             MaxEntangled.m, OperatorSchmidtDecomposition.m,
+%             iden.m, InSeparableBall.m, IsPPT.m, IsPSD.m, jacobi_poly.m,
+%             kpNorm.m, MaxEntangled.m, OperatorSchmidtDecomposition.m,
 %             OperatorSchmidtRank.m, opt_args.m, opt_disp.m, PartialMap.m,
 %             PartialTrace.m, PartialTranspose.m, PermutationOperator.m,
 %             PermuteSystems.m, Realignment.m, SchmidtDecomposition.m,
 %             SchmidtRank.m, sporth.m, Swap.m, SwapOperator.m,
-%             SymmetricExtension.m, SymmetricInnerExtension.m, SymmetricProjection.m,
-%             TraceNorm.m
+%             SymmetricExtension.m, SymmetricInnerExtension.m,
+%             SymmetricProjection.m, TraceNorm.m
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50
-%   last updated: November 12, 2014
+%   last updated: November 14, 2014
 
 function sep = IsSeparable(X,varargin)
 
     X = full(X);
     if(~IsPSD(X))
-        error('isseparable:NotPSD','X is not positive semidefinite, so the idea of it being separable does not make sense.');
+        error('IsSeparable:NotPSD','X is not positive semidefinite, so the idea of it being separable does not make sense.');
     end
     
     lX = length(X);
@@ -67,7 +67,7 @@ function sep = IsSeparable(X,varargin)
     if(length(dim) == 1)
         dim = [dim,lX/dim];
         if abs(dim(2) - round(dim(2))) >= 2*lX*eps
-            error('isseparable:InvalidDim','If DIM is a scalar, it must evenly divide length(X); please provide the DIM array containing the dimensions of the subsystems.');
+            error('IsSeparable:InvalidDim','If DIM is a scalar, it must evenly divide length(X); please provide the DIM array containing the dimensions of the subsystems.');
         end
         dim(2) = round(dim(2));
     end
@@ -235,7 +235,7 @@ function sep = IsSeparable(X,varargin)
     end
     
     % Check proximity of X with the maximally mixed state.
-    if(CloseToMixed(X,pD))
+    if(InSeparableBall(X))
         sep = 1;
         opt_disp(['Determined to be separable by closeness to the maximally mixed state. Reference:\n',refs{8},'\n'],verbose);
         return    
@@ -362,7 +362,7 @@ function sep = IsSeparable(X,varargin)
                 Xsep = Xsep2;
                 e_norm = e_norm2;
 
-                if(CloseToMixed(Xsep,pD))
+                if(InSeparableBall(Xsep))
                     sep = 1;
                     opt_disp('Determined to be separable by subtracting product states until the operator was close to the maximally-mixed state.',verbose);
                     return
@@ -387,12 +387,4 @@ function sep = IsSeparable(X,varargin)
             return
         end
     end
-end
-
-
-% This function determines whether or not a given state is close enough to
-% the maximally mixed state that we can guarantee that it is separable via
-% the Gurvits-Barnum criterion.
-function ctm = CloseToMixed(X,pD)
-    ctm = (norm(X/norm(X,'fro')^2 - eye(pD),'fro') <= 1); % this normalization relies on X being scaled so that trace(X) = 1
 end
