@@ -4,12 +4,10 @@
 %       K: Number of excitations. 
 %
 %   DICKE_STATE = DickeState(N,K) returns the Dicke state, originally 
-%                 introduced in [1] for describing light emission from a 
-%                 cloud of atoms. These symmetric states are in a sense 
-%                 "far from separable". Refer to [2] for a more recent 
-%                 exposition on Dicke states.
-%
-%                 Notation for variables is inspired from reference [2].
+%   introduced in [1] for describing light emission from a cloud of atoms. 
+%   These symmetric states are in a sense "far from separable". Refer to 
+%   [2] for a more recent exposition on Dicke states. Notation for 
+%   variables is inspired from reference [2].
 %
 %	References:
 %   [1] R.H. Dicke. Coherence in spontaneous radiation processes. Phys. 
