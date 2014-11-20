@@ -28,7 +28,7 @@ len = max(sz);
 
 % If X is a vector, turn it into a matrix (we could instead turn every
 % matrix into a vector of eigenvalues, but that would make the computation
-% take O(n^3) time, instead of the current method, which is O(n^2).
+% take O(n^3) time, instead of the current method, which is O(n^2)).
 if(min(sz) == 1) % X is a vector of eigenvalues
     X = sparse(diag(X));
 end
