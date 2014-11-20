@@ -36,7 +36,8 @@ if(isa(rho,'cvx') || isa(sigma,'cvx'))
         variable X(sz_rho(1),sz_rho(1));
         maximize trace(X) + trace(X');
         subject to
-            [rho X;X' sigma] >= 0;
+            cons = [rho,X;X',sigma];
+            cons + cons' >= 0; % avoid some numerical problems: CVX often thinks things aren't symmetric without this
     cvx_end
     
     fid = cvx_optval/2;
@@ -46,5 +47,5 @@ if(isa(rho,'cvx') || isa(sigma,'cvx'))
 else
     [sq_rho,res] = sqrtm(rho); % need "res" parameter to suppress MATLAB singularity warning
     [sq_fid,res] = sqrtm(sq_rho*sigma*sq_rho);
-    fid = trace(sq_fid); % finally, compute the fidelity
+    fid = real(trace(sq_fid)); % finally, compute the fidelity
 end
