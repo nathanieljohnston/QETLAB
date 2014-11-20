@@ -46,5 +46,5 @@ if(isa(rho,'cvx') || isa(sigma,'cvx'))
 else
     [sq_rho,res] = sqrtm(rho); % need "res" parameter to suppress MATLAB singularity warning
     [sq_fid,res] = sqrtm(sq_rho*sigma*sq_rho);
-    fid = trace(sq_fid)^2; % finally, compute the fidelity
+    fid = trace(sq_fid); % finally, compute the fidelity
 end
