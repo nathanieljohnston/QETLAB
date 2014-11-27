@@ -27,8 +27,7 @@
 % 	author: Vincent Russo (vrusso@uwaterloo.ca)
 %           Nathaniel Johnston (nathaniel@njohnston.ca)
 %	package: QETLAB 
-%	version: 
-%	last updated:
+%	last updated: November 27, 2014
 
 function [ dicke_state ] = DickeState( N,k )
 

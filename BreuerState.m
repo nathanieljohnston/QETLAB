@@ -15,10 +15,10 @@
 
 %	requires: SymmetricProjection.m
 %
-% 	author:
-%	package: 
-%	version: 
-%	last updated: 
+% 	author: Vincent Russo (vrusso@uwaterloo.ca)
+%           Nathaniel Johnston (nathaniel@njohnston.ca)
+%	package: QETLAB 
+%	last updated: November 27, 2014
 
 function breuer_state = BreuerState(dim, lambda)
 

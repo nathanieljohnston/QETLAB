@@ -11,9 +11,10 @@
 
 %   requires: nothing
 %   author: John D'Errico
-%   package: 
-%   version:
-%   last updated: 
+%           Nathaniel Johnston (nathaniel@njohnston.ca)
+%           Vincent Russo (vrusso@uwaterloo.ca)
+%	package: QETLAB 
+%	last updated: November 27, 2014
 
 function perm_list = unique_perms( v )
 

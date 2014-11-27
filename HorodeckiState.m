@@ -33,12 +33,14 @@
 
 %	requires: Nothing
 %
-% 	author:
-%	package: 
-%	version: 
-%	last updated:
+% 	author: Vincent Russo (vrusso@uwaterloo.ca)
+%           Nathaniel Johnston (nathaniel@njohnston.ca)
+%	package: QETLAB 
+%	last updated: November 27, 2014
 
 function horo_state = HorodeckiState( a, varargin )
+
+[dim] = opt_args({ '3x3' },varargin{:});
 
 if a < 0 || a > 1
     error('HorodeckiState:ImproperDim','Argument a must be  in[0,1].');
@@ -46,9 +48,7 @@ end
 
 if nargin >= 2
     dim = varargin{1};
-else
-    dim = '3x3';
-end
+end 
 
 if strcmp(dim,'3x3')
     N_a = 1/(8*a+1);
