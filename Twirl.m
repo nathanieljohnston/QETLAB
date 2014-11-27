@@ -9,23 +9,25 @@
 %     P (default 2)
 %
 %   TX = Twirl(X,TYPE,P) is the twirl of the P-partite operator X. TYPE
-%   must be one of 'werner', 'isotropic', or 'real'. A 'werner' twirl is a
-%   twirl over all complex unitaries of the form U^{\otimes P}, an
-%   'isotropic' twirl is a twirl over all complex unitaries of the form U
-%   \otimes conj(U), and a 'real' twirl is a twirl over all real orthogonal
-%   matrices of the form O^{\otimes P}. Note that P = 2 is required if
-%   TYPE = 'isotropic'.
+%   must be one of 'werner', 'isotropic', 'real', or 'pauli'. A 'werner'
+%   twirl is a twirl over all complex unitaries of the form U^{\otimes P},
+%   an 'isotropic' twirl is a twirl over all complex unitaries of the form
+%   U \otimes conj(U), a 'real' twirl is a twirl over all real orthogonal
+%   matrices of the form O^{\otimes P}, and a 'pauli' twirl is a twirl over
+%   all matrices of the form Q \otimes Q, where Q is a Pauli matrix acting
+%   on one fewer qubit than X. Note that P = 2 is required if TYPE ==
+%   'isotropic' or TYPE == 'pauli'.
 %
 %   URL: http://www.qetlab.com/Twirl
 
 %   requires: AntisymmetricProjection.m, BrauerStates.m, iden.m,
-%             MaxEntangled.m,, opt_args.m, perm_sign.m,
+%             MaxEntangled.m,, opt_args.m, Pauli.m, perm_sign.m,
 %             perfect_matchings.m, PermutationOperator.m, PermuteSystems.m,
 %             sporth.m, SymmetricProjection.m, Tensor.m
+%
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.51
-%   last updated: November 12, 2014
+%   last updated: November 27, 2014
 
 function TX = Twirl(X,varargin)
 
@@ -34,8 +36,13 @@ function TX = Twirl(X,varargin)
     % set optional argument defaults: type='werner', p=2
     [type,p] = opt_args({ 'werner', 2 },varargin{:});
 
-    if(strcmpi(type,'isotropic') == 1 && p > 2)
-        error('Twirl:InvalidP','Values of P > 2 are not supported for isotropic twirling.');
+    if((strcmpi(type,'isotropic') == 1 || strcmpi(type,'pauli') == 1) && p > 2)
+        error('Twirl:InvalidP','Values of P > 2 are not supported for isotropic or Pauli twirling.');
+    elseif(strcmpi(type,'pauli') == 1)
+        [log_dim,~] = log2(lX);
+        if(abs(log_dim - 0.5) > 0.000001) % log_dim is 0.5 if lX is a power of 2, larger than 0.5 otherwise
+            error('Twirl:InvalidDim','For Pauli twirling, X must act on qubits (i.e., its dimensions must be powers of 2).');
+        end
     end
 
     d = round(lX^(1/p));
@@ -64,7 +71,7 @@ function TX = Twirl(X,varargin)
         v = MaxEntangled(d,1);
         a = v'*X*v;
 
-        TX = a*v*v' + (trace(X)-a)*(speye(d^2)-v*v')/(d^2-1);
+        TX = a*(v*v') + (trace(X)-a)*(speye(d^2)-v*v')/(d^2-1);
 
     % Computing the real orthogonal twirl of a bipartite state is similarly
     % easy: we could just plug into a formula. The multipartite case is a bit
@@ -82,9 +89,27 @@ function TX = Twirl(X,varargin)
         % Now project down.
         TX = ProjectOntoOperators(X,ProjOps);
 
+    % Computing the Puali twirl isn't too tough either: just project onto
+    % vectorized Pauli matrices.
+    elseif(strcmpi(type,'pauli'))
+        % First, construct the vectorized Pauli operators that Pauli
+        % twirling projects down onto.
+        num_qubits = round(log2(d));
+        
+        % Loop over all Pauli operators.
+        for j = 4^num_qubits:-1:1
+            bitind = bitget(j-1,1:2*num_qubits);
+            ind = bitind(1:2:2*num_qubits) + 2*bitind(2:2:2*num_qubits);
+            ProjOps{j} = reshape(Pauli(ind,1),4^num_qubits,1);
+            ProjOps{j} = ProjOps{j}*ProjOps{j}';
+        end
+
+        % Now project down.
+        TX = ProjectOntoOperators(X,ProjOps);
+
     % If the user tried to do a twirl that we don't understand, get cranky.
     else
-        error('Twirl:InvalidType','TYPE must be one of ''werner'', ''isotropic'', or ''real''.');
+        error('Twirl:InvalidType','TYPE must be one of ''werner'', ''isotropic'', ''real'', or ''pauli''.');
     end
 end
 

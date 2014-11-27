@@ -15,7 +15,7 @@
 %            Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.60
-%   last updated: November 20, 2014
+%   last updated: November 21, 2014
 
 function fid = Fidelity(rho,sigma)
 
@@ -33,7 +33,7 @@ end
 % or constraints of other CVX optimization problems.
 if(isa(rho,'cvx') || isa(sigma,'cvx'))
     cvx_begin sdp quiet
-        variable X(sz_rho(1),sz_rho(1));
+        variable X(sz_rho(1),sz_rho(1)) complex;
         maximize trace(X) + trace(X');
         subject to
             cons = [rho,X;X',sigma];

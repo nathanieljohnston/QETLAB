@@ -19,36 +19,30 @@
 %
 %   URL: http://www.qetlab.com/ChoiMatrix
 
-%   requires: ApplyMap.m, iden.m, MaxEntangled.m, opt_args.m,
-%             PermuteSystems.m
+%   requires: ApplyMap.m, iden.m, MaxEntangled.m, opt_args.m, PartialMap.m,
+%             PermuteSystems.m, sporth.m, superoperator_dims.m
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: January 21, 2013
+%   version: 0.60
+%   last updated: November 24, 2014
 
 function C = ChoiMatrix(Phi,varargin)
 
-if(~iscell(Phi)) % is already a Choi matrix
+if(~iscell(Phi)) % PHI is already a Choi matrix
     C = Phi;
     return
 end
 
-% set optional argument defaults: sys=2
+% Get the dimensions of PHI.
+da = superoperator_dims(Phi); % we only need the input space dimensions
+
+% Set optional argument defaults: sys=2
 [sys] = opt_args({ 2 },varargin{:});
 
-sPhi = size(Phi);
-n1 = size(Phi{1,1},2);
-psi1 = MaxEntangled(n1,1,0);
-if(sPhi(2) == 1 || (sPhi(1) == 1 && sPhi(2) > 2)) % map is CP
-    n2 = n1;
-    psi2 = psi1;
-else
-    n2 = size(Phi{1,2},2);
-    psi2 = MaxEntangled(n2,1,0);
-end
-
-C = PartialMap(psi1*psi2.',Phi,sys,[n1,n1;n2,n2]);
+% Now create the Choi matrix: apply the map to half of the (unnormalized)
+% maximally-entangled states.
+C = PartialMap(MaxEntangled(da(1),1,0)*MaxEntangled(da(2),1,0).',Phi,sys,[da(1),da(1);da(2),da(2)]);
 if(~issparse(Phi{1,1}))
     C = full(C);
 end

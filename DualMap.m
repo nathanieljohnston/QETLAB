@@ -24,37 +24,22 @@
 %
 %   URL: http://www.qetlab.com/DualMap
 
-%   requires: opt_args.m, PermuteSystems.m, Swap.m
+%   requires: opt_args.m, PermuteSystems.m, sporth.m, superoperator_dims.m,
+%             Swap.m
+%
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: November 12, 2014
+%   version: 0.60
+%   last updated: November 24, 2014
 
 function PhiD = DualMap(Phi,varargin)
 
 if(iscell(Phi)) % Phi is provided as a set of Kraus operators
     PhiD = cellfun(@ctranspose,Phi,'UniformOutput',false);
 else % Phi is provided as a Choi matrix
-    dX = size(Phi);
-    sdX = round(sqrt(dX));
-
-    % Set optional argument defaults: dim=sqrt(length(Phi))
-    [dim] = opt_args({ [sdX(1) sdX(1);sdX(2) sdX(2)] },varargin{:});
-
-    % allow the user to enter a single number for dim
-    if(length(dim) == 1)
-        dim = [dim,dX(1)/dim];
-        if abs(dim(2) - round(dim(2))) >= 2*dX(1)*eps
-            error('DualMap:InvalidDim','If DIM is a scalar, PHI must be square and DIM must evenly divide length(PHI); please provide the DIM array containing the dimensions of the subsystems.');
-        end
-        dim(2) = round(dim(2));
-    end
+    % Get the dimensions of PHI.
+    [da,db] = superoperator_dims(Phi,1,varargin{:});
     
-    % allow the user to enter a vector for dim if X is square
-    if(min(size(dim)) == 1)
-        dim = dim(:).'; % force dim to be a row vector
-        dim = [dim;dim];
-    end
-    
-    PhiD = Swap(conj(Phi),[1,2],dim);
+    % Compute the dual map.
+    PhiD = Swap(conj(Phi),[1,2],[da.',db.']);
 end

@@ -23,12 +23,12 @@
 
 %   requires: ApplyMap.m, ChoiMatrix.m, iden.m, IsCP.m, IsHermPreserving.m,
 %             IsPSD.m, KrausOperators.m, MaxEntangled.m, opt_args.m,
-%             PermuteSystems.m, Swap.m
+%             PermuteSystems.m, sporth.m, Swap.m, superoperator_dims.m
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: November 12, 2014
+%   version: 0.60
+%   last updated: November 24, 2014
 
 function PhiC = ComplementaryMap(Phi,varargin)
 
@@ -37,11 +37,14 @@ if(~isc) % don't alter the Kraus operators -- will change the returned complemen
     Phi = KrausOperators(Phi,varargin{:});
 end
 
+% Compute the dimensions of PHI.
+[da,db,de] = superoperator_dims(Phi,1,varargin{:});
+
 % The complementary map is obtained by placing all of the first rows of
 % Kraus operators of PHI into the first of PHIC's Kraus operators, all of
 % the second rows of the Kraus operators of PHI into the second of PHIC's
 % Kraus operators, and so on.
-PhiC = mat2cell(Swap(cell2mat(Phi),[1,2],[size(Phi,1),size(Phi{1},1)],1),size(Phi,1)*ones(1,size(Phi{1},1)),size(Phi{1},2)*ones(1,size(Phi,2)));
+PhiC = mat2cell(Swap(cell2mat(Phi),[1,2],[de,db(1)],1),de*ones(1,db(1)),da(1)*ones(1,size(Phi,2)));
 
 if(~isc) % return a Choi matrix if that was the input
     PhiC = ChoiMatrix(PhiC);

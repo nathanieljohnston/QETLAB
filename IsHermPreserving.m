@@ -14,7 +14,7 @@
 %   URL: http://www.qetlab.com/IsHermPreserving
 
 %   requires: ApplyMap.m, ChoiMatrix.m, iden.m, MaxEntangled.m, opt_args.m,
-%             PermuteSystems.m
+%             PermuteSystems.m, sporth.m, superoperator_dims.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   version: 0.50

@@ -28,12 +28,12 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca), based on an
 %           algorithm by John Watrous
 %   package: QETLAB
-%   version: 0.50
-%   last updated: January 22, 2013
+%   version: 0.60
+%   last updated: November 21, 2014
 
 function cb = CBNorm(Phi,varargin)
 
-if(~iscell(Phi))
+if(~iscell(Phi) && ~isa(Phi,'cvx'))
     Phi = KrausOperators(Phi,varargin{:});
 end
 cb = DiamondNorm(DualMap(Phi));
