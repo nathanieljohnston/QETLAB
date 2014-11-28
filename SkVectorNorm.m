@@ -26,7 +26,6 @@
 %   requires: opt_args.m, SchmidtDecomposition.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: December 2, 2012
 
 function nrm = SkVectorNorm(vec,varargin)

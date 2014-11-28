@@ -18,7 +18,6 @@
 %   requires: iden.m, opt_args.m, PermuteSystems.m, Swap.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.60
 %   last updated: November 12, 2014
 
 function S = SwapOperator(dim,varargin)

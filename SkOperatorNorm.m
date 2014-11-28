@@ -66,7 +66,6 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca), based on joint
 %           work with David W. Kribs
 %   package: QETLAB
-%   version: 0.50
 %   last updated: September 22, 2014
 
 function [lb,lwit,ub,uwit] = SkOperatorNorm(X,varargin)

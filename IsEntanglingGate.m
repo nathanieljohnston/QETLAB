@@ -25,9 +25,9 @@
 
 %   requires: opt_args.m, IsProductOperator.m, IsProductVector.m,
 %             perm_inv.m, PermuteSystems.m, SchmidtDecomposition.m
+%
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 28, 2012
 
 function [eg,wit] = IsEntanglingGate(U,varargin)

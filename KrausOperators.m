@@ -33,7 +33,6 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.60
 %   last updated: November 24, 2014
 
 function ko = KrausOperators(Phi,varargin)

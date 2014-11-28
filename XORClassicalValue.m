@@ -17,7 +17,6 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.60
 %   last updated: November 19, 2014
 
 function wc = XORClassicalValue(p,f)

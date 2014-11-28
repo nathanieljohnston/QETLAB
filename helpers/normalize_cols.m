@@ -10,7 +10,6 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: January 2, 2013
 
 function Y = normalize_cols(X)

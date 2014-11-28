@@ -24,7 +24,6 @@
 %   requires: opt_args.m, PermuteSystems.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: December 28, 2012
 
 function Xpt = PartialTranspose(X,varargin)

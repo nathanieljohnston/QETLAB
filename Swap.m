@@ -27,7 +27,6 @@
 %   requires: opt_args.m, PermuteSystems.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.60
 %   last updated: November 12, 2014
 
 function SX = Swap(X,varargin)

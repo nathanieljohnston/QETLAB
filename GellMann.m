@@ -18,7 +18,6 @@
 %   requires: opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: December 18, 2013
 
 function g = GellMann(ind,varargin)

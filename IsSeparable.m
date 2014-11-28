@@ -42,7 +42,6 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 14, 2014
 
 function sep = IsSeparable(X,varargin)

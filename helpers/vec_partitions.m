@@ -15,7 +15,6 @@
 
 %   requires: opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
-%   version: 0.50
 %   last updated: October 18, 2014
 
 function pt = vec_partitions(v,p,varargin)

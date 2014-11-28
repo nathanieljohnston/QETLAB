@@ -14,7 +14,6 @@
 %   authors: Vincent Russo (vrusso@uwaterloo.ca)
 %            Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.60
 %   last updated: November 21, 2014
 
 function fid = Fidelity(rho,sigma)

@@ -27,7 +27,6 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: March 13, 2013
 
 function rho = ChessboardState(a,b,c,d,m,n,varargin)

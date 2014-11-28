@@ -25,9 +25,9 @@
 
 %   requires: AbsPPTConstraints.m, InSeparableBall.m, IsPSD.m, opt_args.m,
 %             perm_inv.m
+%
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.60
 %   last updated: November 14, 2014
 
 function iappt = IsAbsPPT(rho,varargin)

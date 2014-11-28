@@ -13,7 +13,6 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: October 22, 2014
 
 function nrm = kpNorm(X,k,p)

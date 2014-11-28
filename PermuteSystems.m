@@ -30,7 +30,6 @@
 %   requires: opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 6, 2014
 
 function PX = PermuteSystems(X,perm,varargin)

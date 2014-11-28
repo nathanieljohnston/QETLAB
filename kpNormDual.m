@@ -12,7 +12,6 @@
 %   requires: kpNorm.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: April 3, 2013
 
 function nrm = kpNormDual(X,k,p)

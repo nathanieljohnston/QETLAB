@@ -28,23 +28,15 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
-%   last updated: October 10, 2014
+%   last updated: November 27, 2014
 
 function dist = ChannelDistinguishability(Phi,Psi,varargin)
 
-% guess the input and output dimensions, in case they aren't provided
-if(iscell(Phi))
-    dim = [size(Phi{1,1},2), size(Phi{1,1},1)];
-elseif(iscell(Psi))
-    dim = [size(Psi{1,1},2), size(Psi{1,1},1)];
-else
-    dim = round(sqrt(length(Phi)));
-    dim = [dim,dim];
-end
+% Get the input and output dimensions of PHI and PSI.
+[da,db] = superoperator_dims(Psi,0,varargin{2:end});
 
 % set optional argument defaults: p = [1/2,1/2], dim guessed based on input
-[p,dim] = opt_args({ [1,1]/2, dim },varargin{:});
+[p,dim] = opt_args({ [1,1]/2, [da,db] },varargin{:});
 
 % We convert to a Choi matrix to make things easier -- we end up converting
 % back to Kraus operators in the DiamondNorm function, but the performance

@@ -18,7 +18,6 @@
 
 %   requires: opt_args.m, vec_partitions.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
-%   version: 0.50
 %   last updated: October 21, 2014
 
 function [iu,wit] = IsUPB(varargin)

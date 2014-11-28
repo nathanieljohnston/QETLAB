@@ -14,7 +14,6 @@
 %   requires: iden.m, MaxEntangled.m, opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: September 22, 2014
 
 function rho = IsotropicState(dim,alpha)

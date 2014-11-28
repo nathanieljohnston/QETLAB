@@ -18,7 +18,6 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.60
 %   last updated: November 14, 2014
 
 function isb = InSeparableBall(X)

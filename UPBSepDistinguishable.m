@@ -17,7 +17,6 @@
 
 %   requires: cvx (http://cvxr.com/cvx/), opt_args.m, vec_partitions.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
-%   version: 0.50
 %   last updated: October 30, 2014
 
 function dist = UPBSepDistinguishable(varargin)

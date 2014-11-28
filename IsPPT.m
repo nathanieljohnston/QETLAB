@@ -25,7 +25,6 @@
 %   requires: IsPSD.m, opt_args.m, PartialTranspose.m, PermuteSystems.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 20, 2012
 
 function [ppt,wit] = IsPPT(X,varargin)

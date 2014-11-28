@@ -16,7 +16,6 @@
 
 %   requires: iden.m, MaxEntangled.m, opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
-%   version: 1.00
 %   last updated: March 4, 2014
 
 function delta = DepolarizingChannel(dim,varargin)

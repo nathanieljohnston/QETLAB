@@ -21,7 +21,7 @@
 %
 %   URL: http://www.qetlab.com/Pauli
 
-%   requires: opt_args.m
+%   requires: opt_args.m, Tensor.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   last updated: November 27, 2014

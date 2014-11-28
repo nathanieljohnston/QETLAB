@@ -36,8 +36,7 @@
 %   requires: opt_args.m, sporth.m
 %   authors: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.60
-%   last updated: November 24, 2014
+%   last updated: November 27, 2014
 
 function [da,db,de] = superoperator_dims(Phi,varargin)
 
@@ -62,7 +61,7 @@ function [da,db,de] = superoperator_dims(Phi,varargin)
         dim = expand_dim(dim);
         
         % Now do some error checking.
-        if(allow_rect ~= 1)
+        if((da(1) ~= da(2) || db(1) ~= db(2)) && allow_rect ~= 1)
             error('superoperator_dims:InvalidDims','The input and output spaces of PHI must be square.');
         elseif(dim(1,1) ~= da(1) || dim(2,1) ~= da(2) || dim(1,2) ~= db(1) || dim(2,2) ~= db(2))
             error('superoperator_dims:InvalidDims','The dimensions of PHI do not match those provided in the DIM argument.');

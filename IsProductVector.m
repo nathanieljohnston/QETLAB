@@ -20,7 +20,6 @@
 %   requires: opt_args.m, SchmidtDecomposition.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 26, 2012
 
 function [ipv,dec] = IsProductVector(vec,varargin)

@@ -28,7 +28,6 @@
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca), based on an
 %           algorithm by John Watrous
 %   package: QETLAB
-%   version: 0.60
 %   last updated: November 21, 2014
 
 function cb = CBNorm(Phi,varargin)

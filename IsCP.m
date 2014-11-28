@@ -16,9 +16,9 @@
 %   requires: ApplyMap.m, ChoiMatrix.m, iden.m, IsHermPreserving.m,
 %             IsPSD.m, MaxEntangled.m, opt_args.m, PermuteSystems.m,
 %             sporth.m, superoperator_dims.m
+%
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: January 4, 2013
 
 function cp = IsCP(Phi,varargin)

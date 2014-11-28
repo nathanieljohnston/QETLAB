@@ -21,7 +21,6 @@
 %   requires: opt_args.m, sporth.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: December 13, 2012
 
 function [itn,wit] = IsTotallyNonsingular(X,varargin)

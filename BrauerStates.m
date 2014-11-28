@@ -19,7 +19,6 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.51
 %   last updated: November 12, 2014
 
 function B = BrauerStates(d,p)

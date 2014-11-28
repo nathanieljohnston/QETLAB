@@ -13,7 +13,6 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 2, 2012
 
 function varargout = opt_args(def_args,varargin)

@@ -27,7 +27,6 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: February 21, 2014
 
 function PhiX = PartialMap(X,Phi,varargin)

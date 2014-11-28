@@ -25,7 +25,6 @@
 %   requires: iden.m MaxEntangled.m, opt_args.m, PermuteSystems.m, Swap.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 12, 2014
 
 function v = RandomStateVector(dim,varargin)

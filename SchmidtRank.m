@@ -20,7 +20,6 @@
 %   requires: opt_args.m, sporth.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: December 19, 2012
 
 function rnk = SchmidtRank(vec,varargin)

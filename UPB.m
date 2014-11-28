@@ -25,9 +25,9 @@
 %   requires: FourierMatrix.m, IsTotallyNonsingular.m, MinUPBSize.m,
 %             normalize_cols.m, one_factorization.m, opt_args.m,
 %             opt_disp.m, perm_inv.m, PermuteSystems.m, sporth.m, Swap.m
+%
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 12, 2014
 %   URL: http://www.qetlab.com/UPB
 

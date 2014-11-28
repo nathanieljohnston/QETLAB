@@ -19,7 +19,6 @@
 %   requires: opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: September 21, 2014
 
 function [psd,wit] = IsPSD(X,varargin)

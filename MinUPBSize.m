@@ -18,7 +18,6 @@
 %   requires: opt_args.m, opt_disp.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: June 22, 2013
 
 function s = MinUPBSize(dim,varargin)

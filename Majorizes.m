@@ -14,7 +14,6 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: March 4, 2014
 
 function m = Majorizes(a,b)

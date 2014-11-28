@@ -1,21 +1,23 @@
-%%  ENTROPY    Computes the von Neumann entropy of a density matrix
+%%  ENTROPY    Computes the von Neumann or Renyi entropy of a density matrix
 %   This function has one required argument:
 %     RHO: a density matrix
 %
 %   ENT = Entropy(RHO) is the (base 2) von Neumann entropy of RHO.
 %
-%   This function has one optional input argument:
+%   This function has two optional input arguments:
 %     BASE (default 2)
+%     ALPHA (default 1)
 %
-%   ENT = Entropy(RHO,BASE) is the von Neumann entropy of RHO, computed
-%   with logarithms in the base specified by BASE.
+%   ENT = Entropy(RHO,BASE,ALPHA) is the entropy of RHO, computed with
+%   logarithms in the base specified by BASE. If ALPHA = 1 then this is the
+%   von Neumann entropy. If ALPHA <> 1 then this is the Renyi-ALPHA
+%   entropy.
 %
 %   URL: http://www.qetlab.com/Entropy
 
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
-%   version: 0.60
-%   last updated: November 25, 2014
+%   last updated: November 27, 2014
 
 function ent = Entropy(rho,varargin)
 

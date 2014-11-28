@@ -30,7 +30,6 @@
 %             PermuteSystems.m, sporth.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 26, 2012
 
 function PA = AntisymmetricProjection(dim,varargin)

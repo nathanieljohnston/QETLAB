@@ -23,9 +23,9 @@
 
 %   requires: iden.m, opt_args.m, PermutationOperator.m, PermuteSystems.m,
 %             Swap.m, SwapOperator.m
+%
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.51
 %   last updated: November 12, 2014
 
 function rho = WernerState(dim,alpha)

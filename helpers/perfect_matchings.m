@@ -15,7 +15,6 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 6, 2014
 
 function pm = perfect_matchings(n)

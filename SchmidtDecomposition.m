@@ -29,7 +29,6 @@
 %   requires: opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: December 1, 2012
 
 function [s,u,v] = SchmidtDecomposition(vec,varargin)

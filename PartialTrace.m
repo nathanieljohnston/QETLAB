@@ -30,7 +30,6 @@
 %   requires: opt_args.m, PermuteSystems.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 22, 2012
 
 function Xpt = PartialTrace(X,varargin)

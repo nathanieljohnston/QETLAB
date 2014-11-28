@@ -21,7 +21,6 @@
 %   requires: iden.m, opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 28, 2012
 
 function psi = MaxEntangled(dim,varargin)

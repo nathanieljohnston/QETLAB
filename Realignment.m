@@ -22,7 +22,6 @@
 %   requires: opt_args.m, PartialTranspose.m, PermuteSystems.m, Swap.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 12, 2014
 
 function RX = Realignment(X,varargin)

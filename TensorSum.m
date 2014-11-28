@@ -23,7 +23,6 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 28, 2012
 
 function ts = TensorSum(a1,a2,varargin)

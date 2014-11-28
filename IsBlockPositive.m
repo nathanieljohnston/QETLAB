@@ -43,7 +43,6 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: September 23, 2014
 
 function [ibp,wit] = IsBlockPositive(X,varargin)

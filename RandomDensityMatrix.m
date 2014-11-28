@@ -25,7 +25,6 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: October 10, 2014
 
 function rho = RandomDensityMatrix(dim,varargin)

@@ -27,7 +27,6 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   version: 0.50
 %   last updated: September 30, 2014
 
 function Phi = RandomSuperoperator(dim,varargin)

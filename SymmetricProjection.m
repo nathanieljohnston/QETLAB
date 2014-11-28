@@ -28,8 +28,8 @@
 %   requires: opt_args.m, PermutationOperator.m, PermuteSystems.m, sporth.m
 %   authors: John D'Errico (unique_perms function) and
 %            Nathaniel Johnston (nathaniel@njohnston.ca)
+%
 %   package: QETLAB
-%   version: 0.50
 %   last updated: November 20, 2012
 
 function PS = SymmetricProjection(dim,varargin)
