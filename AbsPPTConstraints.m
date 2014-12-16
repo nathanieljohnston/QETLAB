@@ -1,10 +1,9 @@
 %%  ABSPPTCONSTRAINTS    Builds the eigenvalue matrices that determine whether or not a state is absolutely PPT
-%   This function has two required input arguments:
+%   This function has one required input argument:
 %     LAM: a vector of length prod(DIM) that contains the eigenvalues of
 %          the state
-%     DIM: a 1-by-2 vector containing the local dimensions
 %
-%   L = AbsPPTConstraints(LAM,DIM) is a cell containing the constraint
+%   L = AbsPPTConstraints(LAM) is a cell containing the constraint
 %   matrices constructed in [1] that characterize whether or not a mixed
 %   state with eigenvalues LAM is "absolutely PPT" (see [1] for
 %   definition). In particular, a state with eigenvalues LAM is absolutely
@@ -15,13 +14,15 @@
 %   set of absolutely PPT states (see online documentation for examples).
 %
 %   This function has two optional input arguments:
+%     DIM (default has both subsystems of equal dimension)
 %     ESC_IF_NPOS (default 0)
 %     LIM (default 0)
 %
 %   L = AbsPPTConstraints(LAM,DIM,ESC_IF_NPOS,LIM) is as above, but if LIM
-%   > 0 then at most LIM matrices are computed. Additionally, if
-%   ESC_IF_NPOS = 1 then the function stops computing as soon as a matrix
-%   in L is not positive semidefinite.
+%   > 0 then at most LIM matrices are computed. The two local dimensions
+%   are specified by the 1-by-2 vector DIM. Additionally, if ESC_IF_NPOS =
+%   1 then the function stops computing as soon as a matrix in L is not
+%   positive semidefinite.
 %
 %   URL: http://www.qetlab.com/AbsPPTConstraints
 %

@@ -101,21 +101,21 @@ if(k >= 2)
     ex = 1-min(cvx_optval,1); % CVX-safe way to map (0,Inf) to (1,0)
     if(~isa(X,'cvx')) % make the output prettier if it's not a CVX input
         ex = round(ex);
-    end
-    
-    % Deal with error messages and witnesses.
-    if(nargout > 1 && strcmpi(cvx_status,'Solved'))
-        wit = P*rho*P';
-    elseif(strcmpi(cvx_status,'Inaccurate/Solved'))
-        wit = P*rho*P';
-        warning('SymmetricInnerExtension:NumericalProblems','Numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
-    elseif(nargout > 1 && strcmpi(cvx_status,'Infeasible'))
-        wit = -W;
-    elseif(strcmpi(cvx_status,'Inaccurate/Infeasible'))
-        wit = -W;
-        warning('SymmetricInnerExtension:NumericalProblems','Numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
-    elseif(strcmpi(cvx_status,'Unbounded') || strcmpi(cvx_status,'Inaccurate/Unbounded') || strcmpi(cvx_status,'Failed'))
-        error('SymmetricInnerExtension:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));
+        
+        % Deal with error messages and witnesses.
+        if(nargout > 1 && strcmpi(cvx_status,'Solved'))
+            wit = P*rho*P';
+        elseif(strcmpi(cvx_status,'Inaccurate/Solved'))
+            wit = P*rho*P';
+            warning('SymmetricInnerExtension:NumericalProblems','Numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
+        elseif(nargout > 1 && strcmpi(cvx_status,'Infeasible'))
+            wit = -W;
+        elseif(strcmpi(cvx_status,'Inaccurate/Infeasible'))
+            wit = -W;
+            warning('SymmetricInnerExtension:NumericalProblems','Numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
+        elseif(strcmpi(cvx_status,'Unbounded') || strcmpi(cvx_status,'Inaccurate/Unbounded') || strcmpi(cvx_status,'Failed'))
+            error('SymmetricInnerExtension:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));
+        end
     end
 else
     error('SymmetricInnerExtension:InvalidK','K must be an integer >= 2.');

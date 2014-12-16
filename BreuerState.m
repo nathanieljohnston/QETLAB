@@ -1,4 +1,4 @@
-%%	BREUERSTATE    Produces a Breuer State of dimension >= 4
+%%	BREUERSTATE    Produces a Breuer state of even dimension >= 2
 %	This function has two required arguments:
 %     DIM: the local dimension (for dim >= 2 and even) 
 %     LAMBDA: describes the weight of the singlet component

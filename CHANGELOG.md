@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
-## post-0.6 (changes since 2014-11-27)
+## [post-0.6] (changes since 2014-11-27)
 ### Added
 - BellInequalityMax: Computes the maximum value of a Bell inequality in a classical, quantum, or no-signalling setting.
 - BreuerState: Generates a Breuer state, which is a specific family of bound entangled states on even local dimensions.
@@ -22,7 +22,7 @@ All notable changes to QETLAB will be documented in this file.
 - SymmetricExtension: Can now be used directly as a constraint or objective function within other CVX optimization problems.
 - SymmetricInnerExtension: Can now be used directly as a constraint or objective function within other CVX optimization problems.
 
-## 0.6 - 2014-11-27
+## [0.6] - 2014-11-27
 ### Added
 - AbsPPTConstraints: Computes the linear matrix inequalities that determine whether or not a mixed state is "absolutely PPT".
 - Fidelity: Computes the fidelity of two quantum states, or allows the user to optimize over the fidelity of two quantum states in CVX.
@@ -40,5 +40,5 @@ All notable changes to QETLAB will be documented in this file.
 - Swap and SwapOperator: Reversed the order of the SYS and DIM optional input arguments.
 - Twirl: Can now also perform Pauli twirls.
 
-## 0.5 - 2014-11-06
+## [0.5] - 2014-11-06
 - Initial release of QETLAB.
