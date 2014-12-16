@@ -20,7 +20,7 @@ function [DIST, MEAS, DUAL_SOLUTION] = LocalDistinguishability(X, varargin)
 %   arguments:
 %   LocalDistinguishability(X, 'copies', 2, 'dim', [2 3])
 %
-%   URL: http://www.qetlab.com/SymmetricExtension
+%   URL: http://www.qetlab.com/LocalDistinguishability
 %
 %   requires: cvx (http://cvxr.com/cvx/), PartialTrace.m, 
 %             PartialTranspose.m, PermutationOperator.m,
@@ -87,7 +87,7 @@ function [DIST, MEAS, DUAL_SOLUTION] = LocalDistinguishability(X, varargin)
         P = cell(1, N);
         for k=1:N
             P{k} = PartialTrace(Proj*X(:,:,k)*Proj', 3:copies+1, sdp_dim);
-            opt = opt + ip(P{k}, S{k});
+            opt = opt + trace(P{k}*S{k});
             P_sum = P_sum + P{k};
         end 
 
@@ -97,7 +97,7 @@ function [DIST, MEAS, DUAL_SOLUTION] = LocalDistinguishability(X, varargin)
             for k=1:N
                 if (ppt)
                     PartialTranspose(Proj*X(:,:,k)*Proj', ...
-                        1:ceil(copies/2)+1, sdp_dim) >= 0;
+                        1:floor(copies/2)+1, sdp_dim) >= 0;
                 end
                 X(:,:,k) >= 0;
             end        
