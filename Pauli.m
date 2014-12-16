@@ -21,7 +21,7 @@
 %
 %   URL: http://www.qetlab.com/Pauli
 
-%   requires: opt_args.m, Tensor.m
+%   requires: opt_args.m, Pauli.m, Tensor.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
 %   last updated: November 27, 2014
@@ -48,10 +48,9 @@ if(num_qubits == 1)
     if(sp)
         p = sparse(p);
     end
+    
 % Did the user request a multi-qubit Pauli operator? Construct the
-% one-qubit ones and then tensor (the tensor function already does the
-% tensoring in a way analogous to exponentiation-by-squaring, so this is as
-% close to as fast as we can be here).
+% one-qubit ones and then tensor.
 else
     for j = num_qubits:-1:1
         p_cell{j} = Pauli(ind(j),sp);

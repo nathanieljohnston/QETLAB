@@ -22,18 +22,30 @@
 %
 %   URL: http://www.qetlab.com/IsPPT
 
-%   requires: IsPSD.m, opt_args.m, PartialTranspose.m, PermuteSystems.m
+%   requires: IsPSD.m, opt_args.m, PartialTranspose.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 20, 2012
+%   last updated: December 12, 2014
 
 function [ppt,wit] = IsPPT(X,varargin)
 
 % set optional argument defaults: sys=2, dim=sqrt(length(X)), tol=sqrt(eps)
 [sys,dim,tol] = opt_args({ 2, round(sqrt(length(X))), sqrt(eps) },varargin{:});
 
-if(nargout > 1)
-    [ppt,wit] = IsPSD(PartialTranspose(X,sys,dim),tol);
+% Allow this function to be called within CVX optimization problems.
+if(isa(X,'cvx'))
+    cvx_begin sdp quiet
+    subject to
+    	PartialTranspose(X,sys,dim) >= 0;
+    cvx_end
+    ppt = 1-min(cvx_optval,1); % CVX-safe way to map (0,Inf) to (1,0)
+    
+% If the function is just being called on a non-CVX variable, just check
+% the PPT condition normally (which is much faster).
 else
-    ppt = IsPSD(PartialTranspose(X,sys,dim),tol);
+    if(nargout > 1)
+        [ppt,wit] = IsPSD(PartialTranspose(X,sys,dim),tol);
+    else
+        ppt = IsPSD(PartialTranspose(X,sys,dim),tol);
+    end
 end

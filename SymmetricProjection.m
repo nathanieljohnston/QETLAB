@@ -26,11 +26,9 @@
 %   URL: http://www.qetlab.com/SymmetricProjection
 
 %   requires: opt_args.m, PermutationOperator.m, PermuteSystems.m, sporth.m
-%   authors: John D'Errico (unique_perms function) and
-%            Nathaniel Johnston (nathaniel@njohnston.ca)
-%
+%   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 20, 2012
+%   last updated: December 15, 2014
 
 function PS = SymmetricProjection(dim,varargin)
 
@@ -106,29 +104,5 @@ function slist = sum_vector(dim,p)
             slist(k+1:k+cs,:) = t;
             k = k + cs;
         end
-    end
-end
-
-% This function does the same thing as unique(perms(v)), but is much faster
-% and less memory-intensive in most cases.
-% Written by John D'Errico, Feb. 25, 2008.
-function plist = unique_perms(v)
-    uv = unique(v);
-    n = length(v);
-    nu = length(uv);
-
-    if nu <= 1
-        plist = v;
-    elseif n == nu
-        plist = perms(v);
-    else
-        plist = cell(nu,1);
-        for j = 1:nu
-            vt = v;
-            vt(find(vt==uv(j),1)) = [];
-            t = unique_perms(vt);
-            plist{j} = [repmat(uv(j),size(t,1),1),t];
-        end
-        plist = cell2mat(plist);
     end
 end

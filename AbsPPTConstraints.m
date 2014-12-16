@@ -32,12 +32,19 @@
 %   requires: IsPSD.m, opt_args.m, perm_inv.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 14, 2014
+%   last updated: December 2, 2014
 
-function L = AbsPPTConstraints(lam,dim,varargin)
+function L = AbsPPTConstraints(lam,varargin)
 
-    % set optional argument defaults: esc_if_npos=0, lim=0
-    [esc_if_npos,lim] = opt_args({ 0, 0 },varargin{:});
+    sz = size(lam);
+    if(min(sz) > 1) % LAM is a density matrix: get its eigenvalues
+        lam = eig(lam);
+    end
+    lam_len = max(sz);
+    dim_guess = round(sqrt(lam_len));
+    
+    % set optional argument defaults: dim=dim_guess, esc_if_npos=0, lim=0
+    [dim,esc_if_npos,lim] = opt_args({ dim_guess, 0, 0 },varargin{:});
 
     % Allow the user to enter a single number for DIM.
     if(length(dim) == 1)
@@ -45,7 +52,7 @@ function L = AbsPPTConstraints(lam,dim,varargin)
     end
     
     % Now do some error checking.
-    if(prod(dim) ~= length(lam))
+    if(prod(dim) ~= lam_len)
         error('AbsPPTConstraints:InvalidDim','The dimensions provided by DIM do not match the length of the vector LAM.');
     end
     

@@ -15,6 +15,7 @@
 
 %   requires: opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   package: QETLAB
 %   last updated: October 18, 2014
 
 function pt = vec_partitions(v,p,varargin)

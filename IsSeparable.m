@@ -30,7 +30,7 @@
 %
 %   URL: http://www.qetlab.com/IsSeparable
 
-%   requires: ApplyMap.m, cvx (http://cvxr.com/cvx/), FilterNormalForm.m,
+%   requires: ApplyMap.m, CVX (http://cvxr.com/cvx/), FilterNormalForm.m,
 %             iden.m, InSeparableBall.m, IsPPT.m, IsPSD.m, jacobi_poly.m,
 %             kpNorm.m, MaxEntangled.m, OperatorSchmidtDecomposition.m,
 %             OperatorSchmidtRank.m, opt_args.m, opt_disp.m, PartialMap.m,

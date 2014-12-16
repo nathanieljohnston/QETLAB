@@ -1,13 +1,20 @@
-%%	DICKESTATE		Returns the Dicke state
-%	This function has two required input argument:
-%       N: Number of qubits in Dicke state.
-%       K: Number of excitations. 
+%%	DICKESTATE    Generates a Dicke state
+%	This function has one required input argument:
+%     N: the number of qubits in the Dicke state
 %
-%   DICKE_STATE = DickeState(N,K) returns the Dicke state, originally 
+%   DICKE_STATE = DickeState(N) returns the N-qubit Dicke state, originally 
 %   introduced in [1] for describing light emission from a cloud of atoms. 
 %   These symmetric states are in a sense "far from separable". Refer to 
-%   [2] for a more recent exposition on Dicke states. Notation for 
-%   variables is inspired from reference [2].
+%   [2] for a more recent exposition on Dicke states. The output of this
+%   function is sparse.
+%
+%   This function has three optional input arguments:
+%     K (default 1): number of excitations
+%     NRML (default 1): a flag, either 1 or 0, specifying normalization
+%
+%   DICKE_STATE = DickeState(N,K,NRML) is as above, but generates the Dicke
+%   state with K-level excitations and is normalized to have norm 1 if
+%   NRML = 1 (and has all entries either 0 or 1 if NRML = 0).
 %
 %	References:
 %   [1] R.H. Dicke. Coherence in spontaneous radiation processes. Phys. 
@@ -22,42 +29,39 @@
 %
 %	URL: http://www.qetlab.com/DickeState
 
-%	requires: Nothing
-%
-% 	author: Vincent Russo (vrusso@uwaterloo.ca)
-%           Nathaniel Johnston (nathaniel@njohnston.ca)
+%	requires: opt_args.m, TensorSum.m, unique_perms.m
+% 	authors: Vincent Russo (vrusso@uwaterloo.ca)
+%            Nathaniel Johnston (nathaniel@njohnston.ca)
 %	package: QETLAB 
-%	last updated: November 27, 2014
+%	last updated: December 15, 2014
 
-function [ dicke_state ] = DickeState( N,k )
+function dicke_state = DickeState(N,varargin)
 
-omega = 1/sqrt(nchoosek(N,k));
+% set optional argument defaults: k = 1, nrml = 1
+[k,nrml] = opt_args({ 1, 1 },varargin{:});
 
-q0 = [1;0]; q1 = [0;1];
-init_state = [ones(1,k), zeros(1,N-k)];
+% Make sure that k is valid.
+if k < 0 || k > N
+    error('DickeState:InvalidK','K must be an integer between 0 and N, inclusive.');
+end
+
+num_terms = nchoosek(N,k);
+
+id = speye(2); % generate the appropriate qubit |0> and |1> states
+init_state = [ones(1,k),zeros(1,N-k)];
+
+% Each row of the following matrix corresponds to one of the terms in the
+% sum that defined the Dicke state.
 perm_matrix = unique_perms(init_state);
 
-perms{length(perm_matrix), length(perm_matrix)} = [];
-for i=1:length(perm_matrix)
-    for j=1:length(perm_matrix(i,:))
-        if perm_matrix(i,j) == 0
-            perms{i}{j} = q0;
-        else
-            perms{i}{j} = q1;
-        end
-    end
+% Generate the Dicke state itself from the (0,1)-labelled terms in the
+% previous matrix.
+for i = N:-1:1
+    dicke_terms{i} = id(:,perm_matrix(:,i)+1);
 end
+dicke_state = TensorSum(dicke_terms{:});
 
-states{length(perm_matrix)} = [];
-for i=1:length(perm_matrix)
-   states{i} = TensorSum(perms{i}{:});
-end
-
-dicke_state = 0;
-for i=1:length(states)
-    dicke_state = dicke_state + states{i};
-end
-
-dicke_state = omega * dicke_state;
-
+% Normalize the state, if requested.
+if(nrml == 1)
+    dicke_state = dicke_state / sqrt(num_terms);
 end

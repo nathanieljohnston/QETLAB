@@ -45,7 +45,7 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: September 22, 2014
+%   last updated: December 12, 2014
 
 function [ex,wit] = SymmetricInnerExtension(X,varargin)
 
@@ -75,35 +75,46 @@ if(k >= 2)
     cvx_begin sdp quiet
         cvx_precision(tol);
         variable rho(sdp_prod_dim,sdp_prod_dim) hermitian
-        dual variable W
+        if(nargout > 1) % don't want to compute the dual solution in general (especially not if this is called within CVX)
+            dual variable W
+        end
         subject to
             rho >= 0;
-            if(ppt)
-                W : (1-en)*PartialTrace(P*rho*P',3:k+1,sdp_dim) + en*kron(PartialTrace(P*rho*P',2:k+1,sdp_dim),eye(dim(2)))/dim(2) == X;
+            if(nargout > 1) % the code here gets a bit repetitive, but I'm not sure of a better way to do it
+                if(ppt)
+                    W : (1-en)*PartialTrace(P*rho*P',3:k+1,sdp_dim) + en*kron(PartialTrace(P*rho*P',2:k+1,sdp_dim),eye(dim(2)))/dim(2) == X;
+                else
+                    W : PartialTrace(P*rho*P',3:k+1,sdp_dim)*k/(k+dim(2)) + kron(PartialTrace(P*rho*P',2:k+1,sdp_dim),eye(dim(2)))/(dim(2)+k) == X;                
+                end
             else
-                W : PartialTrace(P*rho*P',3:k+1,sdp_dim)*k/(k+dim(2)) + kron(PartialTrace(P*rho*P',2:k+1,sdp_dim),eye(dim(2)))/(dim(2)+k) == X;                
+                if(ppt)
+                    (1-en)*PartialTrace(P*rho*P',3:k+1,sdp_dim) + en*kron(PartialTrace(P*rho*P',2:k+1,sdp_dim),eye(dim(2)))/dim(2) == X;
+                else
+                    PartialTrace(P*rho*P',3:k+1,sdp_dim)*k/(k+dim(2)) + kron(PartialTrace(P*rho*P',2:k+1,sdp_dim),eye(dim(2)))/(dim(2)+k) == X;                
+                end
             end
             if(ppt)
                 PartialTranspose(P*rho*P',1:ceil(k/2)+1,sdp_dim) >= 0;
             end
     cvx_end
-
-    % format the output of cvx into a slightly more user-friendly form
-    if(strcmpi(cvx_status,'Solved'))
-        ex = 1;
+    
+    ex = 1-min(cvx_optval,1); % CVX-safe way to map (0,Inf) to (1,0)
+    if(~isa(X,'cvx')) % make the output prettier if it's not a CVX input
+        ex = round(ex);
+    end
+    
+    % Deal with error messages and witnesses.
+    if(nargout > 1 && strcmpi(cvx_status,'Solved'))
         wit = P*rho*P';
     elseif(strcmpi(cvx_status,'Inaccurate/Solved'))
-        ex = 1;
         wit = P*rho*P';
         warning('SymmetricInnerExtension:NumericalProblems','Numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
-    elseif(strcmpi(cvx_status,'Infeasible'))
-        ex = 0;
+    elseif(nargout > 1 && strcmpi(cvx_status,'Infeasible'))
         wit = -W;
     elseif(strcmpi(cvx_status,'Inaccurate/Infeasible'))
-        ex = 0;
         wit = -W;
         warning('SymmetricInnerExtension:NumericalProblems','Numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
-    else
+    elseif(strcmpi(cvx_status,'Unbounded') || strcmpi(cvx_status,'Inaccurate/Unbounded') || strcmpi(cvx_status,'Failed'))
         error('SymmetricInnerExtension:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));
     end
 else

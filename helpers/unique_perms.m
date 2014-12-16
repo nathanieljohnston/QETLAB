@@ -1,4 +1,4 @@
-%%  UNIQUE_PERMS   Computes the unique permutations of a vector
+%%  UNIQUE_PERMS    Computes the unique permutations of a vector
 %   This function has one required argument:
 %     V: a vector
 %
@@ -11,8 +11,6 @@
 
 %   requires: nothing
 %   author: John D'Errico
-%           Nathaniel Johnston (nathaniel@njohnston.ca)
-%           Vincent Russo (vrusso@uwaterloo.ca)
 %	package: QETLAB 
 %	last updated: November 27, 2014
 
@@ -31,7 +29,7 @@ else
     for j = 1:nu
         vt = v;
         vt(find(vt==uv(j),1)) = [];
-        t = UniquePerms(vt);
+        t = unique_perms(vt);
         perm_list{j} = [repmat(uv(j),size(t,1),1),t];
     end
     perm_list = cell2mat(perm_list);

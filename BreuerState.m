@@ -1,56 +1,36 @@
-%%	BREUERSTATE		Produces a Breuer State of dimension >= 4
+%%	BREUERSTATE    Produces a Breuer State of dimension >= 4
 %	This function has two required arguments:
-%		DIM: the local dimension (for dim >= 4 and even) 
-%		LAMBDA: describes the weight of the singlet component
+%     DIM: the local dimension (for dim >= 2 and even) 
+%     LAMBDA: describes the weight of the singlet component
 %
-%	BREUER_STATE = BreuerState(DIM, LAMBDA) Gives a Breuer bound entangled 
-%                  state for two qubits of dimension DIM, with the LAMBDA 
-%                  parameter describing the weight of the singlet 
-%                  component. 
+%	BREUER_STATE = BreuerState(DIM,LAMBDA) gives a Breuer bound entangled 
+%   state for two qudits of local dimension DIM, with the LAMBDA parameter
+%   describing the weight of the singlet component, as described in [1].
+%   The Breuer state that is returned is sparse.
+%
 %	References:
 %   [1] H-P. Breuer. Optimal entanglement criterion for mixed quantum 
 %       states. E-print: arXiv:quant-ph/0605036, 2006.
 %
 %	URL: http://www.qetlab.com/BreuerState
 
-%	requires: SymmetricProjection.m
-%
-% 	author: Vincent Russo (vrusso@uwaterloo.ca)
-%           Nathaniel Johnston (nathaniel@njohnston.ca)
+%	requires: MaxEntangled.m, SymmetricProjection.m
+% 	authors: Vincent Russo (vrusso@uwaterloo.ca)
+%            Nathaniel Johnston (nathaniel@njohnston.ca)
 %	package: QETLAB 
-%	last updated: November 27, 2014
+%	last updated: December 15, 2014
 
 function breuer_state = BreuerState(dim, lambda)
 
-% SU(2) generators for dxd matrices
-N = dim-1;
-a1da1 = diag(0:N);
-a2da2 = diag(N-(0:N));
-a1da2 = zeros(N+1,N+1);
-for k = 0:N-1
-    a1da2(k+1+1,k+1) = sqrt((k+1)*(N-k));   
+% Make sure that the dimension is even.
+if mod(dim,2) == 1 || dim <= 0
+    error('BreuerState:InvalidDim','DIM must be an even positive integer.');
 end
-a2da1 = a1da2';
 
-% Schwinger's construction
-jz = (a1da1-a2da2)/2;
-jx = (a1da2+a2da1)/2;
-jy = -1i*(a1da2-a2da1)/2;
+% Start by generating a specific maximally-entangled state PSI.
+V = fliplr(sparse(diag((-1).^mod(1:dim,2))));
+psi = kron(speye(dim),V)*MaxEntangled(dim,1);
 
-% Collective operators
-ee = eye(dim);
-Jx = kron(jx,ee) + kron(ee,jx);
-Jy = kron(jy,ee) + kron(ee,jy);
-Jz = kron(jz,ee) + kron(ee,jz);
-
-% A singlet is the ground state of the following Hamiltonian
-H = Jx^2 + Jy^2 + Jz^2;
-[v,D] = eig(H);
-[~,index] = min(diag(real(D)));
-phis = v(:,index);
-
-% Mix it with the normalized projector to the symmetric subspace
-breuer_state = lambda * (phis*phis') + (1-lambda) * ... 
-               SymmetricProjection(dim)/trace(SymmetricProjection(dim));
-
-end
+% Mix the maximally-entangled state PSI with the normalized projector to
+% the symmetric subspace.
+breuer_state = lambda * (psi*psi') + (1-lambda) * 2*SymmetricProjection(dim)/(dim*(dim+1));
