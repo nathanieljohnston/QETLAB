@@ -44,6 +44,9 @@ end
 
 if(num_ops == 1 || max(p) >= 1) % of course we can distinguish 1 object
     dist = 1;
+    if(nargout > 1) 
+        meas = eye(dim); % optimal measurements is trivial in this case
+    end
     return
 end
 
