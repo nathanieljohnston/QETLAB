@@ -18,6 +18,8 @@ function [DIST, MEAS, DUAL_SOL] = LocalDistinguishability(X, varargin)
 %       cell array containing the optimal measurement operators. DUAL_SOL
 %       is the optimal solution of the dual problem.
 %
+%   P is a vector that contains the probability that each state is chosen 
+%   (by default, the states are chosen uniformly at random)
 %   COPIES is the desired number of copies of the second subsystem. 
 %   DIM is a 1-by-2 vector containing the dimensions of the subsystems 
 %   on which X acts. 
@@ -30,8 +32,8 @@ function [DIST, MEAS, DUAL_SOL] = LocalDistinguishability(X, varargin)
 %   TOL is the numerical tolerance used when determining whether or not 
 %   a symmetric extension exists.
 %
-%   The arguments are mutually optional (note this is different from other 
-%   QETLAB functions!). For example, if you want to specify the number of 
+%   The arguments are mutually optional (*note this is different from other 
+%   QETLAB functions!*). For example, if you want to specify the number of 
 %   COPIES to 3 and the dimension of the two subsystems to [2 3], you can 
 %   call the function as follows:
 %   LocalDistinguishability(X, 'COPIES', 3, 'DIM', [2 3])
