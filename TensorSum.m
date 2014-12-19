@@ -44,41 +44,24 @@ else
     A = [{a2} varargin];
 end
 
+% Get some more preliminary values (dimensions, etc.) and then convert
+% everything into cell matrices (instead of matrices of column vectors) if
+% necessary.
 num_parties = length(A);
-
-% If the objects to be tensored are operators, we don't know any tricks to
-% speed it up -- just loop through and tensor them all together as
-% requested. We could reshape and then tensor as vectors and then use the
-% trick below, but the overhead of reshaping seems to make it not worth it.
-if(iscell(A{1}))
-    dim = zeros(2,num_parties);
-    for j = 1:num_parties
-        dim(:,j) = size(A{j}{1}).';
+dim = zeros(2,num_parties);
+for j = 1:num_parties
+    if(~iscell(A{j}))
+        A{j} = mat2cell(A{j},size(A{j},1),ones(1,size(A{j},2)));
     end
-    
-    % Finally, compute the tensor sum.
-    ts = sparse(prod(dim(1,:)),prod(dim(2,:)));
-    for j = 1:len
-        ts_tmp = A{1}{j};
-        for k = 2:num_parties
-            ts_tmp = kron(ts_tmp,A{k}{j});
-        end
-        ts = ts + s(j)*ts_tmp;
-    end
+    dim(:,j) = size(A{j}{1}).';
+end
 
-% If the objects to be tensored are vectors, we can be faster: once we get
-% to the last two parties to be tensored, we can just perform a matrix
-% multiplication trick rather than tensoring and then summing. This makes
-% the computation significantly faster if the number of parties is low.
-else
-    ts_tmp = cell(1,len);
-    for j = 1:len % faster to just loop than use bsxfun or other tricks
-        ts_tmp{j} = s(j)*A{1}(:,j);
-        for k = 2:num_parties-1
-            ts_tmp{j} = kron(ts_tmp{j},A{k}(:,j));
-        end
+% Finally, actually compute the tensor sum.
+ts = sparse(prod(dim(1,:)),prod(dim(2,:)));
+for j = 1:len
+    ts_tmp = A{1}{j};
+    for k = 2:num_parties
+        ts_tmp = kron(ts_tmp,A{k}{j});
     end
-
-    ts = A{num_parties}*cell2mat(ts_tmp).';
-    ts = ts(:);
+    ts = ts + s(j)*ts_tmp;
 end
