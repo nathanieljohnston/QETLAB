@@ -45,7 +45,7 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: December 12, 2014
+%   last updated: December 16, 2014
 
 function [ex,wit] = SymmetricInnerExtension(X,varargin)
 
@@ -111,7 +111,9 @@ if(k >= 2)
         elseif(nargout > 1 && strcmpi(cvx_status,'Infeasible'))
             wit = -W;
         elseif(strcmpi(cvx_status,'Inaccurate/Infeasible'))
-            wit = -W;
+            if(nargout > 1)
+                wit = -W;
+            end
             warning('SymmetricInnerExtension:NumericalProblems','Numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
         elseif(strcmpi(cvx_status,'Unbounded') || strcmpi(cvx_status,'Inaccurate/Unbounded') || strcmpi(cvx_status,'Failed'))
             error('SymmetricInnerExtension:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));

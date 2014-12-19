@@ -1,17 +1,17 @@
 %%  BELLINEQUALITYMAX    Computes the maximum value of a Bell inequality
 %   This function has five required input arguments:
-%     JOINT_COR: a matrix whose (i,j)-entry is the coefficient of the term
+%     JOINT_COE: a matrix whose (i,j)-entry is the coefficient of the term
 %                <A_iB_j> in the Bell inequality.
-%     A_COR: a vector whose i-th entry is the coefficient of the term <A_i>
+%     A_COE: a vector whose i-th entry is the coefficient of the term <A_i>
 %            in the Bell inequality.
-%     B_COR: a vector whose i-th entry is the coefficient of the term <B_i>
+%     B_COE: a vector whose i-th entry is the coefficient of the term <B_i>
 %            in the Bell inequality.
 %     A_VAL: a vector whose i-th entry is the value of the i-th measurement
 %            outcome on Alice's system
 %     B_VAL: a vector whose i-th entry is the value of the i-th measurement
 %            outcome on Bob's system
 %
-%   BMAX = BellInequalityMax(JOINT_COR,A_COR,B_COR,A_VAL,B_VAL) is the
+%   BMAX = BellInequalityMax(JOINT_COE,A_COE,B_COE,A_VAL,B_VAL) is the
 %   maximum value that the specified Bell inequality can take on in
 %   classical mechanics. For the maximum quantum or no-signalling value,
 %   see the optional arguments described below.
@@ -27,7 +27,7 @@
 %       inequality (higher values give better bounds, but require more
 %       computation time).
 %
-%   BMAX = BellInequalityMax(JOINT_COR,A_COR,B_COR,A_VAL,B_VAL,MTYPE,K) is
+%   BMAX = BellInequalityMax(JOINT_COE,A_COE,B_COE,A_VAL,B_VAL,MTYPE,K) is
 %   the maximum value that the specified Bell inequality can take on in the
 %   setting (classical, quantum, or no-signalling) specified by MTYPE.
 %
@@ -40,18 +40,18 @@
 %   package: QETLAB
 %   last updated: December 11, 2014
 
-function bmax = BellInequalityMax(joint_cor,a_cor,b_cor,a_val,b_val,varargin)
+function bmax = BellInequalityMax(joint_coe,a_coe,b_coe,a_val,b_val,varargin)
 
     % set optional argument defaults: TYPE='classical', K=1
     [mtype,k] = opt_args({ 'classical', 1 },varargin{:});
 
     % Get some basic values and make sure that the input vectors are column
     % vectors.
-    [ma,mb] = size(joint_cor);
+    [ma,mb] = size(joint_coe);
     oa = length(a_val);
     ob = length(b_val);
     a_val = a_val(:); b_val = b_val(:);
-    a_cor = a_cor(:); b_cor = b_cor(:);
+    a_coe = a_coe(:); b_coe = b_coe(:);
     
     % The no-signalling maximum is just implemented by taking the zero-th
     % level of the NPA (quantum) hierarchy.
@@ -71,7 +71,7 @@ function bmax = BellInequalityMax(joint_cor,a_cor,b_cor,a_val,b_val,varargin)
             Da = sum(repmat(a_val(:),[1,ma]).*squeeze(sum(p(:,:,:,1),2)),1);
             Db = sum(repmat(b_val(:),[1,mb]).*squeeze(sum(p(:,:,1,:),1)),1);
 
-            maximize sum(sum(joint_cor.*D)) + Da*a_cor + Db*b_cor
+            maximize sum(sum(joint_coe.*D)) + Da*a_coe + Db*b_coe
 
             subject to
                 NPAHierarchy(p,k) == 1;
@@ -87,7 +87,7 @@ function bmax = BellInequalityMax(joint_cor,a_cor,b_cor,a_val,b_val,varargin)
         
         for i = 1:oa^ma
             for j = 1:ob^mb
-                bmax = max(bmax,sum(sum(joint_cor.*(a_ind.'*b_ind))) + a_ind*a_cor + b_ind*b_cor);
+                bmax = max(bmax,sum(sum(joint_coe.*(a_ind.'*b_ind))) + a_ind*a_coe + b_ind*b_coe);
                 b_ind = update_odometer(b_ind, ob*ones(1,mb));
             end
             a_ind = update_odometer(a_ind, oa*ones(1,ma));

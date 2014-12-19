@@ -1,5 +1,5 @@
-%%	DICKESTATE    Generates a Dicke state
-%	This function has one required input argument:
+%%  DICKESTATE    Generates a Dicke state
+%   This function has one required input argument:
 %     N: the number of qubits in the Dicke state
 %
 %   DICKE_STATE = DickeState(N) returns the N-qubit Dicke state, originally 

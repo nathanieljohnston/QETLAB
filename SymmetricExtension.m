@@ -153,7 +153,9 @@ elseif(k > 1)
         elseif(nargout > 1 && strcmpi(cvx_status,'Infeasible'))
             wit = -W;
         elseif(strcmpi(cvx_status,'Inaccurate/Infeasible'))
-            wit = -W;
+            if(nargout > 1)
+                wit = -W;
+            end
             warning('SymmetricExtension:NumericalProblems','Numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
         elseif(strcmpi(cvx_status,'Unbounded') || strcmpi(cvx_status,'Inaccurate/Unbounded') || strcmpi(cvx_status,'Failed'))
             error('SymmetricExtension:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));

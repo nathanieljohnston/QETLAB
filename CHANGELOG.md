@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
-## [post-0.6] (changes since 2014-11-27)
+## [post-0.6] - changes since 2014-11-27
 ### Added
 - BellInequalityMax: Computes the maximum value of a Bell inequality in a classical, quantum, or no-signalling setting.
 - BreuerState: Generates a Breuer state, which is a specific family of bound entangled states on even local dimensions.
@@ -21,6 +21,7 @@ All notable changes to QETLAB will be documented in this file.
 - IsPPT: Can now be used directly as a constraint or objective function within other CVX optimization problems.
 - SymmetricExtension: Can now be used directly as a constraint or objective function within other CVX optimization problems.
 - SymmetricInnerExtension: Can now be used directly as a constraint or objective function within other CVX optimization problems.
+- TensorSum: Is now much faster at tensoring together lots (> 20) of sparse vectors.
 
 ## [0.6] - 2014-11-27
 ### Added
