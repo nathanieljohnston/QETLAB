@@ -87,7 +87,7 @@ if(num_ops == 1 || max(p) >= 1) % of course we can distinguish 1 object
     end
 else
     cvx_begin sdp quiet
-        cvx_precision default;
+        cvx_precision(tol);
         variable P(d,d,num_ops) hermitian
         dual variable Y
 
