@@ -3,6 +3,7 @@ All notable changes to QETLAB will be documented in this file.
 
 ## [post-0.6] - changes since 2014-11-27
 ### Added
+- LocalDistinguishability: Computes the maximum probability of distinguishing quantum states by means of symmetric-extendible measurements.
 - BellInequalityMax: Computes the maximum value of a Bell inequality in a classical, quantum, or no-signalling setting.
 - BreuerState: Generates a Breuer state, which is a specific family of bound entangled states on even local dimensions.
 - DickeState: Generates a Dicke state.
