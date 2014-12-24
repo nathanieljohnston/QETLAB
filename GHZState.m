@@ -1,4 +1,4 @@
-%%	GHZSTATE    Produces a GHZ state
+%%	GHZSTATE    Generates a (generalized) GHZ state
 %	This function has two required input arguments:
 %     DIM: the local dimension
 %     Q: the number of parties (qubits/qudits)

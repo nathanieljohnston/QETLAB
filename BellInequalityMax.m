@@ -74,7 +74,7 @@ function bmax = BellInequalityMax(joint_coe,a_coe,b_coe,a_val,b_val,varargin)
             maximize sum(sum(joint_coe.*D)) + Da*a_coe + Db*b_coe
 
             subject to
-                NPAHierarchy(p,k) == 1;
+                NPAHierarchy(p,k) >= 1;
         cvx_end
         
         bmax = cvx_optval;

@@ -22,7 +22,7 @@
 %   requires: CVX (http://cvxr.com/cvx/), opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: December 9, 2014
+%   last updated: December 22, 2014
 
 function is_npa = NPAHierarchy(p,varargin)
 
@@ -35,7 +35,7 @@ function is_npa = NPAHierarchy(p,varargin)
     [oa,ob,ma,mb] = size(p);
     o_vec = [oa;ob];
     m_vec = [ma;mb];
-    tot_dim = (o_vec'*m_vec)^k; % dimension of the matrix GAMMA used in the NPA SDP
+    tot_dim = sum(((o_vec-1)'*m_vec).^(0:k)); % dimension of the (compact version of the) matrix GAMMA used in the NPA SDP
     tol = eps^(3/4); % numerical tolerance used
 
     % Make sure that P really is a probability array and that its marginal
@@ -84,18 +84,22 @@ function is_npa = NPAHierarchy(p,varargin)
     
     % Check the NPA SDP (if K is large enough).
     if(k >= 1 || isa(p,'cvx'))
-        i_ind = zeros(2,k);
-        j_ind = zeros(2,k);
+        i_ind = [zeros(1,k);-ones(1,k)];
+        j_ind = [zeros(1,k);-ones(1,k)];
 
         cvx_begin quiet
             cvx_precision(tol);
             % We only enforce the actual NPA constraints if K >= 1... if
-            % K = 0 we are just verifying marginals are consistent.
+            % K = 0 we are just verifying marginals are consistent (i.e.,
+            % no-signalling).
             if(k >= 1)
                 variable G(tot_dim,tot_dim) symmetric
             end
             subject to
                 if(k >= 1)
+                    res_catalog = cell(0);
+                    res_loc = cell(0);
+                    
                     % The following double loop loops over all entries of G and
                     % enforces entry-by-entry the (somewhat complicated) set of NPA
                     % constraints.
@@ -105,32 +109,57 @@ function is_npa = NPAHierarchy(p,varargin)
                             % measurement operators the given matrix entry
                             % corresponds to (see product_of_orthogonal function
                             % below for details).
-                            res = product_of_orthogonal([fliplr(i_ind),j_ind],m_vec);
+                            [res,res_type] = product_of_orthogonal([fliplr(i_ind),j_ind],m_vec);
 
                             % Entry is 0 if S_i^dagger*S_j = 0.
-                            if(isequal(res,0))
+                            if(res_type == 0)
                                 G(i,j) == 0;
-
+                                
                             % Entry is a single probability from the P array if
                             % S_i^dagger*S_j measures on both Alice and Bob's
                             % sytems.
-                            elseif(size(res,2) == 2)
+                            elseif(res_type == 2)
                                 res = sortrows(res.').'; % makes sure that Alice's measurement comes first in RES
                                 G(i,j) == p(res(2,1)+1,res(2,2)+1,res(1,1)+1,res(1,2)-m_vec(1)+1);
 
                             % Entry is a sum of probabilities from the P array if
                             % S_i^dagger*S_j measures on just one system.
-                            elseif(isequal(size(res),[2,1]))
-                                if(res(1) >= m_vec(1)) % measure on Bob's system
+                            elseif(res_type == 1)
+                                if(isequal(res,[0;-1]))
+                                    G(i,j) == 1; % identity measurement
+                                elseif(res(1) >= m_vec(1)) % measure on Bob's system
                                     G(i,j) == sum(p(:,res(2)+1,1,res(1)-m_vec(1)+1));
                                 else % measure on Alice's system
                                     G(i,j) == sum(p(res(2)+1,:,res(1)+1,1));
                                 end
+                                
+                            % Entry is a product of non-commuting
+                            % measurement operators. We can't specify its
+                            % value, but we can specify that it is equal to
+                            % other entries that are the *same* product of
+                            % measurement operators.
+                            else % res_type == -1
+                                % Check to see if we have run into this
+                                % particular RES before.
+                                res_fnd = find_in_cell(res,res_catalog);
+                                %if(res_fnd == 0)
+                                %    res_fnd = find_in_cell(fliplr(res),res_catalog);
+                                %end
+                                
+                                % No, this RES is new to us.
+                                if(res_fnd == 0)
+                                    res_catalog{end+1} = res;
+                                    res_loc{end+1} = [i,j];
+                                    
+                                % Yes, we have seen this RES before.
+                                else
+                                    G(i,j) == G(res_loc{res_fnd}(1),res_loc{res_fnd}(2));
+                                end
                             end
 
-                            j_ind = update_ind(j_ind,k,m_vec,o_vec);
+                            j_ind = update_ind(j_ind,k,m_vec,o_vec-1);
                         end
-                        i_ind = update_ind(i_ind,k,m_vec,o_vec);
+                        i_ind = update_ind(i_ind,k,m_vec,o_vec-1);
                         j_ind = i_ind;
                     end
                     G == semidefinite(tot_dim);
@@ -175,6 +204,17 @@ function is_npa = NPAHierarchy(p,varargin)
     end
 end
 
+
+function ind = find_in_cell(val,A)
+    ind = 0;
+    for i = 1:numel(A)
+        if(isequal(A{i},val))
+            ind = i;
+            return;
+        end
+    end
+end
+
 % This is a function that computes the next index matrix, given an old
 % one. Index matrices have 2 rows, and keep track of the measurement
 % operators that are being multiplied together, from left to right. The
@@ -194,7 +234,7 @@ function new_ind = update_ind(old_ind,k,m_vec,o_vec)
     % Start by increasing the last index by 1.
     new_ind = old_ind;
     new_ind(2,k) = new_ind(2,k)+1;
-        
+
     % Now we work the "odometer": repeatedly set each digit to 0 if it
     % is too high and carry the addition to the left until we hit a
     % digit that *isn't* too high.
@@ -226,21 +266,24 @@ end
 
 % This function determines the nature of the operator specified by the
 % index matrix IND. If IND corresponds to something that is not (generally)
-% a measurement, then -1 is returned. If it corresponds to the zero
-% operator, 0 is returned. If it corresponds to a measurement then the
-% index matrix of that measurement is returned.
-function res = product_of_orthogonal(ind,m_vec)
-    res = -1;
+% a measurement, then -2 is returned. If it corresponds to the zero
+% operator, -1 is returned. If it corresponds to the identity operator,
+% [0;0] is returned. If it corresponds to a measurement then the index
+% matrix of that measurement is returned.
+function [res,res_type] = product_of_orthogonal(ind,m_vec)
+    res_type = -1;
+    res = ind;
     len = size(ind,2);
     
     % IND is the product of just one measurement operator.
     if(len == 1)
-        res = ind;
+        res_type = 1;
         return;
         
-    % IND is the product of two commuting measurement operators.
-    elseif(len == 2 && min(floor(ind(1,1)/m_vec(1)),1) ~= min(floor(ind(1,2)/m_vec(1)),1))
-        res = ind;
+    % IND is the product of two commuting non-identity measurement
+    % operators.
+    elseif(len == 2 && ind(2,1) >= 0 && ind(2,2) >= 0 && min(floor(ind(1,1)/m_vec(1)),1) ~= min(floor(ind(1,2)/m_vec(1)),1))
+        res_type = 2;
         return;
     end
     
@@ -250,14 +293,26 @@ function res = product_of_orthogonal(ind,m_vec)
         for j = i+1:len
             % These two measurements are next to each other and are
             % orthogonal!
-            if(ind(1,i) == ind(1,j) && ind(2,i) ~= ind(2,j))
-                res = 0;
+            if(ind(2,i) >= 0 && ind(2,j) >= 0 && ind(1,i) == ind(1,j) && ind(2,i) ~= ind(2,j))
+                res_type = 0;
                 return; % one is enough; break out of the loop when one is found
                 
             % These two measurements are next to each other and are the
             % same! Merge them and then start over.
             elseif(ind(1,i) == ind(1,j) && ind(2,i) == ind(2,j))
-                res = product_of_orthogonal(ind(:,[1:j-1,j+1:len]),m_vec);
+                [res,res_type] = product_of_orthogonal(ind(:,[1:j-1,j+1:len]),m_vec);
+                return;
+
+            % The first of these two measurement operators is the identity.
+            % Merge them and then start over.
+            elseif(ind(2,i) == -1)
+                [res,res_type] = product_of_orthogonal(ind(:,[1:i-1,i+1:len]),m_vec);
+                return;
+                
+            % The second of these two measurement operators is the
+            % identity. Merge them and then start over.
+            elseif(ind(2,j) == -1)
+                [res,res_type] = product_of_orthogonal(ind(:,[1:j-1,j+1:len]),m_vec);
                 return;
                 
             % These two measurements act on the same party, but are not
