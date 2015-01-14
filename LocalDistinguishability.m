@@ -57,7 +57,7 @@ else
 end
 
 parser = inputParser;
-addRequired(parser, 'X', @isnumeric);
+addRequired(parser, 'X', @(x) isnumeric(x) || iscell(x));
 addParameter(parser, 'P', ones(1,num_ops)/num_ops, @isnumeric);
 addParameter(parser, 'DIM', round(sqrt(d)), @isnumeric);
 addParameter(parser, 'COPIES', 2, @isscalar);
