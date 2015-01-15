@@ -60,12 +60,21 @@ end
 
 parser = inputParser;
 addRequired(parser, 'X', @(x) isnumeric(x) || iscell(x));
-addParameter(parser, 'P', ones(1,num_ops)/num_ops, @isnumeric);
-addParameter(parser, 'DIM', round(sqrt(d)), @isnumeric);
-addParameter(parser, 'COPIES', 2, @isscalar);
-addParameter(parser, 'PPT', true, @islogical);    
-addParameter(parser, 'BOS', true, @islogical);
-addParameter(parser, 'TOL', eps^(1/4), @isscalar);
+if verLessThan('matlab', '8.3')
+    addParamValue(parser, 'P', ones(1,num_ops)/num_ops, @isnumeric);
+    addParamValue(parser, 'DIM', round(sqrt(d)), @isnumeric);
+    addParamValue(parser, 'COPIES', 2, @isscalar);
+    addParamValue(parser, 'PPT', true, @islogical);    
+    addParamValue(parser, 'BOS', true, @islogical);
+    addParamValue(parser, 'TOL', eps^(1/4), @isscalar);
+else
+    addParameter(parser, 'P', ones(1,num_ops)/num_ops, @isnumeric);
+    addParameter(parser, 'DIM', round(sqrt(d)), @isnumeric);
+    addParameter(parser, 'COPIES', 2, @isscalar);
+    addParameter(parser, 'PPT', true, @islogical);    
+    addParameter(parser, 'BOS', true, @islogical);
+    addParameter(parser, 'TOL', eps^(1/4), @isscalar);
+end
 parse(parser,X,varargin{:});
 p = parser.Results.P;
 dim = parser.Results.DIM;
