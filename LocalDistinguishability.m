@@ -49,11 +49,13 @@ if(iscell(X))
     for j = 1:num_ops % make sure that the density operators are scaled
         S{j} = S{j}/trace(S{j});
     end
-else
-    X = normalize_cols(X);  % make sure that the columns have unit length
+elseif(isnumeric(X))
     [d,num_ops] = size(X);
-    S = mat2cell(X, d, ones(1, num_ops));
+    S = mat2cell(normalize_cols(X), d, ones(1, num_ops));
     S = cellfun(@(x) x*x', S, 'UniformOutput', false);
+else
+    error('LocalDistinguishability:InvalidInput', ...
+       'First argument must be a cell array or a single matrix');
 end
 
 parser = inputParser;
