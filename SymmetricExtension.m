@@ -59,8 +59,15 @@ end
 % In certain situations, we don't need semidefinite programming.
 if(k == 1 || (lX <= 6 && ppt && nargout <= 1))
     if(k == 1 && ~ppt) % in some cases, the problem is *really* trivial
-        ex = 1;
-        wit = X;
+        if(nargout > 1)
+            [ex,wit] = IsPSD(X,tol);
+            if(ex == 1)
+                wit = X;
+            end
+        else
+            ex = IsPSD(X,tol);
+        end
+        
         return
     end
     
@@ -75,7 +82,7 @@ if(k == 1 || (lX <= 6 && ppt && nargout <= 1))
             wit = -wit/trace(wit*X);
         end
     else
-        ex = IsPPT(X,2,dim,tol);
+        ex = (IsPPT(X,2,dim,tol) && IsPSD(X,tol));
     end
 
 % In the 2-qubit case, an analytic formula is known for whether or not a
