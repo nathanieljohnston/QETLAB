@@ -42,7 +42,7 @@
 
 function bmax = BellInequalityMax(joint_coe,a_coe,b_coe,a_val,b_val,varargin)
 
-    % set optional argument defaults: TYPE='classical', K=1
+    % set optional argument defaults: MTYPE='classical', K=1
     [mtype,k] = opt_args({ 'classical', 1 },varargin{:});
 
     % Get some basic values and make sure that the input vectors are column

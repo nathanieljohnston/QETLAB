@@ -1,5 +1,5 @@
-%%	HORODECKISTATE    Produces a Horodecki state
-%	This function has one required input argument:
+%%  HORODECKISTATE    Produces a Horodecki state
+%   This function has one required input argument:
 %     A: a real parameter in [0,1]
 %
 %   HORO_STATE = HorodeckiState(A) returns the 3x3 bound entangled
@@ -22,7 +22,7 @@
 %   is defined explicitly in Section 4.1 of [1] and the 2x4 Horodecki state 
 %   is defined explicitly in Section 4.2 of [1].
 %
-%	References:
+%   References:
 %   [1] P. Horodecki. Separability criterion and inseparable mixed states
 %       with positive partial transposition. E-print: 
 %       arXiv:quant-ph/9703004, 1997.
@@ -30,13 +30,13 @@
 %   [2] K. Chruscinski. On the symmetry of the seminal Horodecki state.
 %       E-print: arXiv:1009.4385 [quant-ph], 2010.
 %
-%	URL: http://www.qetlab.com/HorodeckiState
+%   URL: http://www.qetlab.com/HorodeckiState
 
-%	requires: opt_args.m
-% 	authors: Vincent Russo (vrusso@uwaterloo.ca)
+%   requires: opt_args.m
+%   authors: Vincent Russo (vrusso@uwaterloo.ca)
 %            Nathaniel Johnston (nathaniel@njohnston.ca)
-%	package: QETLAB 
-%	last updated: December 15, 2014
+%   package: QETLAB 
+%   last updated: December 15, 2014
 
 function horo_state = HorodeckiState( a, varargin )
 

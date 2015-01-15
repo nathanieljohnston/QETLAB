@@ -4,8 +4,8 @@
 %
 %   PERM_LIST = unique_perms(V) is list of unique permutations of a vector.
 %   
-%   This function does the same thing as unique(perms(v)), but is much 
-%   faster and less memory-intensive in most cases.
+%   This function does the same thing as unique(perms(v),'rows'), but is 
+%   much faster and less memory-intensive in most cases.
 %
 %   URL: http://www.qetlab.com/unique_perms
 

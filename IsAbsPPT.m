@@ -28,7 +28,7 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 14, 2014
+%   last updated: December 24, 2014
 
 function iappt = IsAbsPPT(rho,varargin)
 
@@ -42,9 +42,17 @@ len = max(sz);
 % If rho is a vector, it is a vector of eigenvalues. If it is a matrix,
 % we should find its eigenvalues.
 if(min(sz) == 1) % rho is a vector of eigenvalues
-    lam = sort(real(rho),'descend');
+    if(~isa(rho,'cvx'))
+        lam = sort(real(rho),'descend');
+    else
+        lam = rho;
+    end
 else % rho is a density matrix
-    lam = sort(real(eig(full(rho))),'descend');
+    if(isa(rho,'cvx'))
+        error('IsAbsPPT:InvalidRHO','If used within a CVX optimization problem, RHO must be a vector of eigenvalues, not a density matrix.');
+    else
+        lam = sort(real(eig(full(rho))),'descend');
+    end
 end
 
 % allow the user to enter a single number for dim
@@ -63,23 +71,46 @@ if(pd ~= length(lam))
     error('IsAbsPPT:InvalidDim','The dimensions provided by DIM do not match the length of RHO.');
 end
 
-% Do fast checks first.
-% Check if it's in the Gurvits-Barnum ball.
-if(InSeparableBall(lam))
-    iappt = 1;
-    return;
-    
-% Check if it satisfies the Gerschgorin circle property from arXiv:1406.1277.
-elseif(sum(lam(1:p-1)) <= 2*lam(end) + sum(lam(end-p+1:end-1)))
-    iappt = 1;
-    return;
+% Do fast checks first, if the input is numeric.
+if(~isa(lam,'cvx'))
+    % Check if it's in the Gurvits-Barnum ball.
+    if(InSeparableBall(lam))
+        iappt = 1;
+        return;
+
+    % Check if it satisfies the Gerschgorin circle property from arXiv:1406.1277.
+    elseif(sum(lam(1:p-1)) <= 2*lam(end) + sum(lam(end-p+1:end-1)))
+        iappt = 1;
+        return;
+    end
 end
 
 % Still don't know the answer, and dim is small enough? Roll up your
 % sleeves and *really* check whether or not it's absolutely PPT.
-L = AbsPPTConstraints(lam,dim,1,2612); % compute *all* constraints up to 6 local dimensions, otherwise only compute a few thousand constraints
-if(~IsPSD(L{end})) % only need to check this one constraint: the AbsPPTConstraints function already checked all the earlier ones
-    iappt = 0;
-elseif(p <= 6) % the test we just did is complete for local dimensions up to 6
-    iappt = 1;
+if(isa(lam,'cvx'))
+    if(p >= 7)
+        warning('IsAbsPPT:LargeDim','Only optimizing over the first 2612 linear matrix inequalities for absolutely PPT states, since there are over a million constraints in this case. Thus the set being optimized over is slightly larger than the true set of absolutely PPT states.');
+    end
+    
+    cvx_begin sdp quiet
+    L = AbsPPTConstraints(lam,dim,0,2612);
+    subject to
+        for j = 1:length(L)
+            L{j} >= 0;
+        end
+        for j = 1:pd-1
+            lam(j) >= lam(j+1); % eigenvalues must be in order
+        end
+        lam >= 0;
+    cvx_end
+    iappt = 1-min(cvx_optval,1); % CVX-safe way to map (0,Inf) to (1,0)
+else
+    % Compute *all* constraints up to 6 local dimensions, otherwise only
+    % compute a few thousand constraints.
+    L = AbsPPTConstraints(lam,dim,1,2612);
+    if(~IsPSD(L{end})) % only need to check this one constraint: the AbsPPTConstraints function already checked all the earlier ones
+        iappt = 0;
+    elseif(p <= 6) % the test we just did is complete for local dimensions up to 6
+        iappt = 1;
+    end
 end
