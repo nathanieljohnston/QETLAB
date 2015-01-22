@@ -1,10 +1,11 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
-## [post-0.6] - changes since 2014-11-27
+## [0.7] - 2015-01-22
 ### Added
 - BellInequalityMax: Computes the maximum value of a Bell inequality in a classical, quantum, or no-signalling setting.
 - BreuerState: Generates a Breuer state, which is a specific family of bound entangled states on even local dimensions.
+- DephasingChannel: Produces a (completely or partially) dephasing channel.
 - DickeState: Generates a Dicke state.
 - GHZState: Generates a (generalized) GHZ state.
 - GisinState: Generates a 2-qubit Gisin state.

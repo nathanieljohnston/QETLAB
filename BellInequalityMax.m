@@ -23,9 +23,10 @@
 %       bound on the Bell inequality is computed, not its exact value (see
 %       the argument K below).
 %     K (default 1): if MYTPE='quantum', then K is a non-negative integer
-%       indicating what level of the NPA hierarchy to use to bound the Bell
-%       inequality (higher values give better bounds, but require more
-%       computation time).
+%       or string indicating what level of the NPA hierarchy to use to
+%       bound the Bell inequality (higher values give better bounds, but
+%       require more computation time). See the NPAHierarchy function for
+%       details.
 %
 %   BMAX = BellInequalityMax(JOINT_COE,A_COE,B_COE,A_VAL,B_VAL,MTYPE,K) is
 %   the maximum value that the specified Bell inequality can take on in the
@@ -38,7 +39,7 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: December 11, 2014
+%   last updated: January 22, 2015
 
 function bmax = BellInequalityMax(joint_coe,a_coe,b_coe,a_val,b_val,varargin)
 
@@ -74,10 +75,19 @@ function bmax = BellInequalityMax(joint_coe,a_coe,b_coe,a_val,b_val,varargin)
             maximize sum(sum(joint_coe.*D)) + Da*a_coe + Db*b_coe
 
             subject to
-                NPAHierarchy(p,k) >= 1;
+                NPAHierarchy(p,k) == 1;
         cvx_end
         
         bmax = cvx_optval;
+        
+        % Deal with error messages.
+        if(strcmpi(cvx_status,'Inaccurate/Solved'))
+            warning('BellInequalityMax:NumericalProblems','Minor numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
+        elseif(strcmpi(cvx_status,'Inaccurate/Infeasible'))
+            warning('BellInequalityMax:NumericalProblems','Minor numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
+        elseif(strcmpi(cvx_status,'Unbounded') || strcmpi(cvx_status,'Inaccurate/Unbounded') || strcmpi(cvx_status,'Failed'))
+            error('BellInequalityMax:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));
+        end
     elseif(strcmpi(mtype,'classical'))
         % Compute the classical maximum value just by brute-forcing over
         % all possibilities.

@@ -9,7 +9,8 @@
 %   first level of the NPA heierarchy.
 %
 %   This function has one optional input argument:
-%     K (default 1): a non-negative integer
+%     K (default 1): a non-negative integer, or a string indicating which
+%       level of the hierarchy to check (see below for details)
 %
 %   IS_NPA = NPAHierarchy(P,K) is as above, but the K-th level of the NPA
 %   hierarchy is checked. If K = 0 then it is just verified that P is a
@@ -17,25 +18,60 @@
 %   "face" adds up to 1, and Alice's and Bob's marginal probabilities are
 %   consistent with each other).
 %
+%   If K is a string, it must be a string of a form like '1+ab+aab', which
+%   indicates that the intermediate level of the hierarchy should be used,
+%   which uses all products of 1 measurement, all products of one Alice and
+%   one Bob measurement, and all products of two Alice and one Bob
+%   measurement. Use plus signs to separate the different categories of
+%   products, as above. The first character of this string should always be
+%   a number, indicating the base level to use.
+%
 %   URL: http://www.qetlab.com/NPAHierarchy
 
 %   requires: CVX (http://cvxr.com/cvx/), opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: December 22, 2014
+%   last updated: January 22, 2015
 
 function is_npa = NPAHierarchy(p,varargin)
 
     % set optional argument defaults: K=1
     [k] = opt_args({ 1 },varargin{:});
 
+    % Parse the input argument K to determine which measurement operators
+    % to use. BASE_K is the integer part of the input (i.e., we use all
+    % operators that are the product of BASE_K or fewer measurements) and K
+    % is the maximum number of products that we ever use (e.g., '1+ab+aab'
+    % would result in BASE_K = 1, K = 3).
+    if(isnumeric(k))
+        base_k = k;
+        num_k_compon = 1;
+    elseif(isa(k,'char'))
+        k_types = textscan(lower(k),'%s','Delimiter','+'); % works with old versions of MATLAB, unlike strsplit
+        k_types = k_types{1};
+        base_k = str2double(k_types{1});
+        
+        num_k_compon = length(k_types);
+        if(num_k_compon > 1)
+            k = base_k;
+            for j = 2:num_k_compon
+                k_types{j} = strtrim(k_types{j});
+                k = max(k,length(k_types{j}));
+            end
+        else
+            k = base_k;
+        end
+    else
+        error('NPAHierarchy:InvalidK','K must be a positive integer or a string.');
+    end
+    
     % Start by computing the number measurement settings for Alice and Bob (MA
     % and MB) and the number of outcomes for each measurement setting (OA and
     % OB).
     [oa,ob,ma,mb] = size(p);
     o_vec = [oa;ob];
     m_vec = [ma;mb];
-    tot_dim = sum(((o_vec-1)'*m_vec).^(0:k)); % dimension of the (compact version of the) matrix GAMMA used in the NPA SDP
+    tot_dim = 1 + ((o_vec-1)'*m_vec)^k; % upper bound on the dimension of the (compact version of the) matrix GAMMA used in the NPA SDP
     tol = eps^(3/4); % numerical tolerance used
 
     % Make sure that P really is a probability array and that its marginal
@@ -87,13 +123,48 @@ function is_npa = NPAHierarchy(p,varargin)
         i_ind = [zeros(1,k);-ones(1,k)];
         j_ind = [zeros(1,k);-ones(1,k)];
 
+        if(k >= 1)
+            % Start by generating all of the product of measurements that
+            % you need.
+            ind_catalog = cell(0);
+            for j = 1:tot_dim
+                [res,res_type] = product_of_orthogonal(j_ind,m_vec);
+                res_fnd = find_in_cell(res,ind_catalog);
+                                    
+                % Make sure that this measurement is (1) new, and (2) valid
+                % given the user input.
+                if(res_fnd == 0 && res_type ~= 0)
+                    is_valid_res = (size(res,2) <= base_k);
+                    if(~is_valid_res && num_k_compon >= 2)
+                        num_a_res = sum(res(1,:) < m_vec(1));
+                        num_b_res = size(res,2) - num_a_res;
+                        for i = 2:num_k_compon
+                            num_a_fnd = length(find(k_types{i}=='a'));
+                            num_b_fnd = length(find(k_types{i}=='b'));
+                            if(num_a_res <= num_a_fnd && num_b_res <= num_b_fnd)
+                                is_valid_res = true;
+                                break;
+                            end
+                        end
+                    end
+                    
+                    if(is_valid_res)
+                        ind_catalog{end+1} = res;
+                    end
+                end
+                        
+                j_ind = update_ind(j_ind,k,m_vec,o_vec-1);
+            end
+            real_dim = length(ind_catalog);
+        end
+        
         cvx_begin quiet
             cvx_precision(tol);
             % We only enforce the actual NPA constraints if K >= 1... if
             % K = 0 we are just verifying marginals are consistent (i.e.,
             % no-signalling).
             if(k >= 1)
-                variable G(tot_dim,tot_dim) symmetric
+                variable G(real_dim,real_dim) symmetric
             end
             subject to
                 if(k >= 1)
@@ -103,14 +174,14 @@ function is_npa = NPAHierarchy(p,varargin)
                     % The following double loop loops over all entries of G and
                     % enforces entry-by-entry the (somewhat complicated) set of NPA
                     % constraints.
-                    for i = 1:tot_dim
-                        for j = i:tot_dim
-                            % First, determine what "type" of product of
+                    for i = 1:real_dim
+                        for j = i:real_dim
+                            % First determine what "type" of product of
                             % measurement operators the given matrix entry
                             % corresponds to (see product_of_orthogonal function
                             % below for details).
-                            [res,res_type] = product_of_orthogonal([fliplr(i_ind),j_ind],m_vec);
-
+                            [res,res_type] = product_of_orthogonal([fliplr(ind_catalog{i}),ind_catalog{j}],m_vec);
+                            
                             % Entry is 0 if S_i^dagger*S_j = 0.
                             if(res_type == 0)
                                 G(i,j) == 0;
@@ -119,7 +190,6 @@ function is_npa = NPAHierarchy(p,varargin)
                             % S_i^dagger*S_j measures on both Alice and Bob's
                             % sytems.
                             elseif(res_type == 2)
-                                res = sortrows(res.').'; % makes sure that Alice's measurement comes first in RES
                                 G(i,j) == p(res(2,1)+1,res(2,2)+1,res(1,1)+1,res(1,2)-m_vec(1)+1);
 
                             % Entry is a sum of probabilities from the P array if
@@ -132,7 +202,7 @@ function is_npa = NPAHierarchy(p,varargin)
                                 else % measure on Alice's system
                                     G(i,j) == sum(p(res(2)+1,:,res(1)+1,1));
                                 end
-                                
+
                             % Entry is a product of non-commuting
                             % measurement operators. We can't specify its
                             % value, but we can specify that it is equal to
@@ -142,27 +212,23 @@ function is_npa = NPAHierarchy(p,varargin)
                                 % Check to see if we have run into this
                                 % particular RES before.
                                 res_fnd = find_in_cell(res,res_catalog);
-                                %if(res_fnd == 0)
-                                %    res_fnd = find_in_cell(fliplr(res),res_catalog);
-                                %end
-                                
+                                if(res_fnd == 0)
+                                    res_fnd = find_in_cell(product_of_orthogonal(fliplr(res),m_vec),res_catalog);
+                                end
+
                                 % No, this RES is new to us.
                                 if(res_fnd == 0)
                                     res_catalog{end+1} = res;
                                     res_loc{end+1} = [i,j];
-                                    
+
                                 % Yes, we have seen this RES before.
                                 else
                                     G(i,j) == G(res_loc{res_fnd}(1),res_loc{res_fnd}(2));
                                 end
                             end
-
-                            j_ind = update_ind(j_ind,k,m_vec,o_vec-1);
                         end
-                        i_ind = update_ind(i_ind,k,m_vec,o_vec-1);
-                        j_ind = i_ind;
                     end
-                    G == semidefinite(tot_dim);
+                    G == semidefinite(real_dim);
                 end
                 
                 % Now enforce that P is a probability array and that its
@@ -198,6 +264,15 @@ function is_npa = NPAHierarchy(p,varargin)
         is_npa = 1-min(cvx_optval,1); % CVX-safe way to map (0,Inf) to (1,0)
         if(~isa(p,'cvx')) % make the output prettier if it's not a CVX input
             is_npa = round(is_npa);
+            
+            % Deal with error messages.
+            if(strcmpi(cvx_status,'Inaccurate/Solved'))
+                warning('NPAHierarchy:NumericalProblems','Minor numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
+            elseif(strcmpi(cvx_status,'Inaccurate/Infeasible'))
+                warning('NPAHierarchy:NumericalProblems','Minor numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
+            elseif(strcmpi(cvx_status,'Unbounded') || strcmpi(cvx_status,'Inaccurate/Unbounded') || strcmpi(cvx_status,'Failed'))
+                error('NPAHierarchy:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));
+            end
         end
     else
         is_npa = 1;
@@ -231,6 +306,13 @@ end
 % function, because the upper limit in the second row of an index matrix
 % depends on the value in the first row.
 function new_ind = update_ind(old_ind,k,m_vec,o_vec)
+    % Do we have the identity measurement right now? Go to the first
+    % non-identity one.
+    if(min(min(old_ind)) == -1)
+        new_ind = zeros(2,k);
+        return;
+    end
+    
     % Start by increasing the last index by 1.
     new_ind = old_ind;
     new_ind(2,k) = new_ind(2,k)+1;
@@ -266,8 +348,8 @@ end
 
 % This function determines the nature of the operator specified by the
 % index matrix IND. If IND corresponds to something that is not (generally)
-% a measurement, then -2 is returned. If it corresponds to the zero
-% operator, -1 is returned. If it corresponds to the identity operator,
+% a measurement, then -1 is returned. If it corresponds to the zero
+% operator, 0 is returned. If it corresponds to the identity operator,
 % [0;0] is returned. If it corresponds to a measurement then the index
 % matrix of that measurement is returned.
 function [res,res_type] = product_of_orthogonal(ind,m_vec)
@@ -283,6 +365,7 @@ function [res,res_type] = product_of_orthogonal(ind,m_vec)
     % IND is the product of two commuting non-identity measurement
     % operators.
     elseif(len == 2 && ind(2,1) >= 0 && ind(2,2) >= 0 && min(floor(ind(1,1)/m_vec(1)),1) ~= min(floor(ind(1,2)/m_vec(1)),1))
+        res = sortrows(res.').'; % sort so that Alice's measurement comes first
         res_type = 2;
         return;
     end
@@ -296,7 +379,7 @@ function [res,res_type] = product_of_orthogonal(ind,m_vec)
             if(ind(2,i) >= 0 && ind(2,j) >= 0 && ind(1,i) == ind(1,j) && ind(2,i) ~= ind(2,j))
                 res_type = 0;
                 return; % one is enough; break out of the loop when one is found
-                
+
             % These two measurements are next to each other and are the
             % same! Merge them and then start over.
             elseif(ind(1,i) == ind(1,j) && ind(2,i) == ind(2,j))
@@ -308,17 +391,23 @@ function [res,res_type] = product_of_orthogonal(ind,m_vec)
             elseif(ind(2,i) == -1)
                 [res,res_type] = product_of_orthogonal(ind(:,[1:i-1,i+1:len]),m_vec);
                 return;
-                
+
             % The second of these two measurement operators is the
             % identity. Merge them and then start over.
             elseif(ind(2,j) == -1)
                 [res,res_type] = product_of_orthogonal(ind(:,[1:j-1,j+1:len]),m_vec);
                 return;
-                
+
             % These two measurements act on the same party, but are not
             % orthogonal. Stop increasing J and increase I again.
             elseif(min(floor(ind(1,i)/m_vec(1)),1) == min(floor(ind(1,j)/m_vec(1)),1))
                 break;
+
+            % These two measurements act on different parties and are both
+            % non-identity. They commute; move Alice's before Bob's
+            elseif(ind(1,i) > ind(1,j))
+                [res,res_type] = product_of_orthogonal(ind(:,[1:i-1,j,i+1:j-1,i,j+1:len]),m_vec);
+                return;
             end
         end
     end
