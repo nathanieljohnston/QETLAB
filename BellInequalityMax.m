@@ -39,7 +39,7 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: January 22, 2015
+%   last updated: March 6, 2015
 
 function bmax = BellInequalityMax(joint_coe,a_coe,b_coe,a_val,b_val,varargin)
 
@@ -97,7 +97,7 @@ function bmax = BellInequalityMax(joint_coe,a_coe,b_coe,a_val,b_val,varargin)
         
         for i = 1:oa^ma
             for j = 1:ob^mb
-                bmax = max(bmax,sum(sum(joint_coe.*(a_ind.'*b_ind))) + a_ind*a_coe + b_ind*b_coe);
+                bmax = max(bmax,sum(sum(joint_coe.*(a_val(a_ind+1)*b_val(b_ind+1)'))) + a_val(a_ind+1)'*a_coe + b_val(b_ind+1)'*b_coe);
                 b_ind = update_odometer(b_ind, ob*ones(1,mb));
             end
             a_ind = update_odometer(a_ind, oa*ones(1,ma));

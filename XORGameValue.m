@@ -26,7 +26,7 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: January 15, 2015
+%   last updated: March 6, 2015
 
 function val = XORGameValue(p,f,varargin)
 
@@ -55,7 +55,7 @@ if(strcmpi(vtype,'quantum'))
 
     cvx_begin sdp quiet
         cvx_precision default;
-        variable X(s+t,s+t) hermitian
+        variable X(s+t,s+t) symmetric
         maximize trace(Q*X)
         subject to
             diag(X) == 1;

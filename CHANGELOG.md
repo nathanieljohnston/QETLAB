@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
+## [post-0.7] - Changes since 2015-01-22
+### Added
+- NonlocalGameValue: Computes the maximum value of a nonlocal game in a classical, quantum, or no-signalling setting.
+
 ## [0.7] - 2015-01-22
 ### Added
 - BellInequalityMax: Computes the maximum value of a Bell inequality in a classical, quantum, or no-signalling setting.
@@ -16,7 +20,7 @@ All notable changes to QETLAB will be documented in this file.
 - RandomProbabilities: Computes a random probability vector, distributed uniformly on the unit simplex.
 - WState: Generates a (generalized) W-state.
 - XORGameValue: Computes the classical or quantum value of a nonlocal XOR game (replaces the old functions XORClassicalValue and XORQuantumValue).
-- helpers/unique_perms: Computes all distinct permutations of a given vector (the same as unique(perms(V)), but typically faster and less memory-intensive).
+- helpers/unique_perms: Computes all distinct permutations of a given vector (the same as unique(perms(V),'rows'), but typically faster and less memory-intensive).
 - helpers/update_odometer: Increases the entries of a vector subject to constraints on how large the entries of that vector can be. Useful when you want to have k nested for loops, but k isn't specified beforehand.
 
 ### Changed
