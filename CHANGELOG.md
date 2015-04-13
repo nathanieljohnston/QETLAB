@@ -1,9 +1,15 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
-## [post-0.7] - Changes since 2015-01-22
+## [0.8] - Changes since 2015-04-13
 ### Added
+- BellInequalityMaxQubits: Approximates the optimal value of a Bell inequality in qubit (i.e., 2-dimensional quantum) settings.
 - NonlocalGameValue: Computes the maximum value of a nonlocal game in a classical, quantum, or no-signalling setting.
+
+### Changed
+- BellInequalityMax: Bug fix when computing the classical value of a Bell inequality using measurements that have values other than 0, 1, 2, ..., d-1.
+- KrausOperators: If the zero map is provided as input, this function now returns a single zero matrix Kraus operator, rather than an empty cell containing no Kraus operators.
+- XORGameValue: Bug fix when computing the value of some XOR games with complex entries.
 
 ## [0.7] - 2015-01-22
 ### Added

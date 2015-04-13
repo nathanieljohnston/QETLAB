@@ -33,7 +33,7 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 24, 2014
+%   last updated: March 19, 2015
 
 function ko = KrausOperators(Phi,varargin)
 
@@ -45,6 +45,10 @@ max_dim = max(da(1)*db(1),da(2)*db(2));
 % *canonical* set of Kraus operators, so convert everything to a Choi
 % matrix first.
 Phi = ChoiMatrix(Phi); % if PHI is a Choi matrix already, this does no work: don't worry
+if(norm(Phi,'fro') < da(1)^2*db(1)^2*eps)
+    ko = {zeros(db(1),da(1)),zeros(db(2),da(2))}; % need to handle this case separately, or no Kraus operators are returned
+    return
+end
 
 % Compute a canonical set of Kraus operators for Hermiticity-preserving
 % maps.
