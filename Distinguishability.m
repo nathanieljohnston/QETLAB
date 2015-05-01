@@ -85,10 +85,13 @@ if(iscell(X))
         if(mut_orth == 1) % states are mutually orthogonal
             dist = 1;
             if(nargout > 1) % construct optimal measurements, if requested
-                for j = num_ops:-1:1 % pre-allocate for speed
+                meas_sum = zeros(dim);
+                for j = num_ops:-1:2 % pre-allocate for speed
                     oX = orth(X{j});
                     meas{j} = oX*oX';
+                    meas_sum = meas_sum + meas{j};
                 end
+                meas{1} = eye(dim) - meas_sum;
             end
             return;
         end
@@ -119,9 +122,12 @@ else
         if(max(max(abs(X2 - diag(diag(X2))))) < eps*dim^2)
             dist = 1; % the states are orthogonal, so perfectly distinguishable
             if(nargout > 1) % construct optimal measurements, if requested
-                for j = num_ops:-1:1 % pre-allocate for speed
+                meas_sum = zeros(dim);
+                for j = num_ops:-1:2 % pre-allocate for speed
                     meas{j} = X(:,j)*X(:,j)';
+                    meas_sum = meas_sum + meas{j};
                 end
+                meas{1} = eye(dim) - meas_sum;
             end
             return
         end
