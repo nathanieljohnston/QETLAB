@@ -1,15 +1,15 @@
-%%  BELLINEQUALITYMAXQUBITS    Approximates the optimal value of a Bell inequality in qubit (i.e., 2-dimensional quantum) settings
+%%  BELLINEQUALITYMAXQUBITS    Approximates the optimal value of a 2-outcome Bell inequality in qubit (i.e., 2-dimensional quantum) settings
 %   This function has five required input arguments:
-%     JOINT_COE: a matrix whose (i,j)-entry is the coefficient of the term
+%     JOINT_COE: A matrix whose (i,j)-entry is the coefficient of the term
 %                <A_iB_j> in the Bell inequality.
-%     A_COE: a vector whose i-th entry is the coefficient of the term <A_i>
+%     A_COE: A vector whose i-th entry is the coefficient of the term <A_i>
 %            in the Bell inequality.
-%     B_COE: a vector whose i-th entry is the coefficient of the term <B_i>
+%     B_COE: A vector whose i-th entry is the coefficient of the term <B_i>
 %            in the Bell inequality.
-%     A_VAL: a vector whose i-th entry is the value of the i-th measurement
-%            outcome on Alice's system
-%     B_VAL: a vector whose i-th entry is the value of the i-th measurement
-%            outcome on Bob's system
+%     A_VAL: A vector whose i-th entry is the value of the i-th measurement
+%            outcome on Alice's system. Must have exactly 2 entries.
+%     B_VAL: A vector whose i-th entry is the value of the i-th measurement
+%            outcome on Bob's system. Must have exactly 2 entries.
 %
 %   BMAX = BellInequalityMaxQubits(JOINT_COE,A_COE,B_COE,A_VAL,B_VAL) is an
 %   upper bound on the maximum value that the specified Bell inequality can
@@ -38,6 +38,9 @@ function [bmax,rho] = BellInequalityMaxQubits(joint_coe,a_coe,b_coe,a_val,b_val)
     a_val = a_val(:); b_val = b_val(:);
     a_coe = a_coe(:); b_coe = b_coe(:);
     
+    if(length(a_val) ~= 2 || length(b_val) ~= 2)
+        error('BellInequalityMaxQubits:InvalidInequality','This script is only capable of handling Bell inequalities with two outcomes.');
+    end
     m = ma;
     
     tot_dim = 2^(2*m+2);
