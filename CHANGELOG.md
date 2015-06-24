@@ -10,6 +10,7 @@ All notable changes to QETLAB will be documented in this file.
 
 ### Changed
 - kpNorm: Can now be used as the objective function or as a constraint in a CVX optimization problem, regardless of k and p (only certain special values of k and p were supported previously).
+- kpNormDual: Can now be used as the objective function or as a constraint in a CVX optimization problem, regardless of k and p (only certain special values of k and p were supported previously).
 - SchattenNorm: Can now be used as the objective function or as a constraint in a CVX optimization problem, regardless of p (only p = 1, p = 2, and p = Inf were supported previously).
 
 ## [0.8] - 2015-04-13
