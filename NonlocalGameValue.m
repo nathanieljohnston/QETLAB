@@ -53,7 +53,7 @@ function ngval = NonlocalGameValue(p,V,varargin)
         k = 0;
     end
     
-    % Compute the maximum value of the Bell inequality, depending on which
+    % Compute the maximum value of the non-local game, depending on which
     % type of maximum was requested.
     if(strcmpi(mtype,'quantum'))
         cvx_begin quiet
