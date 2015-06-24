@@ -93,17 +93,19 @@ end
 % This method is based on Madeleine Udell's wonderful post here:
 % http://ask.cvxr.com/t/represent-schatten-p-norm-in-cvx/649/5
 function nrm = kpNorm_cvx(X,k,p,nX,sX)
+    bigX = [zeros(sX(1)),X;X',zeros(sX(2))];
+    
     cvx_begin quiet
         cvx_precision default;
         variable s(nX,1)
         minimize norm(s(1:k),p)
         subject to
             for j = 1:nX-1
+                lambda_sum_largest(bigX,j) <= sum(s(1:j));
                 s(j) >= s(j+1);
-                lambda_sum_largest([zeros(sX(1)),X;X',zeros(sX(2))],j) <= sum(s(1:j));
             end
+            lambda_sum_largest(bigX,nX) <= sum(s);
             s(nX) >= 0;
-            lambda_sum_largest([zeros(sX(1)),X;X',zeros(sX(2))],nX) == sum(s);
     cvx_end
     
     nrm = real(cvx_optval);
