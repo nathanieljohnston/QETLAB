@@ -55,7 +55,7 @@ function nglb = NonlocalGameLB(d,p,V,varargin)
         B(:,:,:,y) = B(:,:,:,y)/(lam+0.1); % scale Bob's measurements so that they add up to less than the identity
         B(:,:,ob,y) = eye(d) - sum_B/(lam+0.1); % fill in the final measurement outcome
     end  
-        
+
     % Now loop until you reach convergence.
     it_diff = 1;
     nglb = -1;

@@ -5,12 +5,15 @@ All notable changes to QETLAB will be documented in this file.
 ### Added
 - BCSGameLB: Computes a lower bound on the quantum value of a binary constraint system (BCS) game.
 - BCSGameValue: Computes the maximum value of a binary constraint system (BCS) game. In classical and no-signalling settings, the value computed is exact, but the quantum value is just an upper bound.
+- InducedMatrixNorm: Computes a lower bound on the induced p->q norm of a matrix.
 - NonlocalGameLB: Computes a lower bound on the quantum value of a two-player non-local game.
+- RandomPOVM: Computes a random POVM of a specified size and with a specified number of outcomes.
 - helpers/bcs_to_nonlocal: Converts a description of a binary constraint system (BCS) game into a form that can be presented as a general non-local game.
 
 ### Changed
 - kpNorm: Can now be used as the objective function or as a constraint in a CVX optimization problem, regardless of k and p (only certain special values of k and p were supported previously).
 - kpNormDual: Can now be used as the objective function or as a constraint in a CVX optimization problem, regardless of k and p (only certain special values of k and p were supported previously).
+- NonlocalGameValue: Added the REPT optional input argument, which lets the user specify the number of times that the non-local game will be repeated in parallel.
 - SchattenNorm: Can now be used as the objective function or as a constraint in a CVX optimization problem, regardless of p (only p = 1, p = 2, and p = Inf were supported previously).
 
 ## [0.8] - 2015-04-13
