@@ -32,7 +32,7 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: January 6, 2016
+%   last updated: January 7, 2016
 
 function [nrm,v] = InducedMatrixNorm(X,p,varargin)
 
@@ -93,6 +93,7 @@ while it_err > tol
     else
         wabs = abs(w); % split w into its phases and magnitudes
         wph = w./wabs;
+        wph(isnan(wph)) = 1; % take care of division by 0 in previous line
         
         wabs = wabs/max(wabs); % pre-process in this way first for numerical reasons
         wabs = wabs.^(q-1); % this is the equality condition from Holder's inequality
@@ -107,7 +108,8 @@ while it_err > tol
         v(ind) = 1;
     else
         vabs = abs(v); % split v into its phases and magnitudes
-        vph = v./vabs;   
+        vph = v./vabs;
+        vph(isnan(vph)) = 1; % take care of division by 0 in previous line  
         
         vabs = vabs'/max(vabs); % pre-process in this way first for numerical reasons
         vabs = vabs.^(1/(p-1)); % this is the equality condition from Holder's inequality
