@@ -32,7 +32,7 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: January 7, 2016
+%   last updated: January 8, 2016
 
 function [nrm,v] = InducedMatrixNorm(X,p,varargin)
 
@@ -44,7 +44,7 @@ function [nrm,v] = InducedMatrixNorm(X,p,varargin)
 % Quickly compute in some special cases.
 if(p == 1 && q == 1)
     [nrm,ind] = max(sum(abs(X),1)); % norm is max abs column sum
-    v = zeros(n,1);
+    v = zeros(m,1);
     v(ind) = 1;
     return
 elseif((p == 2 || strcmpi(p,'fro') == 1) && (q == 2 || strcmpi(q,'fro') == 1))
@@ -52,7 +52,7 @@ elseif((p == 2 || strcmpi(p,'fro') == 1) && (q == 2 || strcmpi(q,'fro') == 1))
     return
 elseif(p == Inf && q == Inf)
     nrm = max(sum(abs(X),2)); % norm is max abs row sum
-    v = ones(n,1);
+    v = ones(m,1);
     return
 end
 
@@ -70,9 +70,9 @@ if(max(size(v0)) > 1)
     end
 end
 if randv0 % generate a random starting vector v0, if appropriate
-    v = randn(n,1);
+    v = randn(m,1);
     if(~isreal(X)) % only add imaginary part to v if X is not real (just to make output prettier)
-        v = v + 1i*randn(n,1);
+        v = v + 1i*randn(m,1);
     end
 else
     v = v0;
