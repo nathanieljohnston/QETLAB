@@ -17,7 +17,7 @@
 
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
-%   last updated: November 27, 2014
+%   last updated: January 12, 2016
 
 function ent = Entropy(rho,varargin)
 
@@ -28,13 +28,14 @@ lam = eig(full(rho));
 
 % If alpha == 1, compute the von Neumann entropy
 if(abs(alpha - 1) <= eps^(3/4))
+    lam(lam==0) = 1; % handle zero entries better: we want 0*log(0) = 0, not NaN
     if(base == 2)
         ent = -sum(real(lam.*log2(lam)));
     else
         ent = -sum(real(lam.*log(lam)))/log(base);
     end
 elseif(alpha >= 0)
-    if(alpha < Inf) % Renty-alpha entropy with ALPHA < Inf
+    if(alpha < Inf) % Renyi-alpha entropy with ALPHA < Inf
         ent = log(sum(lam.^alpha))/(log(base)*(1-alpha));
 
         % Check whether or not we ran into numerical problems due to ALPHA
