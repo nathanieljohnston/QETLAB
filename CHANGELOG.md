@@ -7,9 +7,12 @@ All notable changes to QETLAB will be documented in this file.
 - BCSGameValue: Computes the maximum value of a binary constraint system (BCS) game. In classical and no-signalling settings, the value computed is exact, but the quantum value is just an upper bound.
 - InducedMatrixNorm: Computes a lower bound on the induced p->q norm of a matrix.
 - InducedSchattenNorm: Computes a lower bound on the induced Schatten p->q norm of a superoperator.
+- L1NormCoherence: Computes the l1-norm of coherence of a quantum state.
 - NonlocalGameLB: Computes a lower bound on the quantum value of a two-player non-local game.
 - RandomPOVM: Computes a random POVM of a specified size and with a specified number of outcomes.
+- RobustnessCoherence: Computes the robustness of coherence of a quantum state.
 - helpers/bcs_to_nonlocal: Converts a description of a binary constraint system (BCS) game into a form that can be presented as a general non-local game.
+- helpers/pure_to_mixed: Converts a state vector or density matrix representation of a state to a density matrix.
 
 ### Changed
 - kpNorm: Can now be used as the objective function or as a constraint in a CVX optimization problem, regardless of k and p (only certain special values of k and p were supported previously).
