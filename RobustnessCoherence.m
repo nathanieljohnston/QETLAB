@@ -8,10 +8,11 @@
 %   References: [1] C. Napoli, T. R. Bromley, M. Cianciaruso, M. Piani, 
 %                   N. Johnston, G. Adesso. Robustness of coherence: An
 %                   operational and observable measure of quantum
-%                   coherence. Preprint, 2016.
-%               [2] C. Napoli, T. R. Bromley, M. Cianciaruso, M. Piani, 
+%                   coherence. Preprint submitted to PRL, 2016.
+%               [2] M. Piani, M. Cianciaruso, T. R. Bromley, C. Napoli, 
 %                   N. Johnston, G. Adesso. Robustness of asymmetry and
-%                   coherence of quantum states. Preprint, 2016.
+%                   coherence of quantum states. Preprint submitted to PRA,
+%                   2016.
 %
 %   URL: http://www.qetlab.com/RobustnessCoherence
 

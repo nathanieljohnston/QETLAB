@@ -14,7 +14,7 @@
 %   requires: cvx (http://cvxr.com/cvx/)
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: January 12, 2016
+%   last updated: January 22, 2016
 
 function [TDC,D] = TraceDistanceCoherence(rho)
 
@@ -84,6 +84,14 @@ function [val,D] = TraceCoherencePure(x)
     % fast as possible.
     klow = 1;
     khigh = n;
+    
+    % Explicitly start with rank-1 answer to avoid looping mistakes that
+    % might miss it.
+    D = zeros(n,1); D(1) = 1;
+    D = D(perm_inv(ind));
+    q = ((2*xs(1)^2-2) + sqrt((2*xs(1)^2-2)^2 + 4*(1 - xs(1)^2)*xs(1)^2))/(2*xs(1));
+    val = 2*q/(xs(1) - q);
+    
     while 1==1 % loop until we explicitly break out
         k = ceil((khigh+klow)/2);
         s = sum(xs(1:k));
