@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
+## Changes since v0.9 was released on 2016-01-12
+### Added
+- Concurrence: Computes the concurrence of a 2-qubit state.
+- EntFormation: Computes the entanglement of formation of a 2-qubit state or a pure state.
+
+### Changed
+- DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
+- Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
+- Tensor: Now works properly (i.e., returns the scalar 1) when M = 0.
+
 ## [0.9] - 2016-01-12
 ### Added
 - BCSGameLB: Computes a lower bound on the quantum value of a binary constraint system (BCS) game.

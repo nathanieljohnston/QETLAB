@@ -1,8 +1,8 @@
-%%  NEGATIVITY    Computes the negativity of a bipartite density matrix
+%%  NEGATIVITY    Computes the negativity of a bipartite quantum state
 %   This function has one required argument:
-%     RHO: a density matrix
+%     RHO: a density matrix or a pure state vector
 %
-%   NEG = Negativity(RHO) is the negativity of the density matrix RHO,
+%   NEG = Negativity(RHO) is the negativity of the quantum state RHO,
 %   assuming that the two subsystems on which RHO acts are of equal
 %   dimension (if the local dimensions are unequal, specify them in the
 %   optional DIM argument). The negativity of RHO is the sum of the
@@ -18,13 +18,14 @@
 %   URL: http://www.qetlab.com/Negativity
 
 %   requires: kpNorm.m, opt_args.m, PartialTranspose.m, PermuteSystems.m,
-%             TraceNorm.m
+%             pure_to_mixed.m, TraceNorm.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: October 22, 2014
+%   last updated: February 19, 2016
 
 function neg = Negativity(rho,varargin)
 
+rho = pure_to_mixed(rho); % Let the user input either a pure state vector or a density matrix.
 dX = size(rho);
 round_dim = round(sqrt(dX));
 
@@ -41,7 +42,7 @@ if(length(dim) == 1)
 end
 
 if(prod(dim) ~= dX(1))
-    error('Negativity:InvalidDim','Please provide local dimension in the argument DIM that match the size of RHO.');
+    error('Negativity:InvalidDim','Please provide local dimensions in the argument DIM that match the size of RHO.');
 end
 
 % Compute the negativity.

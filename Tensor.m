@@ -15,7 +15,7 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 28, 2012
+%   last updated: May 10, 2016
 
 function krn = Tensor(A,varargin)
 
@@ -30,8 +30,8 @@ if(iscell(A))
 elseif(nargin == 2 && length(varargin{1}) == 1)
     % Tensor naively if we only want a few copies.
     if(varargin{1} <= 4 || (length(A) > 3 && ~issparse(A)))
-        krn = A;
-        for j = 2:varargin{1};
+        krn = 1;
+        for j = 1:varargin{1};
             krn = kron(krn,A);
         end
         
