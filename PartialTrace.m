@@ -2,7 +2,7 @@
 %   This function has one required argument:
 %     X: a square matrix
 %
-%   XPT = PartialTrace(X) is the partial transpose of the matrix X,
+%   XPT = PartialTrace(X) is the partial trace of the matrix X,
 %   where it is assumed that length(X) is a perfect squares and both
 %   subsystems have equal dimension. The trace is taken over the second
 %   subsystem.
@@ -69,7 +69,7 @@ if(mode)
     sub_sys_vec = prod_dim*ones(1,prod_dim_sys)/prod_dim_sys;
     perm = [sys,setdiff(1:num_sys,sys)];
 
-    X = mat2cell(PermuteSystems(X,perm,dim), sub_sys_vec, sub_sys_vec); % permute the subsystems so that we just have to do the partial transpose on the first (potentially larger) subsystem
+    X = mat2cell(PermuteSystems(X,perm,dim), sub_sys_vec, sub_sys_vec); % permute the subsystems so that we just have to do the partial trace on the first (potentially larger) subsystem
     Xpt = sparse(sub_sys_vec(1),sub_sys_vec(1));
     for j = 1:prod_dim_sys
         Xpt = Xpt + X{j,j};

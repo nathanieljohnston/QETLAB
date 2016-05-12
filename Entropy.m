@@ -17,7 +17,7 @@
 
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
-%   last updated: January 12, 2016
+%   last updated: May 12, 2016
 
 function ent = Entropy(rho,varargin)
 
@@ -25,10 +25,10 @@ function ent = Entropy(rho,varargin)
 [base,alpha] = opt_args({ 2, 1 },varargin{:});
 
 lam = eig(full(rho));
+lam = lam(lam>0); % handle zero entries better: we want 0*log(0) = 0, not NaN
 
 % If alpha == 1, compute the von Neumann entropy
 if(abs(alpha - 1) <= eps^(3/4))
-    lam(lam==0) = 1; % handle zero entries better: we want 0*log(0) = 0, not NaN
     if(base == 2)
         ent = -sum(real(lam.*log2(lam)));
     else

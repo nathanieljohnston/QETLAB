@@ -8,6 +8,7 @@ All notable changes to QETLAB will be documented in this file.
 
 ### Changed
 - DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
+- Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
 - Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
 - Tensor: Now works properly (i.e., returns the scalar 1) when M = 0.
 
