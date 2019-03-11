@@ -71,12 +71,12 @@ if(iscell(Phi)) % the superoperator was provided as a cell of Kraus operators
     PhiX = ApplyMap(X,Phi);
 else % the superoperator was provided as a Choi matrix
     dPhi = size(Phi);
-    dim = [prod_dim_r1,prod_dim_r1,dPhi(1)/dim(1,sys),dim(1,sys),prod_dim_r2,prod_dim_r2;prod_dim_c1,prod_dim_c1,dPhi(2)/dim(2,sys),dim(2,sys),prod_dim_c2,prod_dim_c2];
+    dim = [prod_dim_r1,prod_dim_r1,dim(1,sys),dPhi(1)/dim(1,sys),prod_dim_r2,prod_dim_r2;prod_dim_c1,prod_dim_c1,dim(2,sys),dPhi(2)/dim(2,sys),prod_dim_c2,prod_dim_c2];
     psi_r1 = MaxEntangled(prod_dim_r1,1,0);
     psi_c1 = MaxEntangled(prod_dim_c1,1,0);
     psi_r2 = MaxEntangled(prod_dim_r2,1,0);
     psi_c2 = MaxEntangled(prod_dim_c2,1,0);
     
-    Phi = PermuteSystems(kron(kron(psi_r1*psi_c1.',Phi),psi_r2*psi_c2.'),[1,4,5,2,3,6],dim);
+    Phi = PermuteSystems(kron(kron(psi_r1*psi_c1.',Phi),psi_r2*psi_c2.'),[1,3,5,2,4,6],dim);
     PhiX = ApplyMap(X,Phi);
 end
