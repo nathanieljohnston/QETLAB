@@ -77,6 +77,6 @@ else % the superoperator was provided as a Choi matrix
     psi_r2 = MaxEntangled(prod_dim_r2,1,0);
     psi_c2 = MaxEntangled(prod_dim_c2,1,0);
     
-    Phi = PermuteSystems(kron(kron(psi_r1*psi_c1.',Phi),psi_r2*psi_c2.'),[1,3,5,2,4,6],dim);
+    Phi = PermuteSystems(kron(kron(psi_r1*psi_c1.',Phi),psi_r2*psi_c2.'),[1,4,5,2,3,6],dim);
     PhiX = ApplyMap(X,Phi);
 end
