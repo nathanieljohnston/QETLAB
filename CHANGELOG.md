@@ -5,10 +5,13 @@ All notable changes to QETLAB will be documented in this file.
 ### Added
 - Concurrence: Computes the concurrence of a 2-qubit state.
 - EntFormation: Computes the entanglement of formation of a 2-qubit state or a pure state.
+- helpers/dec_to_bin: Converts a decimal number to a binary vector. Replaces de2bi from the Communications toolbox.
+- helpers/pad_array: Pads an array with zeroes. Replaces padarray from the Image Processing toolbox.
 
 ### Changed
 - DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
+- GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
 - Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
 - Tensor: Now works properly (i.e., returns the scalar 1) when M = 0.
 
