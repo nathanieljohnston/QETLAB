@@ -13,6 +13,7 @@ All notable changes to QETLAB will be documented in this file.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
 - GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
 - Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
+- NonlocalGameValue: Now computes classical value of a game quicker, via algorithm of arXiv:2005.13418
 - Tensor: Now works properly (i.e., returns the scalar 1) when M = 0.
 
 ## [0.9] - 2016-01-12

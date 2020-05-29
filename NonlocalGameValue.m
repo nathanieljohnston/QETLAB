@@ -36,8 +36,9 @@
 %             update_odometer.m
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%           Mateus Araújo (wrote classical value computation)
 %   package: QETLAB
-%   last updated: July 10, 2015
+%   last updated: May 29, 2020
 
 function ngval = NonlocalGameValue(p,V,varargin)
 
@@ -109,33 +110,46 @@ function ngval = NonlocalGameValue(p,V,varargin)
             error('NonlocalGameValue:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));
         end
     elseif(strcmpi(mtype,'classical'))
-        % Compute the classical maximum value just by brute-forcing over
-        % all possibilities.
-        ngval = -Inf;
-        a_ind = zeros(1,ma);
-        b_ind = zeros(1,mb);
-        a_ind(ma) = oa-2;
-        b_ind(mb) = ob-2;
-        p = permute(repmat(p,[1,1,oa,ob]),[3,4,1,2]);
-        ab_prob = zeros(oa,ob,ma,mb);
-        
-        for i = 1:oa^ma
-            for j = 1:ob^mb
-                for x = 1:ma
-                    for y = 1:mb
-                        ab_prob(:,:,x,y) = zeros(oa,ob);
-                        ab_prob(a_ind(x)+1,b_ind(y)+1,x,y) = 1;
-                    end
-                end
-                tgval = sum(sum(sum(sum(p.*V.*ab_prob))));
-                if(tgval >= ngval - 0.000001)
-                    ngval = max(ngval, sum(sum(sum(sum(p.*V.*ab_prob)))));
-                end
-                b_ind = update_odometer(b_ind, ob*ones(1,mb));
+        % Compute the classical maximum value just by looping over Bob's strategies
+        % and taking Alice's optimal strategy for each.
+        for x=1:ma
+            for y=1:mb
+                V(:,:,x,y) = p(x,y)*V(:,:,x,y);
             end
-            a_ind = update_odometer(a_ind, oa*ones(1,ma));
+        end
+        ngval = -Inf;
+        b_ind = zeros(1,mb);
+        if (oa^ma < ob^mb) % we choose Bob as the party with the fewest strategies
+            V = permute(V,[3,4,1,2]);
+            [oa,ob,ma,mb] = size(V);
+        end
+        V = permute(V,[1 3 2 4]); % this is necessary to avoid having to call squeeze later
+
+        if (ob^mb <= 10^6)  % for small problems we don't parallelize
+           parallel_threads = 0;
+        else
+           parallel_threads = Inf;
+        end
+
+        parfor (i = 0:ob^mb-1, parallel_threads)
+            b_ind = integer_digits(i,ob,mb);
+            Valice = zeros(oa,ma);
+            for y=1:mb
+                Valice = Valice + V(:,:,b_ind(y)+1,y);
+            end
+            tgval = sum(max(Valice));
+            ngval = max(ngval, tgval);
         end
     else
         error('NonlocalGameValue:InvalidMTYPE','MTYPE must be one of ''classical'', ''quantum'', or ''nosignal''.');
+    end
+end
+
+% converts number "number" to base "base" with digits "digits"
+function dits = integer_digits(number,base,digits)
+    dits = zeros(1,digits);
+    for i=1:digits
+        dits(digits+1-i) = mod(number,base);
+        number = floor(number/base);
     end
 end
