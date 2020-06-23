@@ -5,6 +5,7 @@ All notable changes to QETLAB will be documented in this file.
 ### Added
 - Concurrence: Computes the concurrence of a 2-qubit state.
 - EntFormation: Computes the entanglement of formation of a 2-qubit state or a pure state.
+- MatsumotoFidelity: Computes the Matsumoto fidelity of two density matrices.
 - helpers/dec_to_bin: Converts a decimal number to a binary vector. Replaces de2bi from the Communications toolbox.
 - helpers/pad_array: Pads an array with zeroes. Replaces padarray from the Image Processing toolbox.
 
