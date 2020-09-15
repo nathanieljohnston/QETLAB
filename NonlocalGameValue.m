@@ -120,7 +120,7 @@ function ngval = NonlocalGameValue(p,V,varargin)
         ngval = -Inf;
         b_ind = zeros(1,mb);
         if (oa^ma < ob^mb) % we choose Bob as the party with the fewest strategies
-            V = permute(V,[3,4,1,2]);
+            V = permute(V,[2,1,4,3]);
             [oa,ob,ma,mb] = size(V);
         end
         V = permute(V,[1 3 2 4]); % this is necessary to avoid having to call squeeze later
