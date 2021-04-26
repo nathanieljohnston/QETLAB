@@ -59,7 +59,7 @@ prod_dimR = prod(dim(1,:));
 prod_dimC = prod(dim(2,:));
 
 % Do some basic input checking.
-if length(perm) ~= num_sys
+if length(dim) ~= num_sys
     error('PermuteSystems:InvalidPerm','length(PERM) must equal length(DIM).')
 elseif ~all(sort(perm) == 1:num_sys)
     error('PermuteSystems:InvalidPerm','PERM must be a permutation vector.')
