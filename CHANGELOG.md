@@ -4,6 +4,7 @@ All notable changes to QETLAB will be documented in this file.
 ## Changes since v0.9 was released on 2016-01-12
 ### Added
 - Concurrence: Computes the concurrence of a 2-qubit state.
+- EntangledSubspace: Constructs a basis of a bipartite r-entangled subspace of any dimension.
 - EntFormation: Computes the entanglement of formation of a 2-qubit state or a pure state.
 - MatsumotoFidelity: Computes the Matsumoto fidelity of two density matrices.
 - helpers/dec_to_bin: Converts a decimal number to a binary vector. Replaces de2bi from the Communications toolbox.
