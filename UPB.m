@@ -22,13 +22,9 @@
 %
 %   URL: http://www.qetlab.com/UPB
 
-%   requires: FourierMatrix.m, IsTotallyNonsingular.m, MinUPBSize.m,
-%             normalize_cols.m, one_factorization.m, opt_args.m,
-%             opt_disp.m, perm_inv.m, PermuteSystems.m, sporth.m, Swap.m
-%
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 12, 2014
+%   last updated: May 9, 2022
 %   URL: http://www.qetlab.com/UPB
 
 function [u,varargout] = UPB(name,varargin)
@@ -166,6 +162,77 @@ function [u,varargout] = UPB(name,varargin)
         upbp{2}(:,3) = [0;1;-1]/sqrt(2);
         upbp{2}(:,4) = [1;0;0];
 
+
+    % the "GenTiles1" UPB
+    elseif(strcmpi(name,'GenTiles1'))
+        if(isempty(varargin))
+            error('UPB:InvalidArguments','When using NAME=GenTiles1, you must specify a second input argument that gives the local dimension of the desired UPB.')
+        elseif(mod(varargin{1},2) == 1)
+            error('UPB:InvalidArguments','When using NAME=GenTiles1, the second input argument DIM must be even.')
+        end
+
+        n = varargin{1};
+        I = eye(n);
+        w = exp(4i*pi/n);
+        ct = 1;
+        
+        upbp{1}(:,n^2-2*n+1) = ones(n,1)/sqrt(n); % pre-allocate
+        upbp{2}(:,n^2-2*n+1) = ones(n,1)/sqrt(n); % pre-allocate
+        for m = 1:(n/2-1)
+            wMat = zeros(n,n);
+            for k = 0:n-1
+                for j = 0:(n/2-1)
+                    wMat(mod(j+k,n)+1,k+1) = wMat(mod(j+k,n)+1,k+1) + w^(j*m);
+                end
+            end
+            
+            for k = 0:n-1
+                upbp{1}(:,ct) = I(:,k+1);
+                upbp{2}(:,ct) = wMat(:,mod(k+1,n)+1)/sqrt(n/2);
+                upbp{1}(:,ct+1) = wMat(:,k+1)/sqrt(n/2);
+                upbp{2}(:,ct+1) = I(:,k+1);
+                ct = ct + 2;
+            end
+        end
+
+    % the "GenTiles2" UPB
+    elseif(strcmpi(name,'GenTiles2'))
+        if(isempty(varargin))
+            error('UPB:InvalidArguments','When using NAME=GenTiles2, you must specify a second input argument that gives the local dimensions of the desired UPB.')
+        elseif(varargin{2} <= 3 || varargin{1} <= 2 || varargin{2} < varargin{1})
+            error('UPB:InvalidArguments','When using NAME=GenTiles2, the local dimension M and N must satisfy N > 3, M >= 3, and N >= M.')
+        end
+
+        m = varargin{1};
+        n = varargin{2};
+        Im = eye(m);
+        In = eye(n);
+        w = exp(2i*pi/(n-2));
+        
+        upbp{1}(:,m*n-2*m+1) = ones(m,1)/sqrt(m); % pre-allocate
+        upbp{2}(:,m*n-2*m+1) = ones(n,1)/sqrt(n); % pre-allocate
+        for j = 1:m
+            upbp{1}(:,j) = (Im(:,j) - Im(:,mod(j,m)+1))/sqrt(2);
+            upbp{2}(:,j) = In(:,j);
+        end
+        
+        ct = m+1;
+        for j = 0:m-1
+            for k = 1:n-3
+                upbp{1}(:,ct) = Im(:,j+1);
+                upbp{2}(:,ct) = zeros(n,1);
+                for ell = 0:m-3
+                    upbp{2}(mod(ell+j+1,m)+1,ct) = w^(ell*k);
+                end
+                for ell = m-2:n-3
+                    upbp{2}(ell+3,ct) = w^(ell*k);
+                end
+                upbp{2}(:,ct) = upbp{2}(:,ct) / sqrt(n-2);
+                
+                ct = ct + 1;
+            end
+        end
+        
     % the "Min4x4" UPB
     elseif(strcmpi(name,'Min4x4'))
         upbp{1}(:,8) = [0;0;1;0]; % pre-allocate
@@ -188,7 +255,7 @@ function [u,varargout] = UPB(name,varargin)
     % the "QuadRes" UPB
     elseif(strcmpi(name,'QuadRes'))
         if(isempty(varargin))
-            error('UPB:InvalidArguments','When using NAME=QuadRes, you must specify a second input argument that gives the dimension of the desires UPB.')
+            error('UPB:InvalidArguments','When using NAME=QuadRes, you must specify a second input argument that gives the dimension of the desired UPB.')
         elseif(~isprime(2*varargin{1}-1))
             error('UPB:InvalidArguments','When using NAME=QuadRes, the second input argument DIM must be such that 2*DIM-1 is prime.')
         elseif(mod(varargin{1},2) == 0)

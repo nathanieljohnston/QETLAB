@@ -19,6 +19,7 @@ All notable changes to QETLAB will be documented in this file.
 - PartialTranspose: Fixed bug when partial transposing non-numerical non-square matrices.
 - SymmetricProjection: Dramatically increased speed when using MODE = 0. Changed and standardized the order of the columns when using PARTIAL = 1 and MODE = 0.
 - Tensor: Now works properly (i.e., returns the scalar 1) when M = 0.
+- UPB: Now supports the GenTiles1 and GenTiles2 UPBs
 
 ## [0.9] - 2016-01-12
 ### Added
