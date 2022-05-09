@@ -28,7 +28,7 @@
 %   requires: opt_args.m, PermutationOperator.m, PermuteSystems.m, sporth.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: May 3, 2022
+%   last updated: May 9, 2022
 
 function PS = SymmetricProjection(dim,varargin)
 
@@ -93,23 +93,6 @@ function PS = SymmetricProjection(dim,varargin)
             
         if(~partial)
             PS = PS*PS';
-        end
-    end
-end
-
-% Creates a matrix whose rows are all vectors with P non-negative integer
-% entries adding up to SM.
-function slist = sum_vector(sm,p)
-    if p <= 1
-        slist = sm;
-    else
-        k = 0;
-        slist = zeros(nchoosek(sm+p-1,p-1),p);
-        for j = 0:sm
-            cs = nchoosek(j+p-2,p-2);
-            t = [(sm-j)*ones(cs,1),sum_vector(j,p-1)];
-            slist(k+1:k+cs,:) = t;
-            k = k + cs;
         end
     end
 end

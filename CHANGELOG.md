@@ -9,6 +9,7 @@ All notable changes to QETLAB will be documented in this file.
 - MatsumotoFidelity: Computes the Matsumoto fidelity of two density matrices.
 - helpers/dec_to_bin: Converts a decimal number to a binary vector. Replaces de2bi from the Communications toolbox.
 - helpers/pad_array: Pads an array with zeroes. Replaces padarray from the Image Processing toolbox.
+- helpers/sum_vector: Creates all vectors with non-negative integer entries adding to a given value. Used to be bundled inside of SymmetricProjection.m.
 
 ### Changed
 - DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
