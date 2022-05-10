@@ -7,9 +7,12 @@ All notable changes to QETLAB will be documented in this file.
 - EntangledSubspace: Constructs a basis of a bipartite r-entangled subspace of any dimension.
 - EntFormation: Computes the entanglement of formation of a 2-qubit state or a pure state.
 - MatsumotoFidelity: Computes the Matsumoto fidelity of two density matrices.
+- helpers/asymind: Creates all vectors with strictly increasing permutations of an input vector.
 - helpers/dec_to_bin: Converts a decimal number to a binary vector. Replaces de2bi from the Communications toolbox.
 - helpers/pad_array: Pads an array with zeroes. Replaces padarray from the Image Processing toolbox.
 - helpers/sum_vector: Creates all vectors with non-negative integer entries adding to a given value. Used to be bundled inside of SymmetricProjection.m.
+- helpers/symind: Creates all vectors with non-increasing permutations of an input vector.
+- helpers/symindfind: Finds the row index of a vector in symind.
 
 ### Changed
 - DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
