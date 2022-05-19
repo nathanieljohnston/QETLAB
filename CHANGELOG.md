@@ -19,6 +19,7 @@ All notable changes to QETLAB will be documented in this file.
 - DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
 - GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
+- IsBlockPositive: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
 - Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
 - NonlocalGameValue: Now computes classical value of a game quicker, via algorithm of arXiv:2005.13418
 - PartialTranspose: Fixed bug when partial transposing non-numerical non-square matrices.

@@ -10,7 +10,7 @@ QETLAB is a MATLAB toolbox for exploring and manipulating quantum entanglement.
 
 ## Tested with
 
-* MATLAB R2011b
+* Current development takes place on MATLAB R2019a, but it has been tested on versions as old as MATLAB R2011b
 * CVX Version 2.1
 
 ## Documentation and Further Information
