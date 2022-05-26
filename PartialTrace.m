@@ -30,7 +30,7 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: May 25, 2022
+%   last updated: May 26, 2022
 
 function Xpt = PartialTrace(X,varargin)
 
@@ -73,16 +73,12 @@ end
 % without computing X*X' (which might take a lot of memory in high
 % dimensions).
 if(isPureState)
-    sub_sys_vec = prod_dim*ones(1,prod_dim_sys)/prod_dim_sys;
     perm = [sys,setdiff(1:num_sys,sys)];
     pDimRat = prod_dim/prod_dim_sys;
 
     X = PermuteSystems(X,perm,dim,1); % permute the subsystems so that we just have to do the partial trace on the first (potentially larger) subsystem
-    Xpt = sparse(sub_sys_vec(1),sub_sys_vec(1));
-    for j = 1:prod_dim_sys
-        Xtmp = X((j-1)*pDimRat+1:j*pDimRat);
-        Xpt = Xpt + Xtmp*Xtmp';
-    end
+    Xtmp = reshape(X,[pDimRat,prod_dim_sys]);
+    Xpt = Xtmp*Xtmp';
     
 % If the matrix is sparse and the amount we are tracing over is smaller
 % than the amount remaining, just do the naive thing and manually add up
