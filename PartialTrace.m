@@ -1,4 +1,4 @@
-%%  PARTIALTRACE    Computes the partial trace of a matrix
+%%  PARTIALTRACE    Computes the partial trace of a vector or matrix
 %   This function has one required argument:
 %     X: a vector or a square matrix
 %
