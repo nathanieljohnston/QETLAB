@@ -4,13 +4,32 @@ All notable changes to QETLAB will be documented in this file.
 ## Changes since v0.9 was released on 2016-01-12
 ### Added
 - Concurrence: Computes the concurrence of a 2-qubit state.
+- EntangledSubspace: Constructs a basis of a bipartite r-entangled subspace of any dimension.
 - EntFormation: Computes the entanglement of formation of a 2-qubit state or a pure state.
+- MatsumotoFidelity: Computes the Matsumoto fidelity of two density matrices.
+- RandomPPTState: Generates a random density matrix with positive partial transpose, and optionally low rank.
+- helpers/asum_vector: Creates all vectors with binary entries adding to a given value. Used by AntisymmetricProjection.m.
+- helpers/asymind: Creates all vectors with strictly increasing permutations of an input vector.
+- helpers/dec_to_bin: Converts a decimal number to a binary vector. Replaces de2bi from the Communications toolbox.
+- helpers/glob_ind: Creates a global index from a vector of local indices. Used to be bundled inside of SymmetricProjection.m.
+- helpers/pad_array: Pads an array with zeroes. Replaces padarray from the Image Processing toolbox.
+- helpers/sum_vector: Creates all vectors with non-negative integer entries adding to a given value. Used to be bundled inside of SymmetricProjection.m.
+- helpers/symind: Creates all vectors with non-increasing permutations of an input vector.
+- helpers/symindfind: Finds the row index of a vector in symind.
 
 ### Changed
+- AntisymmetricProjection: Dramatically increased speed when using MODE = 0. Changed and standardized the order of the columns when using PARTIAL = 1 and MODE = 0.
 - DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
+- GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
+- IsBlockPositive: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
 - Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
+- NonlocalGameValue: Now computes classical value of a game quicker, via algorithm of arXiv:2005.13418
+- PartialTrace: Now allows pure state vectors as input, and computes their partial traces (i.e., reduced density matrices) much more quickly.
+- PartialTranspose: Fixed bug when partial transposing non-numerical non-square matrices.
+- SymmetricProjection: Dramatically increased speed when using MODE = 0. Changed and standardized the order of the columns when using PARTIAL = 1 and MODE = 0.
 - Tensor: Now works properly (i.e., returns the scalar 1) when M = 0.
+- UPB: Now supports the GenTiles1 and GenTiles2 UPBs
 
 ## [0.9] - 2016-01-12
 ### Added

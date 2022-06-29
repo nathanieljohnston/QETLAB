@@ -26,11 +26,9 @@
 %
 %   URL: http://www.qetlab.com/AntisymmetricProjection
 
-%   requires: opt_args.m, perm_sign.m, PermutationOperator.m,
-%             PermuteSystems.m, sporth.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 26, 2012
+%   last updated: June 29, 2022
 
 function PA = AntisymmetricProjection(dim,varargin)
 
@@ -71,27 +69,36 @@ function PA = AntisymmetricProjection(dim,varargin)
     % the antisymmetric subspace.
     else
         lim = nchoosek(dim,p);
-        ind = nchoosek(1:dim,p);
-        Id = speye(dim);
-        PA = spalloc(dimp,lim,pfac*lim); % allocate the correct number of non-zero elements to PA for speed/memory reasons
+        alist = asum_vector(p,dim);
 
-        % construct an orthonormal basis for the antisymmetric subspace
+        ct = 1;
+        splen = factorial(dim)/factorial(dim-p);% number of non-zero entries in the antisymmetric isometry
+        Vi = zeros(splen,1);
+        Vj = zeros(splen,1);
+        Vval = zeros(splen,1);
+        allperms = perms(1:p);
         for j = 1:lim
-            v = spalloc(dimp,1,pfac);
-            for k = 1:pfac
-                vt = Id(:,ind(j,plist(k,1)));
-                for m = 2:p
-                    vt = kron(vt,Id(:,ind(j,plist(k,m))));
-                end
-                v = v + perm_sign(plist(k,:))*vt;
-            end
-            PA(:,j) = v;
-        end
+            ind = cell2mat(arrayfun(@(x,y) repmat(y,1,x), alist(j,:),1:dim,'un',0));
+            plist = perms(ind);
 
-        if(partial)
-            PA = PA/sqrt(pfac);
-        else
-            PA = PA*PA'/pfac;
+            % compute entries of the projection, one at a time
+            sp = size(plist,1);
+            sqsp = sqrt(sp);
+            for k = 1:sp
+                Vi(ct) = glob_ind(plist(k,:),dim);
+                Vj(ct) = j;
+                plist(k,:);
+                Vval(ct) = perm_sign(allperms(k,:))/sqsp;
+                ct = ct + 1;
+            end
+        end
+        
+        % Build the sparse output matrix all at once, for memory and speed
+        % reasons
+        PA = sparse(Vi,Vj,Vval,dimp,lim); % columns of this matrix form an ONB for the antisymmetric subspace
+            
+        if(~partial)
+            PA = PA*PA';
         end
     end
 end
