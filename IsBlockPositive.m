@@ -43,7 +43,7 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: September 23, 2014
+%   last updated: May 19, 2022
 
 function [ibp,wit] = IsBlockPositive(X,varargin)
 
@@ -85,10 +85,10 @@ function [ibp,wit] = IsBlockPositive(X,varargin)
     
     [lb,lwit,ub,uwit] = SkOperatorNorm(Y,k,dim,str,op_norm,tol); % compute the norm
 
-    if(ub <= op_norm*(1 + tol)) % block positive
+    if(ub <= op_norm*(1 - tol)) % block positive
         ibp = 1;
         wit = uwit;
-    elseif(lb >= op_norm*(1 - tol)) % not block positive
+    elseif(lb >= op_norm*(1 + tol)) % not block positive
         ibp = 0;
         wit = lwit;
     else % not sure :(

@@ -1,4 +1,4 @@
-%%  FIDELITY    Computes the fidelity of two density matrices
+%%  FIDELITY    Computes the (Uhlmann) fidelity of two density matrices
 %   This function has two required input arguments:
 %     RHO,SIGMA: density matrices
 %
@@ -32,6 +32,7 @@ end
 % or constraints of other CVX optimization problems.
 if(isa(rho,'cvx') || isa(sigma,'cvx'))
     cvx_begin sdp quiet
+        cvx_precision best
         variable X(sz_rho(1),sz_rho(1)) complex;
         maximize trace(X) + trace(X');
         subject to
@@ -45,6 +46,7 @@ if(isa(rho,'cvx') || isa(sigma,'cvx'))
 % since this is much faster.
 else
     [sq_rho,res] = sqrtm(rho); % need "res" parameter to suppress MATLAB singularity warning
-    [sq_fid,res] = sqrtm(sq_rho*sigma*sq_rho);
+    sq_prod = sq_rho*sigma*sq_rho;
+    [sq_fid,res] = sqrtm((sq_prod+sq_prod')/2); % needed to avoid numerical problems
     fid = real(trace(sq_fid)); % finally, compute the fidelity
 end

@@ -28,7 +28,7 @@
 % 	authors: Vincent Russo (vrusso@uwaterloo.ca)
 %            Nathaniel Johnston (nathaniel@njohnston.ca)
 %	package: QETLAB 
-%	last updated: December 15, 2014
+%	last updated: April 28, 2020
 
 function ghz_state = GHZState(dim,q,varargin)
 
@@ -36,10 +36,10 @@ function ghz_state = GHZState(dim,q,varargin)
 [coeff] = opt_args({ ones(1,dim)/sqrt(dim) },varargin{:});
 
 % Do some error checking.
-if dim < 2
-    error('GHZState:InvalidDim','DIM must be at least 2.');
-elseif q < 2
-    error('GHZState:InvalidQ','Q must be at least 2.');
+if dim < 1
+    error('GHZState:InvalidDim','DIM must be at least 1.');
+elseif q < 1
+    error('GHZState:InvalidQ','Q must be at least 1.');
 elseif length(coeff) ~= dim
     error('GHZState:InvalidCoeff','COEFF must be a vector of length equal to DIM.');
 end

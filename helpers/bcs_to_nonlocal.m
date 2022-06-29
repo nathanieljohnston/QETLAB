@@ -66,7 +66,7 @@ function [p,V] = bcs_to_nonlocal(C)
         % on the left with 1's so that each of these have the same length
         % as we loop over a.
         a_cell = cellfun(@str2num,num2cell(dec2bin(a-1)));
-        a_cell = num2cell(1+padarray(a_cell,[0,max_num_vars_in_cons-length(a_cell)],0,'pre'));
+        a_cell = num2cell(1+pad_array(a_cell,max_num_vars_in_cons-length(a_cell), 0));
         for b = 1:2
             for x = 1:num_cons
                 full_a = expand_a(a_cell,var_in_cons(x,:),num_vars);

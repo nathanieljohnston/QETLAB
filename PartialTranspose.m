@@ -66,7 +66,7 @@ Xpt = PermuteSystems(X,perm,dim); % permute the subsystems so that we just have 
 if(isnumeric(Xpt)) % if the input is a numeric matrix, perform the partial transpose operation the fastest way we know how
     Xpt = cell2mat(mat2cell(Xpt, sub_sys_vecR, sub_sys_vecC).'); % partial transpose on first subsystem
 else % if the input is not numeric (such as a variable in a semidefinite program), do a slower method that avoids mat2cell (mat2cell doesn't like non-numeric arrays)
-    Xpt = reshape(permute(reshape(Xpt,[sub_sys_vecR(1),sub_prodR,sub_sys_vecC(1),sub_prodC]),[1,4,3,2]),[prod_dimR,prod_dimC]);
+    Xpt = reshape(permute(reshape(Xpt,[sub_sys_vecR(1),sub_prodR,sub_sys_vecC(1),sub_prodC]),[1,4,3,2]),[sub_sys_vecR(1)*sub_prodC,sub_sys_vecC(1)*sub_prodR]);
 end
 
 % return the subsystems back to their original positions

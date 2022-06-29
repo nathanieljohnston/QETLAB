@@ -15,7 +15,7 @@
 %   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: May 10, 2016
+%   last updated: May 24, 2018
 
 function krn = Tensor(A,varargin)
 
@@ -42,7 +42,7 @@ elseif(nargin == 2 && length(varargin{1}) == 1)
     else
         l2 = floor(log2(varargin{1}));
         krn_cell = cell(1,l2+1);
-        b = de2bi(varargin{1});
+        b = dec_to_bin(varargin{1});
         
         krn = 1;
         krn_cell{1} = A;

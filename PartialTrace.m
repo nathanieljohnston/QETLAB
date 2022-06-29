@@ -1,20 +1,21 @@
-%%  PARTIALTRACE    Computes the partial trace of a matrix
+%%  PARTIALTRACE    Computes the partial trace of a vector or matrix
 %   This function has one required argument:
-%     X: a square matrix
+%     X: a vector or a square matrix
 %
 %   XPT = PartialTrace(X) is the partial trace of the matrix X,
 %   where it is assumed that length(X) is a perfect squares and both
 %   subsystems have equal dimension. The trace is taken over the second
-%   subsystem.
+%   subsystem. If X is a vector then the partial trace of X*X' is instead
+%   computed (i.e., the reduced density matrix of the pure state vector X).
 %
 %   This function has three optional arguments:
 %     SYS (default 2)
 %     DIM (default has all subsystems of equal dimension)
 %     MODE (default -1)
 %
-%   XPT = PartialTrace(X,SYS,DIM,MODE) gives the partial trace of the matrix X,
-%   where the dimensions of the (possibly more than 2) subsystems are given
-%   by the vector DIM and the subsystems to take the trace on are given by
+%   XPT = PartialTrace(X,SYS,DIM,MODE) gives the partial trace of X, where
+%   the dimensions of the (possibly more than 2) subsystems are given by
+%   the vector DIM and the subsystems to take the trace on are given by
 %   the scalar or vector SYS. MODE is a flag that determines which of two
 %   algorithms is used to compute the partial trace. If MODE = -1 then this
 %   script chooses whichever algorithm it thinks will be faster based on
@@ -27,10 +28,9 @@
 %
 %   URL: http://www.qetlab.com/PartialTrace
 
-%   requires: opt_args.m, PermuteSystems.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 22, 2012
+%   last updated: May 26, 2022
 
 function Xpt = PartialTrace(X,varargin)
 
@@ -55,17 +55,35 @@ sp = issparse(X);
 isnum = isnumeric(X);
 prod_dim = prod(dim);
 prod_dim_sys = prod(dim(sys));
+isPureState = 0;
 
+% If X has just one row or one column then it is a pure state vector whose
+% partial trace can be computed more quickly.
+if(min(size(X)) == 1)
+    isPureState = 1;
+    X = X(:);% make sure it is a column vector
+    
 % Determine which of two computation methods to use (i.e., guess which
 % method will be faster).
-if(mode == -1)
+elseif(mode == -1)
     mode = (isnum && sp && prod_dim_sys^2 <= prod_dim);
 end
 
+% If it's a pure state, compute its partial trace a bit more quickly,
+% without computing X*X' (which might take a lot of memory in high
+% dimensions).
+if(isPureState)
+    perm = [sys,setdiff(1:num_sys,sys)];
+    pDimRat = prod_dim/prod_dim_sys;
+
+    X = PermuteSystems(X,perm,dim,1); % permute the subsystems so that we just have to do the partial trace on the first (potentially larger) subsystem
+    Xtmp = reshape(X,[pDimRat,prod_dim_sys]);
+    Xpt = Xtmp*Xtmp';
+    
 % If the matrix is sparse and the amount we are tracing over is smaller
 % than the amount remaining, just do the naive thing and manually add up
 % the blocks.
-if(mode)
+elseif(mode)
     sub_sys_vec = prod_dim*ones(1,prod_dim_sys)/prod_dim_sys;
     perm = [sys,setdiff(1:num_sys,sys)];
 

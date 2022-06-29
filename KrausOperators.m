@@ -33,7 +33,7 @@
 %
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: March 19, 2015
+%   last updated: July 16, 2018
 
 function ko = KrausOperators(Phi,varargin)
 
@@ -84,8 +84,8 @@ else
         ind = length(S);
     end
     S = diag(sqrt(S));
-    U = U*padarray(S,size(U,2)-size(S,1),'post');
-    V = V*padarray(S,size(V,2)-size(S,1),'post');
+    U = U*pad_array(S,size(U,2)-size(S,1),1);
+    V = V*pad_array(S,size(V,2)-size(S,1),1);
 
     ko(:,1) = mat2cell(reshape(U(:,1:ind),db(1),da(1)*ind),db(1),da(1)*ones(ind,1)).';
     ko(:,2) = mat2cell(reshape(V(:,1:ind),db(2),da(2)*ind),db(2),da(2)*ones(ind,1)).';

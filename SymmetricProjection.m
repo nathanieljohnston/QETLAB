@@ -6,7 +6,7 @@
 %   symmetric subspace of two copies of DIM-dimensional space. PS is always
 %   a sparse matrix.
 %
-%   This function has five optional arguments:
+%   This function has three optional arguments:
 %     P (default 2)
 %     PARTIAL (default 0)
 %     MODE (default -1)
@@ -28,7 +28,7 @@
 %   requires: opt_args.m, PermutationOperator.m, PermuteSystems.m, sporth.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: December 15, 2014
+%   last updated: May 9, 2022
 
 function PS = SymmetricProjection(dim,varargin)
 
@@ -66,24 +66,30 @@ function PS = SymmetricProjection(dim,varargin)
     % the symmetric subspace.
     else
         lim = nchoosek(dim+p-1,dim-1);
-        PS = spalloc(dimp,lim,dimp); % allocate dim^p non-zero elements to PS for speed/memory reasons
         slist = sum_vector(p,dim);
-        Id = speye(dim);
 
+        ct = 1;
+        Vi = zeros(dimp,1);
+        Vj = zeros(dimp,1);
+        Vval = zeros(dimp,1);
         for j = 1:lim
             ind = cell2mat(arrayfun(@(x,y) repmat(y,1,x), slist(j,:),1:dim,'un',0));
-            plist = unique_perms(ind);
-            v = spalloc(dimp,1,nchoosek(p,floor(p/2)));
+            plist = unique(perms(ind),'rows');
+
+            % compute entries of the projection, one at a time
             sp = size(plist,1);
+            sqsp = sqrt(sp);
             for k = 1:sp
-                vt = Id(:,plist(k,1));
-                for m = 2:p
-                    vt = kron(vt,Id(:,plist(k,m)));
-                end
-                v = v + vt/sqrt(sp);
+                Vi(ct) = glob_ind(plist(k,:),dim);
+                Vj(ct) = j;
+                Vval(ct) = 1/sqsp;
+                ct = ct + 1;
             end
-            PS(:,j) = v;
         end
+
+        % Build the sparse output matrix all at once, for memory and speed
+        % reasons
+        PS = sparse(Vi,Vj,Vval,dimp,lim); % columns of this matrix form an ONB for the symmetric subspace
             
         if(~partial)
             PS = PS*PS';
@@ -91,18 +97,11 @@ function PS = SymmetricProjection(dim,varargin)
     end
 end
 
-% We need some helper functions to help us through the MODE = 0 algorithm.
-function slist = sum_vector(dim,p)
-    if p <= 1
-        slist = dim;
-    else
-        k = 0;
-        slist = zeros(nchoosek(dim+p-1,p-1),p);
-        for j = 0:dim
-            cs = nchoosek(j+p-2,p-2);
-            t = [sum_vector(j,p-1),(dim-j)*ones(cs,1)];
-            slist(k+1:k+cs,:) = t;
-            k = k + cs;
-        end
+% Creates a global index based on a local index vector.
+function gi = glob_ind(li,dim)
+    gi = 1;
+    num_li = length(li);
+    for k = 1:num_li
+        gi = gi + (dim^(k-1))*(li(k)-1);
     end
 end
