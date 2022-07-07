@@ -72,7 +72,7 @@ function PA = AntisymmetricProjection(dim,varargin)
         alist = asum_vector(p,dim);
 
         ct = 1;
-        splen = factorial(dim)/factorial(dim-p);% number of non-zero entries in the antisymmetric isometry
+        splen = round(factorial(dim)/factorial(dim-p));% number of non-zero entries in the antisymmetric isometry, rounded for numerical reasons
         Vi = zeros(splen,1);
         Vj = zeros(splen,1);
         Vval = zeros(splen,1);
