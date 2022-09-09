@@ -34,6 +34,11 @@
 
 function PX = PermuteSystems(X,perm,varargin)
 
+if all(perm == 1:length(perm)) %do nothing if trivial permutation is requested
+	PX = X;
+	return
+end
+
 dX = size(X);
 is_vec = (min(dX) == 1);
 num_sys = length(perm);
