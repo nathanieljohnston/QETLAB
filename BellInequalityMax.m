@@ -32,11 +32,10 @@
 %
 %   URL: http://www.qetlab.com/BellInequalityMax
 
-%   requires: CVX (http://cvxr.com/cvx/), NPAHierarchy.m, opt_args.m
-%
-%   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   requires: CVX (http://cvxr.com/cvx/)
+%   author: Nathaniel Johnston (nathaniel@njohnston.ca) and Mateus Araújo
 %   package: QETLAB
-%   last updated: March 6, 2015
+%   last updated: September 16, 2022
 
 function bmax = BellInequalityMax(coefficients,desc,notation,varargin)
 

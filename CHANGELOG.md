@@ -10,7 +10,10 @@ All notable changes to QETLAB will be documented in this file.
 - RandomPPTState: Generates a random density matrix with positive partial transpose, and optionally low rank.
 - helpers/asum_vector: Creates all vectors with binary entries adding to a given value. Used by AntisymmetricProjection.m.
 - helpers/asymind: Creates all vectors with strictly increasing permutations of an input vector.
+- helpers/cg2fp: Converts a Bell functional or behaviour in Collins-Gisin notation and converts it to full probability notation. Used in BellInequalityMax.m.
 - helpers/dec_to_bin: Converts a decimal number to a binary vector. Replaces de2bi from the Communications toolbox.
+- helpers/fc2fp: Converts a Bell functional or behaviour in full correlator notation and converts it to full probability notation. Used in BellInequalityMax.m.
+- helpers/fp2fc: Converts a Bell functional or behaviour in full probability notation and converts it to full correlator notation. Used in BellInequalityMax.m.
 - helpers/glob_ind: Creates a global index from a vector of local indices. Used to be bundled inside of SymmetricProjection.m.
 - helpers/pad_array: Pads an array with zeroes. Replaces padarray from the Image Processing toolbox.
 - helpers/sum_vector: Creates all vectors with non-negative integer entries adding to a given value. Used to be bundled inside of SymmetricProjection.m.
@@ -19,6 +22,7 @@ All notable changes to QETLAB will be documented in this file.
 
 ### Changed
 - AntisymmetricProjection: Dramatically increased speed when using MODE = 0. Changed and standardized the order of the columns when using PARTIAL = 1 and MODE = 0.
+- BellInequalityMax: Changed to allow input in full probability, full correlation, or Collins-Gisin notation.
 - DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
 - GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
@@ -27,6 +31,7 @@ All notable changes to QETLAB will be documented in this file.
 - NonlocalGameValue: Now computes classical value of a game quicker, via algorithm of arXiv:2005.13418
 - PartialTrace: Now allows pure state vectors as input, and computes their partial traces (i.e., reduced density matrices) much more quickly.
 - PartialTranspose: Fixed bug when partial transposing non-numerical non-square matrices.
+- PermuteSystems: Modified so that no computation is performed (so this function is slightly faster) if the permutation requested is the identity.
 - SymmetricProjection: Dramatically increased speed when using MODE = 0. Changed and standardized the order of the columns when using PARTIAL = 1 and MODE = 0.
 - Tensor: Now works properly (i.e., returns the scalar 1) when M = 0.
 - UPB: Now supports the GenTiles1 and GenTiles2 UPBs

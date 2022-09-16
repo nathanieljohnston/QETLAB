@@ -8,6 +8,10 @@ function FC = FP2FC(V,varargin)
 
 %by default do the Bell functional, otherwise if behaviour==1 do the behaviour
 
+%   author: Mateus Araújo
+%   package: QETLAB
+%   last updated: September 16, 2022
+
 if nargin == 1
 	behaviour = 0;
 else
