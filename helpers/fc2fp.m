@@ -6,8 +6,11 @@ function V = FC2FP(FC,varargin)
 %      <A1> <A1B1> <A1B2> ...
 %to full probability notation V(a,b,x,y)
 
-
 %by default do the Bell functional, otherwise if behaviour==1 do the behaviour
+
+%   author: Mateus Araújo
+%   package: QETLAB
+%   last updated: September 16, 2022
 
 if nargin == 1
 	behaviour = 0;

@@ -28,9 +28,9 @@
 %   URL: http://www.qetlab.com/PermuteSystems
 
 %   requires: opt_args.m
-%   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   author: Nathaniel Johnston (nathaniel@njohnston.ca) and Mateus Araújo
 %   package: QETLAB
-%   last updated: November 6, 2014
+%   last updated: September 16, 2022
 
 function PX = PermuteSystems(X,perm,varargin)
 
