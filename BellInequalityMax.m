@@ -97,7 +97,7 @@ function bmax = BellInequalityMax(coefficients,desc,notation,varargin)
             elseif (strcmpi(notation,'fp'))
             	M = fp2fc(coefficients);
             elseif (strcmpi(notation,'cg'))
-            	M = fp2fc(cg2fp(coefficients,desc));
+            	M = cg2fc(coefficients);
             end        
         
 	        if (ma < mb) %if Alice has fewer inputs than Bob we swap them
