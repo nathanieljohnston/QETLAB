@@ -33,7 +33,7 @@
 %   package: QETLAB
 %   last updated: January 22, 2015
 
-function is_npa = NPAHierarchy(p,varargin)
+function is_npa = NPAHierarchyCG(cg,desc,varargin)
 
     % set optional argument defaults: K=1
     [k] = opt_args({ 1 },varargin{:});
@@ -68,69 +68,27 @@ function is_npa = NPAHierarchy(p,varargin)
     % Start by computing the number measurement settings for Alice and Bob (MA
     % and MB) and the number of outcomes for each measurement setting (OA and
     % OB).
-    [oa,ob,ma,mb] = size(p);
-    o_vec = [oa;ob];
-    m_vec = [ma;mb];
+    
+    desc = desc(:);
+    o_vec = desc(1:2);
+    m_vec = desc(3:4);
+    aindex = @(a,x) (2 + a + x*(o_vec(1)-1));
+	bindex = @(b,y) (2 + b + y*(o_vec(2)-1));
     tot_dim = 1 + ((o_vec-1)'*m_vec)^k; % upper bound on the dimension of the (compact version of the) matrix GAMMA used in the NPA SDP
     tol = eps^(3/4); % numerical tolerance used
 
-    % Make sure that P really is a probability array and that its marginal
-    % probabilities are consistent with each other (but only if P is not a
-    % CVX variable... if it is a CVX variable we will enforce these
-    % constraints within the SDP below).
-    if(~isa(p,'cvx'))
-        % Require that P is a probability matrix (all entries are
-        % non-negative and its faces sum to 1).
-        if(min(min(min(min(p)))) < -tol^(3/4))
-            is_npa = 0;
-            return;
-        end
-        
-        for i = 1:ma
-            for j = 1:mb
-                if(abs(sum(sum(p(:,:,i,j))) - 1) > tol^(3/4))
-                    is_npa = 0;
-                    return;
-                end
-            end
-        end
-        
-        % Let's check Bob's marginal probabilities.
-        for i = 1:ob
-            for j = 1:mb
-                marg = sum(squeeze(p(:,i,:,j)),1);
-                if(max(abs(marg - marg(1))) > tol^(3/4))
-                    is_npa = 0;
-                    return;
-                end
-            end
-        end
-        
-        % Now check Alice's marginal probabilities.
-        for i = 1:oa
-            for j = 1:ma
-                marg = sum(squeeze(p(i,:,j,:)),1);
-                if(max(abs(marg - marg(1))) > tol^(3/4))
-                    is_npa = 0;
-                    return;
-                end
-            end
-        end
-    end
-    
-    % Check the NPA SDP (if K is large enough).
-    if(k >= 1 || isa(p,'cvx'))
+
+    % Check the NPA SDP
         i_ind = [zeros(1,k);-ones(1,k)];
         j_ind = [zeros(1,k);-ones(1,k)];
 
-        if(k >= 1)
             % Start by generating all of the product of measurements that
             % you need.
             ind_catalog = cell(0);
             for j = 1:tot_dim
                 [res,res_type] = product_of_orthogonal(j_ind,m_vec);
                 res_fnd = find_in_cell(res,ind_catalog);
-                                    
+                         
                 % Make sure that this measurement is (1) new, and (2) valid
                 % given the user input.
                 if(res_fnd == 0 && res_type ~= 0)
@@ -156,18 +114,11 @@ function is_npa = NPAHierarchy(p,varargin)
                 j_ind = update_ind(j_ind,k,m_vec,o_vec-1);
             end
             real_dim = length(ind_catalog);
-        end
-        
+
         cvx_begin quiet
             cvx_precision(tol);
-            % We only enforce the actual NPA constraints if K >= 1... if
-            % K = 0 we are just verifying marginals are consistent (i.e.,
-            % no-signalling).
-            if(k >= 1)
-                variable G(real_dim,real_dim) symmetric
-            end
+            variable G(real_dim,real_dim) symmetric
             subject to
-                if(k >= 1)
                     res_catalog = cell(0);
                     res_loc = cell(0);
                     
@@ -190,7 +141,7 @@ function is_npa = NPAHierarchy(p,varargin)
                             % S_i^dagger*S_j measures on both Alice and Bob's
                             % sytems.
                             elseif(res_type == 2)
-                                G(i,j) == p(res(2,1)+1,res(2,2)+1,res(1,1)+1,res(1,2)-m_vec(1)+1);
+                                G(i,j) == cg(aindex(res(2,1),res(1,1)),bindex(res(2,2),res(1,2)-m_vec(1)));
 
                             % Entry is a sum of probabilities from the P array if
                             % S_i^dagger*S_j measures on just one system.
@@ -198,9 +149,9 @@ function is_npa = NPAHierarchy(p,varargin)
                                 if(isequal(res,[0;-1]))
                                     G(i,j) == 1; % identity measurement
                                 elseif(res(1) >= m_vec(1)) % measure on Bob's system
-                                    G(i,j) == sum(p(:,res(2)+1,1,res(1)-m_vec(1)+1));
+                                    G(i,j) == cg(1,bindex(res(2),res(1)-m_vec(1)));
                                 else % measure on Alice's system
-                                    G(i,j) == sum(p(res(2)+1,:,res(1)+1,1));
+                                    G(i,j) == cg(aindex(res(2),res(1)),1);
                                 end
 
                             % Entry is a product of non-commuting
@@ -229,40 +180,11 @@ function is_npa = NPAHierarchy(p,varargin)
                         end
                     end
                     G == semidefinite(real_dim);
-                end
-                
-                % Now enforce that P is a probability array and that its
-                % marginals are consistent with each other.
-                if(isa(p,'cvx'))
-                    % First, P is an array of probabilities, so it must be
-                    % non-negative and its faces must sum to 1.
-                    p >= 0;
-                    for i = 1:ma
-                        for j = 1:mb
-                            sum(sum(p(:,:,i,j))) == 1;
-                        end
-                    end
-                    
-                    % Bob's marginal probabilities must be consistent.
-                    for i = ob:-1:1
-                        for j = mb:-1:1
-                            marg_a{i,j} = sum(squeeze(p(:,i,:,j)),1);
-                            marg_a{i,j} == marg_a{i,j}(1)*ones(1,ma);
-                        end
-                    end
 
-                    % Alice's marginal probabilities must be consistent.
-                    for i = oa:-1:1
-                        for j = ma:-1:1
-                            marg_b{i,j} = sum(squeeze(p(i,:,j,:)),1);
-                            marg_b{i,j} == marg_b{i,j}(1)*ones(1,mb);
-                        end
-                    end
-                end
         cvx_end
 
         is_npa = 1-min(cvx_optval,1); % CVX-safe way to map (0,Inf) to (1,0)
-        if(~isa(p,'cvx')) % make the output prettier if it's not a CVX input
+        if(~isa(cg,'cvx')) % make the output prettier if it's not a CVX input
             is_npa = round(is_npa);
             
             % Deal with error messages.
@@ -274,9 +196,6 @@ function is_npa = NPAHierarchy(p,varargin)
                 error('NPAHierarchy:NumericalProblems',strcat('Numerical problems encountered (CVX status: ',cvx_status,'). Please try adjusting the tolerance level TOL.'));
             end
         end
-    else
-        is_npa = 1;
-    end
 end
 
 
