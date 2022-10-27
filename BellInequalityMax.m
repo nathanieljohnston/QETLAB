@@ -61,7 +61,7 @@ function bmax = BellInequalityMax(coefficients,desc,notation,varargin)
            	M = fc2cg(coefficients);
         end
 
-        cvx_begin
+        cvx_begin quiet
         	variable p_cg((oa-1)*ma+1,(ob-1)*mb+1);
 
             p_fp = cg2fp(p_cg,desc,1);
@@ -87,7 +87,7 @@ function bmax = BellInequalityMax(coefficients,desc,notation,varargin)
            	M = fc2cg(coefficients);
         end
 
-        cvx_begin
+        cvx_begin quiet
 
             variable p((oa-1)*ma+1,(ob-1)*mb+1);
             

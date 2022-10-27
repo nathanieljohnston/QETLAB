@@ -4,7 +4,7 @@ function V2 = ParallelRepetition(V,rept)
 
 %   requires: update_odometer.m
 %
-%   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   author: Nathaniel Johnston (nathaniel@njohnston.ca) and Mateus Araújo
 %   package: QETLAB
 %   last updated: Sep 16, 2022
 
