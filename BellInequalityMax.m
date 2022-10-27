@@ -48,35 +48,56 @@ function bmax = BellInequalityMax(coefficients,desc,notation,varargin)
     ma = desc(3);
     mb = desc(4);
     
-    % The no-signalling maximum is just implemented by taking the zero-th
-    % level of the NPA (quantum) hierarchy.
+    % The no-signalling maximum is just a LP. We use the Collins-Gisin notation,
+    % so the only constraint left to impose is positivity of the probabilities
     if(strcmpi(mtype,'nosignal'))
-        mtype = 'quantum';
-        k = 0;
-    end
-    
-    % Compute the maximum value of the Bell inequality, depending on which
-    % type of maximum was requested.
-    if(strcmpi(mtype,'quantum'))
-        cvx_begin quiet
-            variable p(oa,ob,ma,mb);
 
-            % Set up the Bell inequality.
+        % Set up the Bell inequality.
+        if (strcmpi(notation,'cg'))
+          	M = coefficients;
+        elseif (strcmpi(notation,'fp'))
+          	M = fp2cg(coefficients);
+        elseif (strcmpi(notation,'fc'))
+           	M = fc2cg(coefficients);
+        end
+
+        cvx_begin
+        	variable p_cg((oa-1)*ma+1,(ob-1)*mb+1);
+
+            p_fp = cg2fp(p_cg,desc,1);
+
+            bmax = M(:)'*p_cg(:);
             
-            if (strcmpi(notation,'fp'))
-            	M = coefficients;
-            elseif (strcmpi(notation,'cg'))
-            	M = cg2fp(coefficients,desc);
-            elseif (strcmpi(notation,'fc'))
-            	M = fc2fp(coefficients);
-            end
+            maximize bmax;
+
+            subject to
+            	p_cg(1,1) == 1;
+            	p_fp >= 0;
+		cvx_end
+        
+    % Compute the quantum maximum value of the Bell inequality
+    elseif(strcmpi(mtype,'quantum'))
+
+        % Set up the Bell inequality.
+        if (strcmpi(notation,'cg'))
+          	M = coefficients;
+        elseif (strcmpi(notation,'fp'))
+          	M = fp2cg(coefficients);
+        elseif (strcmpi(notation,'fc'))
+           	M = fc2cg(coefficients);
+        end
+
+        cvx_begin
+
+            variable p((oa-1)*ma+1,(ob-1)*mb+1);
             
             bmax = M(:)'*p(:);
             
             maximize bmax;
 
             subject to
-                NPAHierarchy(p,k) == 1;
+            	p(1,1) == 1;
+                NPAHierarchy(p,desc,k) == 1;
         cvx_end
         
         % Deal with error messages.
@@ -97,7 +118,7 @@ function bmax = BellInequalityMax(coefficients,desc,notation,varargin)
             elseif (strcmpi(notation,'fp'))
             	M = fp2fc(coefficients);
             elseif (strcmpi(notation,'cg'))
-            	M = fp2fc(cg2fp(coefficients,desc));
+            	M = cg2fc(coefficients);
             end        
         
 	        if (ma < mb) %if Alice has fewer inputs than Bob we swap them
