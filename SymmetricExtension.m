@@ -9,8 +9,8 @@
 %   This function has five optional arguments:
 %     K (default 2)
 %     DIM (default has both subsystems of equal dimension)
-%     PPT (default 0)
-%     BOS (default 0)
+%     PPT (default 1)
+%     BOS (default 1)
 %     TOL (default eps^(1/4))
 %
 %   [EX,WIT] = SymmetricExtension(X,K,DIM,PPT,BOS,TOL) determines whether
@@ -45,7 +45,7 @@ function [ex,wit] = SymmetricExtension(X,varargin)
 lX = length(X);
 
 % set optional argument defaults: k=2, dim=sqrt(length(X)), ppt=1, bos=1, tol=eps^(1/4)
-[k,dim,ppt,bos,tol] = opt_args({ 2, round(sqrt(lX)), 0, 0, eps^(1/4) },varargin{:});
+[k,dim,ppt,bos,tol] = opt_args({ 2, round(sqrt(lX)), 1, 1, eps^(1/4) },varargin{:});
 
 % allow the user to enter a single number for dim
 if(length(dim) == 1)
@@ -101,42 +101,37 @@ elseif(k > 1)
     else
         sdp_prod_dim = dim(1)*dim(2)^k;
     end
-    
     cvx_begin sdp quiet
         cvx_precision(tol);
-        variable rho(sdp_prod_dim,sdp_prod_dim) hermitian
+        if(bos)
+        	V = kron(speye(dim(1)),SymmetricProjection(dim(2),k,1)); %this is an isometry
+        	variable sig(sdp_prod_dim,sdp_prod_dim) hermitian
+        	rho = V*sig*V';
+        else
+        	variable rho(sdp_prod_dim,sdp_prod_dim) hermitian
+        end
         if(nargout > 1) % don't want to compute the dual solution in general (especially not if this is called within CVX)
             dual variable W
         end
         subject to
-            rho >= 0;
-            if(bos) % check for a Bosonic extension (faster *and* more effective)
-                P = kron(speye(dim(1)),SymmetricProjection(dim(2),k,1));
-                if(nargout > 1)
-                    W : PartialTrace(P*rho*P',3:k+1,sdp_dim) == X;
-                else
-                    PartialTrace(P*rho*P',3:k+1,sdp_dim) == X;
-                end
-                if(ppt)
-                    PartialTranspose(P*rho*P',1:ceil(k/2)+1,sdp_dim) >= 0;
-                end
-            else % check for a non-Bosonic extension (slower but perhaps sometimes useful)
-                % It's a bit messy that the code from above is largely
-                % repeated here, but the goal is to not slow down the
-                % Bosonic optimization at all, so we don't want to
-                % introduce a new variable sigma = P*rho*P' in that case.
-                if(nargout > 1)
-                    W : PartialTrace(rho,3:k+1,sdp_dim) == X;
-                else
-                    PartialTrace(rho,3:k+1,sdp_dim) == X;
-                end
-                for j = 3:k+1
-                    PartialTrace(rho,setdiff(2:k+1,j),sdp_dim) == X;
-                end
-                if(ppt)
-                    PartialTranspose(rho,1:ceil(k/2)+1,sdp_dim) >= 0;
+            if(nargout > 1)
+                W : PartialTrace(rho,3:k+1,sdp_dim) == X;
+            else
+                PartialTrace(rho,3:k+1,sdp_dim) == X;
+            end
+            if(ppt)
+            	for j=2:k+1
+                	PartialTranspose(rho,2:j,sdp_dim) >= 0;
                 end
             end
+        	if(bos)
+        		sig >= 0;
+        	else
+        		rho >= 0;
+                for j = 3:k+1% in the permutation invariant case we need to explicitly enforce the symmetry
+                    PartialTrace(rho,setdiff(2:k+1,j),sdp_dim) == X;
+                end
+        	end
     cvx_end
     
     ex = 1-min(cvx_optval,1); % CVX-safe way to map (0,Inf) to (1,0)
@@ -145,17 +140,9 @@ elseif(k > 1)
 
         % Deal with error messages and witnesses.
         if(nargout > 1 && strcmpi(cvx_status,'Solved'))
-            if(bos)
-                wit = P*rho*P';
-            else
-                wit = rho;
-            end
+            wit = rho;
         elseif(strcmpi(cvx_status,'Inaccurate/Solved'))
-            if(bos)
-                wit = P*rho*P';
-            else
-                wit = rho;
-            end
+            wit = rho;
             warning('SymmetricExtension:NumericalProblems','Minor numerical problems encountered by CVX. Consider adjusting the tolerance level TOL and re-running the script.');
         elseif(nargout > 1 && strcmpi(cvx_status,'Infeasible'))
             wit = -W;
