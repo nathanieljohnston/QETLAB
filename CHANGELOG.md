@@ -39,6 +39,7 @@ All notable changes to QETLAB will be documented in this file.
 - PartialTrace: Now allows pure state vectors as input, and computes their partial traces (i.e., reduced density matrices) much more quickly.
 - PartialTranspose: Fixed bug when partial transposing non-numerical non-square matrices.
 - PermuteSystems: Modified so that no computation is performed (so this function is slightly faster) if the permutation requested is the identity.
+- SymmetricExtension: If PPT = 1 is specified, now all possible PPT constraints are used instead of just one PPT constraint like in the past.
 - SymmetricProjection: Dramatically increased speed when using MODE = 0. Changed and standardized the order of the columns when using PARTIAL = 1 and MODE = 0.
 - Tensor: Now works properly (i.e., returns the scalar 1) when M = 0.
 - UPB: Now supports the GenTiles1 and GenTiles2 UPBs
