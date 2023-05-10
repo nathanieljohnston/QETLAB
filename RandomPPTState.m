@@ -1,6 +1,6 @@
 %%  RANDOMPPTSTATE    Generates a random density matrix with positive partial transpose, and optionally low rank
 %   This function has one required argument:
-%     DIM: a scalar or 2-entry vector specifying the local dimenions of the
+%     DIM: a scalar or 2-entry vector specifying the local dimensions of the
 %          desired PPT density matrix
 %
 %   RHO = RandomPPTState(DIM) generates a density matrix with local
@@ -90,7 +90,7 @@ function [sigma,kminev] = PPTIterate(rho,dim,k)
     [vrho,drho] = eig(rho,'vector');
     [vrhoPT,drhoPT] = eig(PartialTranspose(rho,2,dim),'vector');
     
-    % Get rid of potentialy tiny imaginary pieces of eigenvalues, resulting
+    % Get rid of potentially tiny imaginary pieces of eigenvalues, resulting
     % from numerical precision issues.
     drho = real(drho);
     drhoPT = real(drhoPT);

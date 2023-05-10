@@ -67,7 +67,7 @@ end
 randX0 = 1;
 if(max(size(X0)) > 1)
     if(length(X0) ~= dim(1))
-        warning('InducedSchattenNorm:DimensionMismatch','The initial matrix X0 must be of size DA-by-DA, where PHI is a map acting on DA-by-DA matrices. Using a randomly-generated intial matrix instead.');
+        warning('InducedSchattenNorm:DimensionMismatch','The initial matrix X0 must be of size DA-by-DA, where PHI is a map acting on DA-by-DA matrices. Using a randomly-generated initial matrix instead.');
     else
         randX0 = 0;
     end
