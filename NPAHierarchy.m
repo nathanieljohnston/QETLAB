@@ -139,7 +139,7 @@ function is_npa = NPAHierarchyCG(cg,desc,varargin)
                                 
                             % Entry is a single probability from the P array if
                             % S_i^dagger*S_j measures on both Alice and Bob's
-                            % sytems.
+                            % systems.
                             elseif(res_type == 2)
                                 G(i,j) == cg(aindex(res(2,1),res(1,1)),bindex(res(2,2),res(1,2)-m_vec(1)));
 

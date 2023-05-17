@@ -78,7 +78,7 @@ if(max(size(v0)) > 1)
     [s0,a0,b0] = SchmidtDecomposition(v0,dim);
     sr = length(s0);
     if(sr > k)
-        warning('sk_iterate:SchmidtRankMismatch','The Schmidt rank of the initial vector v0 is %d, which is larger than k=%d. Using a randomly-generated intial vector instead.',sr,k);
+        warning('sk_iterate:SchmidtRankMismatch','The Schmidt rank of the initial vector v0 is %d, which is larger than k=%d. Using a randomly-generated initial vector instead.',sr,k);
     else
         randv0 = 0;
         vp(:,1) = padarray(reshape(a0*diag(s0),da*sr,1),da*(k-sr),'post');

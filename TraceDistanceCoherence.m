@@ -69,7 +69,7 @@ end
 % state using a method that is much faster than the naive SDP.
 function [val,D] = TraceCoherencePure(x)
     x = abs(x(:));
-    [xs,ind] = sort(x,'descend'); % sort the entries of x in decending order
+    [xs,ind] = sort(x,'descend'); % sort the entries of x in descending order
     
     n = length(xs);
     

@@ -64,7 +64,7 @@ randv0 = 1;
 if(max(size(v0)) > 1)
     v0 = v0(:); % make sure it's a column vector
     if(length(v0) ~= m)
-        warning('InducedMatrixNorm:DimensionMismatch','The initial vector v0 must have length equal to the number of columns of X. Using a randomly-generated intial vector instead.');
+        warning('InducedMatrixNorm:DimensionMismatch','The initial vector v0 must have length equal to the number of columns of X. Using a randomly-generated initial vector instead.');
     else
         randv0 = 0;
     end
