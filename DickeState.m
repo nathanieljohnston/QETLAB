@@ -29,39 +29,54 @@
 %
 %	URL: http://www.qetlab.com/DickeState
 
-%	requires: opt_args.m, TensorSum.m, unique_perms.m
+%	requires: opt_args.m, TensorSum.m
 % 	authors: Vincent Russo (vrusso@uwaterloo.ca)
 %            Nathaniel Johnston (nathaniel@njohnston.ca)
 %	package: QETLAB 
-%	last updated: December 15, 2014
+%	last updated: July 31, 2023
 
 function dicke_state = DickeState(N,varargin)
 
-% set optional argument defaults: k = 1, nrml = 1
-[k,nrml] = opt_args({ 1, 1 },varargin{:});
+    % set optional argument defaults: k = 1, nrml = 1
+    [k,nrml] = opt_args({ 1, 1 },varargin{:});
 
-% Make sure that k is valid.
-if k < 0 || k > N
-    error('DickeState:InvalidK','K must be an integer between 0 and N, inclusive.');
+    % Make sure that k is valid.
+    if k < 0 || k > N
+        error('DickeState:InvalidK','K must be an integer between 0 and N, inclusive.');
+    end
+
+    num_terms = nchoosek(N,k);
+
+    id = speye(2); % generate the appropriate qubit |0> and |1> states
+
+    % Each row of the following matrix corresponds to one of the terms in the
+    % sum that defined the Dicke state.
+    perm_matrix = binary_vecs(N,k);
+
+    % Generate the Dicke state itself from the (0,1)-labelled terms in the
+    % previous matrix.
+    for i = N:-1:1
+        dicke_terms{i} = id(:,perm_matrix(:,i)+1);
+    end
+    dicke_state = TensorSum(dicke_terms{:});
+
+    % Normalize the state, if requested.
+    if(nrml == 1)
+        dicke_state = dicke_state / sqrt(num_terms);
+    end
 end
 
-num_terms = nchoosek(N,k);
-
-id = speye(2); % generate the appropriate qubit |0> and |1> states
-init_state = [ones(1,k),zeros(1,N-k)];
-
-% Each row of the following matrix corresponds to one of the terms in the
-% sum that defined the Dicke state.
-perm_matrix = unique_perms(init_state);
-
-% Generate the Dicke state itself from the (0,1)-labelled terms in the
-% previous matrix.
-for i = N:-1:1
-    dicke_terms{i} = id(:,perm_matrix(:,i)+1);
-end
-dicke_state = TensorSum(dicke_terms{:});
-
-% Normalize the state, if requested.
-if(nrml == 1)
-    dicke_state = dicke_state / sqrt(num_terms);
+function t = binary_vecs(n,k)
+    if(k < 0 || k > n)
+        t = [];
+    elseif(n == 1)
+        t = k;
+    else
+        t0 = binary_vecs(n-1,k);
+        t1 = binary_vecs(n-1,k-1);
+        s0 = size(t0,1);
+        s1 = size(t1,1);
+        
+        t = [zeros(s0,1),t0;ones(s1,1),t1];
+    end
 end

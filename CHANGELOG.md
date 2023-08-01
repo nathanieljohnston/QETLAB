@@ -31,6 +31,7 @@ All notable changes to QETLAB will be documented in this file.
 - AntisymmetricProjection: Dramatically increased speed when using MODE = 0. Changed and standardized the order of the columns when using PARTIAL = 1 and MODE = 0.
 - BellInequalityMax: Changed to allow input in full probability, full correlation, or Collins-Gisin notation. See new documentation page for details.
 - DiamondNorm: Changed the SDP used in the calculation. This function is now more numerically robust, at the expense of being slightly slower.
+- DickeState: Changed the code so that it no longer depends on helpers/unique_perms.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
 - GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
 - IsBlockPositive: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
@@ -46,6 +47,7 @@ All notable changes to QETLAB will be documented in this file.
 
 ### Removed
 - NonlocalGameValue: Made redundant by newly-added ParallelRepetition function.
+- helpers/unique_perms: Changed to DickeState and SymmetricProjection made this function no longer necessary.
 
 ## [0.9] - 2016-01-12
 ### Added
