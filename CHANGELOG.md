@@ -8,6 +8,7 @@ All notable changes to QETLAB will be documented in this file.
 - EntFormation: Computes the entanglement of formation of a 2-qubit state or a pure state.
 - MatsumotoFidelity: Computes the Matsumoto fidelity of two density matrices.
 - ParallelRepetition: Produces the coefficients of a parallel repetition of a nonlocal game, in full probability notation. Replaces the old NonlocalGameValue.m.
+- PolynomialAsMatrix: Creates a compact fully symmetric matrix representation of a polynomial.
 - RandomPPTState: Generates a random density matrix with positive partial transpose, and optionally low rank.
 - helpers/asum_vector: Creates all vectors with binary entries adding to a given value. Used by AntisymmetricProjection.m.
 - helpers/asymind: Creates all vectors with strictly increasing permutations of an input vector.

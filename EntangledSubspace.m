@@ -1,4 +1,4 @@
-%%  ENTANGLEDSUBSPACE    Produces an r-entangled subspace
+%%  ENTANGLEDSUBSPACE    Produces a basis of an r-entangled subspace
 %   This function has two required arguments:
 %     DIM (positive integer indicating the subspace dimension)
 %     LOCALDIM (a positive integer or 1-by-2 vector indicating the local dimension(s))
@@ -11,7 +11,7 @@
 %   This function has one optional argument:
 %     R (default 1)
 %
-%   E = EntangledSubspace(DIM,LOCALDIM,r) is as above, but the subspace is
+%   E = EntangledSubspace(DIM,LOCALDIM,R) is as above, but the subspace is
 %   R-entangled instead of just entangled (i.e., every member of the
 %   subspace has Schmidt rank R+1 or larger).
 %
