@@ -1,5 +1,5 @@
 %%  POLYNOMIALASMATRIX    Creates a compact fully symmetric matrix representation of a polynomial
-%   This function has four required arguments:
+%   This function has three required arguments:
 %     P: the polynomial, represented as a vector of coefficients of its
 %        monomials in lexicographic order
 %     N: number of variables in the polynomial
