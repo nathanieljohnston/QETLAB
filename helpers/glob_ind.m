@@ -4,9 +4,9 @@
 %     DIM: the dimension of the local spaces (all of the same dimension, so
 %          this is a scalar)
 %
-%   GI = glob_ind(LI,DIM) the global coordinate corresponding to the local
-%   coordinates in LI. That is, GI is the position of the "1" in the vector
-%   |LI(1)> \otimes |LI(2)> \otimes ...
+%   GI = glob_ind(LI,DIM) is the global coordinate corresponding to the
+%   local coordinates in LI. That is, GI is the position of the "1" in the
+%   vector |LI(1)> \otimes |LI(2)> \otimes ...
 %
 %   URL: http://www.qetlab.com/glob_ind
 

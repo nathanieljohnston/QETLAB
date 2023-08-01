@@ -17,6 +17,7 @@ All notable changes to QETLAB will be documented in this file.
 - helpers/dec_to_bin: Converts a decimal number to a binary vector. Replaces de2bi from the Communications toolbox.
 - helpers/cg2fc: Converts a Bell functional or behaviour in Collins-Gisin notation notation and converts it to full correlator notation. Used in BellInequalityMax.m.
 - helpers/cg2fp: Converts a Bell functional or behaviour in Collins-Gisin notation notation and converts it to full probability notation. Used in BellInequalityMax.m.
+- helpers/exp2ind: Looks up a monomial's lexicographical index based on a list of exponents.
 - helpers/fc2fp: Converts a Bell functional or behaviour in full correlator notation and converts it to full probability notation. Used in BellInequalityMax.m.
 - helpers/fc2cg: Converts a Bell functional or behaviour in full correlator notation and converts it to Collins-Gisin notation. Used in BellInequalityMax.m.
 - helpers/ffl: Produces the coefficients of the Fortnow-Feige-Lovász nonlocal game. Can be used as a test case for BellInequalityMax.

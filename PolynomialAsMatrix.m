@@ -5,15 +5,19 @@
 %     N: number of variables in the polynomial
 %     D: half the degree of the polynomial
 %
-%   GAMMA = Purity(RHO) is the purity of the quantum state RHO (i.e., GAMMA
-%   is the quantity trace(RHO^2)).
+%   M = PolynomialAsMatrix(P,N,D) is a fully symmetric matrix
+%       representation of the N-variable degree-D polynomial P
 %
 %   This function has one optional argument:
 %     K (default 0): A non-negative integer that indicates the level of the
 %                    SOS or SOS-type hierarchy. More specifically, this
 %                    input argument causes the output matrix to represent
-%                    the polynomial (S(x))^K * P(x) instead of p(x) itself,
+%                    the polynomial (S(x))^K * P(x) instead of P(x) itself,
 %                    where S(x) = x1^2 + x2^2 + ... + xN^2.
+%
+%   M = PolynomialAsMatrix(P,N,D,K) is a fully symmetric matrix
+%       representation of the N-variable degree-D polynomial
+%       (x1^2 + x2^2 + ... + xN^2)^K * P(x1,x2,...,xN)
 %
 %   URL: http://www.qetlab.com/PolynomialAsMatrix
 
