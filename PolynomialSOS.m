@@ -24,12 +24,14 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: August 1, 2023
+%   last updated: August 3, 2023
 
 function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
     % set optional argument defaults: OPTTYPE='max'
     [opttype] = opt_args({ 'max' },varargin{:});
+    do_max = strcmpi(opttype,'max');% true means maximize, false means minimize
 
+    ob_start = tic;
     M = PolynomialAsMatrix(p,n,d,k);
     s = length(M);
 
@@ -37,7 +39,7 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
     cvx_begin sdp quiet
         cvx_precision best;
         variable rho(s,s) hermitian
-        if(strcmpi(opttype,'max'))
+        if(do_max)
             maximize real(trace(rho*M))
         else
             minimize real(trace(rho*M))
@@ -48,17 +50,32 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
             PartialTranspose(P*rho*P',1,n*ones(1,d+k)) == P*rho*P';
     cvx_end
     ob = real(cvx_optval);
+    ob_end = toc(ob_start);% time spent performing outer bound calculation
 
     % If requested, compute inner bounds via error bounds.
     if(nargout > 1)
+        ib_start = tic;
+        ib_end = 0;
         if(k > 0)% error estimate is based on the k = 0 matrix
             M = PolynomialAsMatrix(p,n,d);
         end
 
-        if(strcmpi(opttype,'max'))
+        if(do_max)
             ib = ob - 4*d*(n-1)*norm(full(M))/(d+k+1);
         else
             ib = ob + 4*d*(n-1)*norm(full(M))/(d+k+1);
+        end
+
+        si = symind(2*d,1:n);
+        ob_end = ob_end / 4;
+        while(ib_end < ob_end)% keep computing randomized inner bounds until we have spent at least 25% as much time on this as we did on outer bounds
+            new_ib = poly_rand_input(p,n,si);
+            if(do_max)
+                ib = max(ib,new_ib);
+            else
+                ib = min(ib,new_ib);
+            end
+            ib_end = toc(ib_start);
         end
     end
 end
