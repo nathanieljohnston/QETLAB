@@ -28,6 +28,7 @@ All notable changes to QETLAB will be documented in this file.
 - helpers/fp2cg: Converts a Bell functional or behaviour in full probability notation and converts it to Collins-Gisin notation. Used in BellInequalityMax.m.
 - helpers/glob_ind: Creates a global index from a vector of local indices. Used to be bundled inside of SymmetricProjection.m.
 - helpers/pad_array: Pads an array with zeroes. Replaces padarray from the Image Processing toolbox.
+- helpers/poly_rand_input: Evaluates a homogeneous polynomial on a random input from the unit sphere.
 - helpers/sum_vector: Creates all vectors with non-negative integer entries adding to a given value. Used to be bundled inside of SymmetricProjection.m.
 - helpers/symind: Creates all vectors with non-increasing permutations of an input vector.
 - helpers/symindfind: Finds the row index of a vector in symind.
