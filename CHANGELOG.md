@@ -3,6 +3,7 @@ All notable changes to QETLAB will be documented in this file.
 
 ## Changes since v0.9 was released on 2016-01-12
 ### Added
+- CliqueNumber: Bounds the clique number (i.e., maximum size of a clique) of a graph.
 - Concurrence: Computes the concurrence of a 2-qubit state.
 - CopositivePolynomial: Creates a homogenous polynomial whose non-negativity is equivalent to copositivity of a given matrix.
 - EntangledSubspace: Constructs a basis of a bipartite r-entangled subspace of any dimension.
@@ -12,6 +13,7 @@ All notable changes to QETLAB will be documented in this file.
 - PolynomialAsMatrix: Creates a compact fully symmetric matrix representation of a polynomial.
 - PolynomialOptimize: Bounds the optimal value of a homogeneous polynomial on the unit sphere.
 - PolynomialSOS: Bounds the optimal value of a homogeneous polynomial on the unit sphere via the Sum-Of-Squares hierarchy.
+- RandomGraph: Generates a random graph.
 - RandomPPTState: Generates a random density matrix with positive partial transpose, and optionally low rank.
 - helpers/asum_vector: Creates all vectors with binary entries adding to a given value. Used by AntisymmetricProjection.m.
 - helpers/asymind: Creates all vectors with strictly increasing permutations of an input vector.
