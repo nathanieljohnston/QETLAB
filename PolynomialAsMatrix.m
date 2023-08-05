@@ -45,19 +45,29 @@ function M = PolynomialAsMatrix(p,n,d,varargin)
     if(isa(p,'cvx'))
         cvx_begin sdp quiet
         expression M(lk,lk);
+        expression pArr(ld,ld);
     else
         M = sparse(lk,lk);
+        pArr = sparse(ld,ld);
     end
+
+    % Pre-load p values into a matrix, to speed up the later nested loops
+    for j = 1:ld
+        for kk = 1:ld
+            pArr(j,kk) = p(symindfind(sort([SId(j,:),SId(kk,:)]),n));
+        end
+    end
+
+    % Now actually compute the compact polynomial matrix
     for i = 1:lk
         for j = 1:ld
             rh = rki - rd(j,:);
             if(all(rh >= 0) && all(rh <= k-d))
                 for kk = 1:ld
-                    pVal = p(symindfind(sort([SId(j,:),SId(kk,:)]),n));
-                    if(isa(p,'cvx') || pVal ~= 0)% Only do these computations if the relevant coefficient of the polynomial is non-zero or this is being used inside of another CVX optimization problem; otherwise it is a waste of time.
+                    if(isa(p,'cvx') || pArr(j,kk) ~= 0)% Only do these computations if the relevant coefficient of the polynomial is non-zero or this is being used inside of another CVX optimization problem; otherwise it is a waste of time.
                         rkl = rh + rd(kk,:);
                         l = symindfind(spreadOcc(rkl),n);
-                        M(i,l) = M(i,l) + p(symindfind(sort([SId(j,:),SId(kk,:)]),n)) * exp(lnM(rh,k-d,logFac) - lnM(rd(j,:)+rd(kk,:),2*d,logFac) - logFac(k+1) + lnG(rki,rh,d,logFac) + lnG(rkl,rh,d,logFac));
+                        M(i,l) = M(i,l) + pArr(j,kk) * exp(lnM(rh,k-d,logFac) - lnM(rd(j,:)+rd(kk,:),2*d,logFac) - logFac(k+1) + lnG(rki,rh,d,logFac) + lnG(rkl,rh,d,logFac));
                     end
                 end
             end
