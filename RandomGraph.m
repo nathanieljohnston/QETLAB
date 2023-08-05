@@ -1,4 +1,4 @@
-%%  RANDOMGRAPH    Generates a random graph
+%%  RANDOMGRAPH    Generates the adjacency matrix of a random graph
 %   This function has one required argument:
 %     N: the number of vertices in the graph
 %
