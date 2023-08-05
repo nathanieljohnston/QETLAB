@@ -28,7 +28,7 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: August 4, 2023
+%   last updated: August 5, 2023
 
 function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
 
@@ -36,28 +36,44 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
     [opttype,target] = opt_args({ 'max', 'none' },varargin{:});
     do_max = strcmpi(opttype,'max');% true means maximize, false means minimize
     has_target = isnumeric(target);% whether or not a target value was specified
+    if(nargout > 1)
+        ob_start = tic;
+    end
 
-    ob_start = tic;
     M = PolynomialAsMatrix(p,n,d,k);
-    s = length(M);
-
     P = SymmetricProjection(n,d+k,1,0);
-    cvx_begin sdp quiet
-        cvx_precision best;
-        variable rho(s,s) hermitian
-        if(do_max)
-            maximize real(trace(rho*M))
-        else
-            minimize real(trace(rho*M))
-        end
-        subject to
-            rho >= 0;
-            trace(rho) == 1;
-            PartialTranspose(P*rho*P',1,n*ones(1,d+k)) == P*rho*P';
-    cvx_end
-    ob = real(cvx_optval);
-    ob_end = toc(ob_start);% time spent performing outer bound calculation
 
+    if(isa(p,'cvx'))% if being used inside another CVX optimization problem, use the dual program which is slower but actually allows M to be a variable
+        s = size(P,1);
+        cvx_begin sdp quiet
+            cvx_precision best;
+            variable Y(s,s) hermitian
+            if(do_max)
+                minimize lambda_max(M - P'*Y*P + P'*PartialTranspose(Y,1,n*ones(1,d+k))*P)
+            else
+                maximize lambda_min(M - P'*Y*P + P'*PartialTranspose(Y,1,n*ones(1,d+k))*P)
+            end
+        cvx_end
+        ob = real(cvx_optval);
+    else% if not being used inside another CVX optimization problem, use the primal program which is faster and less memory-intensive
+        s = length(M);
+        cvx_begin sdp quiet
+            cvx_precision best;
+            variable rho(s,s) hermitian
+            if(do_max)
+                maximize real(trace(rho*M))
+            else
+                minimize real(trace(rho*M))
+            end
+            subject to
+                rho >= 0;
+                trace(rho) == 1;
+                bigRho = P*rho*P';% bigRho is an expression, not a variable
+                PartialTranspose(bigRho,1,n*ones(1,d+k)) == bigRho;
+        cvx_end
+        ob = real(cvx_optval);
+    end
+    
     % If requested, compute inner bounds via error bounds. But only do this
     % if there was not a target set that we have already crossed over
     % (i.e., we are maximizing and found an upper bound below the target or
@@ -73,6 +89,8 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
                 ib = Inf;
             end
         else
+            ob_end = toc(ob_start);% time spent performing outer bound calculation
+            
             ib_start = tic;
             ib_end = 0;
             if(k > 0)% error estimate is based on the k = 0 matrix

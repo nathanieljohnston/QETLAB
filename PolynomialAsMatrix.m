@@ -80,9 +80,6 @@ function M = PolynomialAsMatrix(p,n,d,varargin)
         rki = nextCVec(rki);
     end
     M = M + M.';
-    if(isa(p,'cvx'))
-        cvx_end
-    end
 end
 
 % Computes the "r" quantity: vectors describing how often entry j occurs in
