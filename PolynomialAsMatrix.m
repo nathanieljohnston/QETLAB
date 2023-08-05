@@ -23,7 +23,7 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: July 31, 2023
+%   last updated: August 5, 2023
 
 function M = PolynomialAsMatrix(p,n,d,varargin)
 
@@ -42,14 +42,19 @@ function M = PolynomialAsMatrix(p,n,d,varargin)
     % pre-compute logs of factorials
     logFac = [0,cumsum(log(1:max(2*d,k)))];% This trick lets us compute these logs of factorials a bit faster than computing each one individually; we re-use a lot of values.
 
-    M = sparse(lk,lk);
+    if(isa(p,'cvx'))
+        cvx_begin sdp quiet
+        expression M(lk,lk);
+    else
+        M = sparse(lk,lk);
+    end
     for i = 1:lk
         for j = 1:ld
             rh = rki - rd(j,:);
             if(all(rh >= 0) && all(rh <= k-d))
                 for kk = 1:ld
                     pVal = p(symindfind(sort([SId(j,:),SId(kk,:)]),n));
-                    if(pVal ~= 0)% Only do these computations if the relevant coefficient of the polynomial is non-zero; otherwise it is a waste of time.
+                    if(isa(p,'cvx') || pVal ~= 0)% Only do these computations if the relevant coefficient of the polynomial is non-zero or this is being used inside of another CVX optimization problem; otherwise it is a waste of time.
                         rkl = rh + rd(kk,:);
                         l = symindfind(spreadOcc(rkl),n);
                         M(i,l) = M(i,l) + p(symindfind(sort([SId(j,:),SId(kk,:)]),n)) * exp(lnM(rh,k-d,logFac) - lnM(rd(j,:)+rd(kk,:),2*d,logFac) - logFac(k+1) + lnG(rki,rh,d,logFac) + lnG(rkl,rh,d,logFac));
@@ -58,6 +63,9 @@ function M = PolynomialAsMatrix(p,n,d,varargin)
             end
         end
         rki = nextCVec(rki);
+    end
+    if(isa(p,'cvx'))
+        cvx_end
     end
 end
 
