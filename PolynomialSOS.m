@@ -39,6 +39,10 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
     if(nargout > 1)
         ob_start = tic;
     end
+    if(isa(p,'cvx') && ~do_max)
+        ob = -PolynomialSOS(-p,n,d,k,'max',target);
+        return
+    end
 
     M = PolynomialAsMatrix(p,n,d,k);
     P = SymmetricProjection(n,d+k,1,0);
@@ -48,11 +52,7 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
         cvx_begin sdp quiet
             cvx_precision best;
             variable Y(s,s) hermitian
-            if(do_max)
-                minimize lambda_max(M - P'*Y*P + P'*PartialTranspose(Y,1,n*ones(1,d+k))*P)
-            else
-                maximize lambda_min(M - P'*Y*P + P'*PartialTranspose(Y,1,n*ones(1,d+k))*P)
-            end
+            minimize lambda_max(M + P'*(PartialTranspose(Y,1,n*ones(1,d+k)) - Y)*P)
         cvx_end
         ob = real(cvx_optval);
     else% if not being used inside another CVX optimization problem, use the primal program which is faster and less memory-intensive
