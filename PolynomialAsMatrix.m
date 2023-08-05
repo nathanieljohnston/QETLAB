@@ -51,7 +51,8 @@ function M = PolynomialAsMatrix(p,n,d,varargin)
         pArr = sparse(ld,ld);
     end
 
-    % Pre-load p values into a matrix, to speed up the later nested loops
+    % Pre-load p values into an easily-lookupable matrix, to speed up the
+    % later nested loops
     for j = 1:ld
         for kk = 1:ld
             pArr(j,kk) = p(symindfind(sort([SId(j,:),SId(kk,:)]),n));
@@ -67,13 +68,18 @@ function M = PolynomialAsMatrix(p,n,d,varargin)
                     if(isa(p,'cvx') || pArr(j,kk) ~= 0)% Only do these computations if the relevant coefficient of the polynomial is non-zero or this is being used inside of another CVX optimization problem; otherwise it is a waste of time.
                         rkl = rh + rd(kk,:);
                         l = symindfind(spreadOcc(rkl),n);
-                        M(i,l) = M(i,l) + pArr(j,kk) * exp(lnM(rh,k-d,logFac) - lnM(rd(j,:)+rd(kk,:),2*d,logFac) - logFac(k+1) + lnG(rki,rh,d,logFac) + lnG(rkl,rh,d,logFac));
+                        if(l > i)% Only compute entries in the upper-right half of the matrix, since sparse indexing like this is slow. The matrix is symmetric, so we can just compute M = M + M.' later.
+                            M(i,l) = M(i,l) + pArr(j,kk) * exp(lnM(rh,k-d,logFac) - lnM(rd(j,:)+rd(kk,:),2*d,logFac) - logFac(k+1) + lnG(rki,rh,d,logFac) + lnG(rkl,rh,d,logFac));
+                        elseif(l == i)
+                            M(i,l) = M(i,l) + pArr(j,kk) * exp(lnM(rh,k-d,logFac) - lnM(rd(j,:)+rd(kk,:),2*d,logFac) - logFac(k+1) + lnG(rki,rh,d,logFac) + lnG(rkl,rh,d,logFac)) / 2;
+                        end
                     end
                 end
             end
         end
         rki = nextCVec(rki);
     end
+    M = M + M.';
     if(isa(p,'cvx'))
         cvx_end
     end
