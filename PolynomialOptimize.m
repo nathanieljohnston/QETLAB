@@ -28,7 +28,7 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: August 4, 2023
+%   last updated: August 5, 2023
 
 function [ob,ib] = PolynomialOptimize(p,n,d,k,varargin)
 
@@ -36,14 +36,25 @@ function [ob,ib] = PolynomialOptimize(p,n,d,k,varargin)
     [opttype,target] = opt_args({ 'max', 'none' },varargin{:});
     do_max = strcmpi(opttype,'max');% true means maximize, false means minimize
     has_target = isnumeric(target);% whether or not a target value was specified
+    if(nargout > 1)
+        ob_start = tic;
+    end
 
-    ob_start = tic;
+    % Inside of CVX, just do the maximization version of this optimization.
+    % If a minimization was requested, convert it and re-call the function.
+    if(isa(p,'cvx') && ~do_max)
+        ob = -PolynomialOptimize(-p,n,d,k,'max',target);
+        return
+    end
+
     M = PolynomialAsMatrix(p,n,d,k);
     s = length(M);
     nev = min(max(round(sqrt(s)),100),s);% how many eigenvalues of M to compute; if you encounter numerical problems when using this function, try increasing this number
-
+    
     if(do_max)
-        if(nev >= s)% if using all of the eigenvalues, just do a full eigenvalue calculation
+        if(isa(p,'cvx'))
+            ob = lambda_max(M);% slower CVX-safe way of getting maximum eigenvalue
+        elseif(nev >= s)% if using all of the eigenvalues, just do a full eigenvalue calculation
             ob = max(real(eig(full(M))));
         else% if not, do a sparse eigenvalue calculation
             ob = max(real(eigs(M,nev,'largestreal')));
@@ -55,7 +66,6 @@ function [ob,ib] = PolynomialOptimize(p,n,d,k,varargin)
             ob = min(real(eigs(M,nev,'smallestreal')));
         end
     end
-    ob_end = toc(ob_start);% time spent performing outer bound calculation
 
     % If requested, compute inner bounds via error bounds. But only do this
     % if there was not a target set that we have already crossed over
@@ -72,6 +82,8 @@ function [ob,ib] = PolynomialOptimize(p,n,d,k,varargin)
                 ib = Inf;
             end
         else
+            ob_end = toc(ob_start);% time spent performing outer bound calculation
+
             ib_start = tic;
             ib_end = 0;
             if(k > 0)% error estimate is based on the k = 0 matrix

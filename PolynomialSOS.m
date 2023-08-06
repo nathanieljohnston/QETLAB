@@ -39,6 +39,9 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
     if(nargout > 1)
         ob_start = tic;
     end
+
+    % Inside of CVX, just do the maximization version of this optimization.
+    % If a minimization was requested, convert it and re-call the function.
     if(isa(p,'cvx') && ~do_max)
         ob = -PolynomialSOS(-p,n,d,k,'max',target);
         return
