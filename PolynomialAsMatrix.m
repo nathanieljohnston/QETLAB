@@ -23,7 +23,7 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: August 5, 2023
+%   last updated: August 9, 2023
 
 function M = PolynomialAsMatrix(p,n,d,varargin)
 
@@ -42,16 +42,18 @@ function M = PolynomialAsMatrix(p,n,d,varargin)
     % pre-compute logs of factorials
     logFac = [0,cumsum(log(1:max(2*d,k)))];% This trick lets us compute these logs of factorials a bit faster than computing each one individually; we re-use a lot of values.
 
+    % pre-allocate helper arrays as either CVX expressions are all-0
+    % numeric matrices
     if(isa(p,'cvx'))
         cvx_begin sdp quiet
         expression M(lk,lk);
         expression pArr(ld,ld);
     else
         M = sparse(lk,lk);
-        pArr = sparse(ld,ld);
+        pArr = zeros(ld,ld);
     end
 
-    % Pre-load p values into an easily-lookupable matrix, to speed up the
+    % pre-load p values into an easily-lookupable matrix, to speed up the
     % later nested loops
     for j = 1:ld
         for kk = 1:ld
