@@ -28,7 +28,7 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: August 5, 2023
+%   last updated: August 9, 2023
 
 function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
 
@@ -54,7 +54,7 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
         s = size(P,1);
         cvx_begin sdp quiet
             cvx_precision best;
-            variable Y(s,s) hermitian
+            variable Y(s,s) symmetric
             minimize lambda_max(M + P'*(PartialTranspose(Y,1,n*ones(1,d+k)) - Y)*P)
         cvx_end
         ob = real(cvx_optval);
@@ -62,7 +62,7 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
         s = length(M);
         cvx_begin sdp quiet
             cvx_precision best;
-            variable rho(s,s) hermitian
+            variable rho(s,s) symmetric
             if(do_max)
                 maximize real(trace(rho*M))
             else
