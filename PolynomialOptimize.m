@@ -28,7 +28,7 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: August 5, 2023
+%   last updated: August 2, 2023
 
 function [ob,ib] = PolynomialOptimize(p,n,d,k,varargin)
 
@@ -48,22 +48,24 @@ function [ob,ib] = PolynomialOptimize(p,n,d,k,varargin)
     end
 
     M = PolynomialAsMatrix(p,n,d,k);
+    if(isa(p,'cvx'))
+        ob = lambda_max(M);% slower CVX-safe way of getting maximum eigenvalue
+        return
+    end
+
     s = length(M);
-    nev = min(max(round(sqrt(s)),100),s);% how many eigenvalues of M to compute; if you encounter numerical problems when using this function, try increasing this number
-    
+    sub_dim = 20 + floor(k/10);% Krylov subspace dimension used in sparse eigenvalue computation. If eigenvalues fail to converge, try increasing this value.
     if(do_max)
-        if(isa(p,'cvx'))
-            ob = lambda_max(M);% slower CVX-safe way of getting maximum eigenvalue
-        elseif(nev >= s)% if using all of the eigenvalues, just do a full eigenvalue calculation
+        if(s <= max(sub_dim,500))% if using all of the eigenvalues, or the matrix is small, just do a full eigenvalue calculation
             ob = max(real(eig(full(M))));
         else% if not, do a sparse eigenvalue calculation
-            ob = max(real(eigs(M,nev,'largestreal')));
+            ob = real(eigs(M,1,'largestreal','SubspaceDimension',sub_dim));
         end
     else
-        if(nev >= s)
+        if(s <= max(sub_dim,500))
             ob = min(real(eig(full(M))));
         else
-            ob = min(real(eigs(M,nev,'smallestreal')));
+            ob = real(eigs(M,1,'smallestreal','SubspaceDimension',sub_dim));
         end
     end
 
