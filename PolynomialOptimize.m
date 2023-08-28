@@ -28,7 +28,7 @@
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: August 2, 2023
+%   last updated: August 28, 2023
 
 function [ob,ib] = PolynomialOptimize(p,n,d,k,varargin)
 
