@@ -82,29 +82,22 @@ function [ob,ib] = PolynomialSOS(p,n,d,k,varargin)
     % (i.e., we are maximizing and found an upper bound below the target or
     % we are minimizing and found a lower bound above the target).
     if(nargout > 1)
+        % Set ib to a useless bound; we hit the target and so do not
+        % need this bound, but it was still requested, so we have to
+        % return it to avoid errors.
+        if(do_max)
+            ib = -Inf;
+        else
+            ib = Inf;
+        end
+
         if(has_target && ((do_max && ob <= target) || (~do_max && ob >= target)))
-            % Set ib to a useless bound; we hit the target and so do not
-            % need this bound, but it was still requested, so we have to
-            % return it to avoid errors.
-            if(do_max)
-                ib = -Inf;
-            else
-                ib = Inf;
-            end
+            return;
         else
             ob_end = toc(ob_start);% time spent performing outer bound calculation
             
             ib_start = tic;
             ib_end = 0;
-            if(k > 0)% error estimate is based on the k = 0 matrix
-                M = PolynomialAsMatrix(p,n,d);
-            end
-    
-            if(do_max)
-                ib = ob - 4*d*(n-1)*norm(full(M))/(d+k+1);
-            else
-                ib = ob + 4*d*(n-1)*norm(full(M))/(d+k+1);
-            end
     
             si = symind(2*d,1:n);
             ob_end = ob_end / 4;
