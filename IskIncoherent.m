@@ -1,4 +1,4 @@
-%%  ISKCOHERENT    Determines whether or not a quantum state is k-incoherent
+%%  ISKINCOHERENT    Determines whether or not a quantum state is k-incoherent
 %   This function has two required arguments:
 %     RHO: a mixed quantum state
 %     K: a positive integer
@@ -11,7 +11,7 @@
 %           conversations with Bartosz Regula
 %   last updated: May 14, 2018
 
-function ikc = IskCoherent(rho,k)
+function ikc = IskIncoherent(rho,k)
     n = size(rho,1);
 
     Pk = nchoosek(1:n,k);
