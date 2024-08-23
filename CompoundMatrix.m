@@ -1,15 +1,14 @@
 %%  COMPOUNDMATRIX    Computes the rth compound matrix of a given matrix
 %   This function has two required arguments:
 %     A: an arbitrary matrix
-%     r: a positive integer
+%     r: a nonnegative integer
 %
 %   comp = CompoundMatrix(A, r) returns the rth compound matrix of A
 %
 %   If r > min{m, n}, then the rth compound matrix of A is the 0x0 matrix.
 %   Otherwise, the size of the result is (m choose r) x (n choose r).
 %
-%   URL: http://www.qetlab.com/CompoundMatrix
-%   !! CURRENTLY THERE IS NO PAGE FOR THIS FUNCTION !!
+%   URL: https://qetlab.com/CompoundMatrix
 %             
 %   author: Benjamin Talbot
 %   package: QETLAB
