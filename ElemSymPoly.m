@@ -11,14 +11,13 @@
 %             
 %   author: Benjamin Talbot
 %   package: QETLAB
-%   last updated: August 23, 2024
+%   last updated: August 25, 2024
 
 function res = ElemSymPoly(x, k)
     n = length(x);
     if k > n || k < 0
         error('ElemSymPoly:InvalidInput','k must be a nonnegative integer less than or equal to the length of x.');
     end
-    res = 0;
     if k == 0
         res = 1;
     elseif k == 1
@@ -26,12 +25,7 @@ function res = ElemSymPoly(x, k)
     elseif k == n
         res = prod(x);
     else
-        % for i = 1:n
-        %     res = res + x(i) * ElemSymPoly(x(i+1:n), k-1);
-        % end
         idxs = nchoosek(1:n, k);
-        for i = 1:size(idxs, 1)
-            res = res + prod(x(idxs(i, :)));
-        end
+        res = sum(prod(x(idxs), 2));
     end
 end
