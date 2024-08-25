@@ -113,7 +113,7 @@ if isHermitian(X)
 end
 
 function isHermitian = isHermitian(X)
-    isHermitian = all(all(abs(X - X') < 1e-10));
+    isHermitian = all(all(abs(X - X') <= 1e-10));
 end
 
 function basis = genHermBasis(dim)
