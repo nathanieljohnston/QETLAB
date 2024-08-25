@@ -9,9 +9,12 @@
 %   See paper "Absolutely k-Incoherent Quantum States and Spectral
 %   Inequalities for Factor Width of a Matrix" by Johnston et al for
 %   details.
+% 
+%   URL: https://qetlab.com/IskFactorPositive
 
-%   requires: QETLAB (qetlab.com)
+%   requires: IsPSD.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   package: QETLAB
 %   last updated: April 28, 2022
 
 function [ifp,wit] = IskFactorPositive(X,k)
