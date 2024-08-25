@@ -9,6 +9,7 @@
 %   programming.
 
 %   requires: CVX (http://cvxr.com/cvx/), IskCoherent.m
+%   package: QETLAB
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   last updated: May 14, 2018
 

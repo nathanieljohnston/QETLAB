@@ -9,6 +9,7 @@
 %   requires: CVX (http://cvxr.com/cvx/)
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca), based on code and
 %           conversations with Bartosz Regula
+%   package: QETLAB
 %   last updated: May 14, 2018
 
 function ikc = IskIncoherent(rho,k)

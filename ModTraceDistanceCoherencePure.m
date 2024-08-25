@@ -8,6 +8,7 @@
 %   ||x*x' - p*D||, where D is an incoherent (diagonal) state.
 
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   package: QETLAB
 %   last updated: August 16, 2017
 
 function [TDC,p] = ModTraceDistanceCoherencePure(x)

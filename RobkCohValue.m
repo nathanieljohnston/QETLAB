@@ -8,8 +8,8 @@
 %   associated formula ROB comes from (see Theorem 1 of the associated
 %   paper for details).
 
-%   requires: nothing
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   package: QETLAB
 %   last updated: May 14, 2018
 
 function [rob,l] = RobkCohValue(v,k)

@@ -10,6 +10,7 @@
 
 %   requires: CVX (http://cvxr.com/cvx/)
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   package: QETLAB
 %   last updated: May 14, 2018
 
 function [robk,sig] = RobustnesskCoherenceLP(v,k)

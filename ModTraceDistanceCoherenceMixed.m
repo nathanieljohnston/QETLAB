@@ -9,6 +9,7 @@
 
 %   requires: YALMIP (https://yalmip.github.io/)
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
+%   package: QETLAB
 %   last updated: August 21, 2017
 
 function [TDC,D] = ModTraceDistanceCoherenceMixed(rho)

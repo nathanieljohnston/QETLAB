@@ -9,8 +9,6 @@
 %   See paper "Absolutely k-Incoherent Quantum States and Spectral
 %   Inequalities for Factor Width of a Matrix" by Johnston et al for
 %   details.
-% 
-%   URL: https://qetlab.com/IskFactorPositive
 
 %   requires: IsPSD.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
