@@ -3,7 +3,7 @@
 %     RHO: a mixed quantum state
 %     K: a positive integer
 %   
-%   IKC = IskCoherent(RHO,K) returns 1 if RHO is K-incoherent and return 0
+%   IKINC = IskCoherent(RHO,K) returns 1 if RHO is K-incoherent and return 0
 %   otherwise. This is checked via semidefinite programming.
 
 %   requires: CVX (http://cvxr.com/cvx/)
@@ -12,7 +12,7 @@
 %   package: QETLAB
 %   last updated: May 14, 2018
 
-function ikc = IskIncoherent(rho,k)
+function ikinc = IskIncoherent(rho,k)
     n = size(rho,1);
 
     Pk = nchoosek(1:n,k);
@@ -35,5 +35,5 @@ function ikc = IskIncoherent(rho,k)
         rho == P;
     cvx_end
     
-    ikc = 1-min(cvx_optval,1);
+    ikinc = 1-min(cvx_optval,1);
 end
