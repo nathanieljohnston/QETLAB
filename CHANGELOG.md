@@ -11,6 +11,7 @@ All notable changes to QETLAB will be documented in this file.
 - IsCopositive: Determines whether or not a matrix is copositive.
 - MatsumotoFidelity: Computes the Matsumoto fidelity of two density matrices.
 - ParallelRepetition: Produces the coefficients of a parallel repetition of a nonlocal game, in full probability notation. Replaces the old NonlocalGameValue.m.
+- PauliChannel: Fixed a bug where "probability vectors" summing to less than 1 were being accepted as input to the function.
 - PolynomialAsMatrix: Creates a compact fully symmetric matrix representation of a polynomial.
 - PolynomialOptimize: Bounds the optimal value of a homogeneous polynomial on the unit sphere.
 - PolynomialSOS: Bounds the optimal value of a homogeneous polynomial on the unit sphere via the Sum-Of-Squares hierarchy.

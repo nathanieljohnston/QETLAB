@@ -15,7 +15,7 @@
 %   requires: ChoiMatrix.m, RandomProbabilities.m, update_odometer.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: December 16, 2014
+%   last updated: March 28, 2025
 
 function Phi = PauliChannel(p)
 
@@ -33,7 +33,7 @@ else
     p = reshape(p,len_p,1);
     
     tol = len_p*eps^(3/4);
-    if(isa(p,'cvx') == 0 && (min(p) < -tol || sum(p) > 1+tol))
+    if(isa(p,'cvx') == 0 && (min(p) < -tol || sum(p) > 1+tol || sum(p) < 1-tol))
         error('PauliChannel:InvalidP','P must be a probability vector: its entries must be non-negative and sum to 1.');
     end
 
