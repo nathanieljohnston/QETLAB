@@ -1,4 +1,4 @@
-%%  GENGELLMANN    Produces a generalized Gell-Mann operator
+%%  GENGELLMANN    Produces a generalized Gell-Mann operator or the identity matrix
 %   This function has three required arguments:
 %     IND1 (a nonnegative integer from 0 to DIM-1 inclusive)
 %     IND2 (a nonnegative integer from 0 to DIM-1 inclusive)
