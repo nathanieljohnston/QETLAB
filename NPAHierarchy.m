@@ -1,4 +1,4 @@
-%% NPAHIERARCHYCG Determines whether or not a set of correlations satisfy the conditions of the NPA hierarchy
+%% NPAHIERARCHY Determines whether or not a set of correlations satisfy the conditions of the NPA hierarchy
 %   This function checks if a given set of correlations, represented in the
 %   Collins-Gisin (CG) format, is compatible with a quantum description
 %   according to the Navascués-Pironio-Acín (NPA) hierarchy.
@@ -17,7 +17,7 @@
 %           outcomes for Alice (OA), outcomes for Bob (OB), measurement
 %           settings for Alice (MA), and measurement settings for Bob (MB).
 %
-%   IS_NPA = NPAHierarchyCG(CG, DESC) is either 1 or 0 (or a CVX expression
+%   IS_NPA = NPAHierarchy(CG, DESC) is either 1 or 0 (or a CVX expression
 %   evaluating to these), indicating that the correlations in the matrix CG
 %   do or do not satisfy the conditions of the first level (K=1) of the NPA
 %   hierarchy for the scenario defined by DESC.
@@ -26,7 +26,7 @@
 %     K (default 1): a non-negative integer, or a string indicating which
 %       level of the hierarchy to check (see below for details).
 %
-%   IS_NPA = NPAHierarchyCG(CG, DESC, K) is as above, but the K-th level of the NPA
+%   IS_NPA = NPAHierarchy(CG, DESC, K) is as above, but the K-th level of the NPA
 %   hierarchy is checked.
 %   If K = 0, the check is currently not implemented to verify basic
 %   probability properties; it will likely just check trivial positivity
@@ -49,7 +49,7 @@
 %   package: QETLAB
 %   last updated: April 20, 2025)
 
-function is_npa = NPAHierarchyCG(cg,desc,varargin)
+function is_npa = NPAHierarchy(cg,desc,varargin)
 
     % set optional argument defaults: K=1
     [k] = opt_args({ 1 },varargin{:});
