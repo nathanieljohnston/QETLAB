@@ -1,22 +1,38 @@
-%%  NPAHIERARCHY    Determines whether or not a set of probabilities satisfy the conditions of the NPA hierarchy
-%   This function has one required input argument:
-%     P: a 4D array of probabilities, where P(a,b,x,y) is the probability
-%        that Alice and Bob get measurement outcome (a,b) when they use
-%        measurement setting (x,y)
+%% NPAHIERARCHY Determines whether or not a set of correlations satisfy the conditions of the NPA hierarchy
+%   This function checks if a given set of correlations, represented in the
+%   Collins-Gisin (CG) format, is compatible with a quantum description
+%   according to the Navascués-Pironio-Acín (NPA) hierarchy.
 %
-%   IS_NPA = NPAHierarchy(P) is either 1 or 0, indicating that the
-%   probabilities in the array P do or do not satisfy the conditions of the
-%   first level of the NPA heierarchy.
+%   This function has two required input arguments:
+%     CG: a 2D matrix representing correlations in the Collins-Gisin (CG)
+%         notation commonly used within QETLAB. It should have dimensions
+%         ((OA-1)*MA+1, (OB-1)*MB+1), where OA, OB, MA, MB are defined
+%         in the DESC argument. CG(1,1) represents normalization and is
+%         typically 1. Other entries encode marginal and joint correlations
+%         derived from underlying probabilities P(a,b|x,y). See QETLAB
+%         functions like fp2cg or fc2cg for conversion details. If used
+%         within an optimization problem (like in BellInequalityMax), this
+%         can be a CVX variable.
+%     DESC: a 4-element vector [OA OB MA MB] specifying the number of
+%           outcomes for Alice (OA), outcomes for Bob (OB), measurement
+%           settings for Alice (MA), and measurement settings for Bob (MB).
+%
+%   IS_NPA = NPAHierarchy(CG, DESC) is either 1 or 0 (or a CVX expression
+%   evaluating to these), indicating that the correlations in the matrix CG
+%   do or do not satisfy the conditions of the first level (K=1) of the NPA
+%   hierarchy for the scenario defined by DESC.
 %
 %   This function has one optional input argument:
 %     K (default 1): a non-negative integer, or a string indicating which
-%       level of the hierarchy to check (see below for details)
+%       level of the hierarchy to check (see below for details).
 %
-%   IS_NPA = NPAHierarchy(P,K) is as above, but the K-th level of the NPA
-%   hierarchy is checked. If K = 0 then it is just verified that P is a
-%   valid probability array (i.e., each entry is non-negative, each matrix
-%   "face" adds up to 1, and Alice's and Bob's marginal probabilities are
-%   consistent with each other).
+%   IS_NPA = NPAHierarchy(CG, DESC, K) is as above, but the K-th level of the NPA
+%   hierarchy is checked.
+%   If K = 0, the check is currently not implemented to verify basic
+%   probability properties; it will likely just check trivial positivity
+%   of the identity moment. A full K=0 check would verify the underlying
+%   probabilities derived from CG are valid (non-negative, normalize correctly,
+%   satisfy no-signalling).
 %
 %   If K is a string, it must be a string of a form like '1+ab+aab', which
 %   indicates that the intermediate level of the hierarchy should be used,
@@ -26,14 +42,14 @@
 %   products, as above. The first character of this string should always be
 %   a number, indicating the base level to use.
 %
-%   URL: http://www.qetlab.com/NPAHierarchy
+%   URL: http://www.qetlab.com/NPAHierarchy (Link might describe the general concept)
 
 %   requires: CVX (http://cvxr.com/cvx/), opt_args.m
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: January 22, 2015
+%   last updated: April 20, 2025)
 
-function is_npa = NPAHierarchyCG(cg,desc,varargin)
+function is_npa = NPAHierarchy(cg,desc,varargin)
 
     % set optional argument defaults: K=1
     [k] = opt_args({ 1 },varargin{:});
