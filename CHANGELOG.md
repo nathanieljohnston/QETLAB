@@ -45,6 +45,7 @@ All notable changes to QETLAB will be documented in this file.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
 - GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
 - IsBlockPositive: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
+- IsSeparable: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
 - Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
 - NonlocalGameValue: Now computes classical value of a game quicker, via algorithm of arXiv:2005.13418
 - PartialTrace: Now allows pure state vectors as input, and computes their partial traces (i.e., reduced density matrices) much more quickly.

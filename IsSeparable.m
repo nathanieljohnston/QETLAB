@@ -42,7 +42,7 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 14, 2014
+%   last updated: May 15, 2025
 
 function sep = IsSeparable(X,varargin)
 
@@ -304,9 +304,8 @@ function sep = IsSeparable(X,varargin)
         % realignment first anyway, since it is quicker and simpler (and thus
         % provides a more useful reference).
         try
-            xi = FilterNormalForm(X,dim);
-
-            if(sum(xi) > min( sqrt(nD*xD*(nD-1)*(xD-1)), nD*xD*(1 - 1/nD + (nD^2 - 1)/xD + min(0,(xD^2-nD^2)/xD - (xD-1)))/2 ) + 10*xD*eps)
+            xi = FilterNormalForm(X + max(eps,tol^2)*eye(pD), dim);
+            if(sum(xi) > min( sqrt(nD*xD*(nD-1)*(xD-1)), nD*xD*(1 - 1/nD + (nD^2 - 1)/xD + min(0,(xD^2-nD^2)/xD - (xD-1)))/2 ) + xD*tol)
                 sep = 0;
                 opt_disp(['Determined to be entangled via the Filter Covariance Matrix Criterion. Reference:\n',refs{7},'\n'],verbose);
                 return    
