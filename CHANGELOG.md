@@ -27,9 +27,10 @@ All notable changes to QETLAB will be documented in this file.
 - helpers/exp2ind: Looks up a monomial's lexicographical index based on a list of exponents.
 - helpers/fc2fp: Converts a Bell functional or behaviour in full correlator notation and converts it to full probability notation. Used in BellInequalityMax.m.
 - helpers/fc2cg: Converts a Bell functional or behaviour in full correlator notation and converts it to Collins-Gisin notation. Used in BellInequalityMax.m.
-- helpers/ffl: Produces the coefficients of the Fortnow-Feige-Lovász nonlocal game. Can be used as a test case for BellInequalityMax.
+- helpers/ffl: Produces the coefficients of the Fortnow-Feige-Lovï¿½sz nonlocal game. Can be used as a test case for BellInequalityMax.
 - helpers/fp2fc: Converts a Bell functional or behaviour in full probability notation and converts it to full correlator notation. Used in BellInequalityMax.m.
 - helpers/fp2cg: Converts a Bell functional or behaviour in full probability notation and converts it to Collins-Gisin notation. Used in BellInequalityMax.m.
+- helpers/has_band_k_ordering: Determines whether a matrix has bandwidth â‰¤ k up to symmetric permutation. Used as a new helper check in IskIncoherent.m.
 - helpers/glob_ind: Creates a global index from a vector of local indices. Used to be bundled inside of SymmetricProjection.m.
 - helpers/pad_array: Pads an array with zeroes. Replaces padarray from the Image Processing toolbox.
 - helpers/poly_rand_input: Evaluates a homogeneous polynomial on a random input from the unit sphere.
@@ -45,6 +46,7 @@ All notable changes to QETLAB will be documented in this file.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
 - GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
 - IsBlockPositive: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
+- IskIncoherent: Fixed bug with nested CVX optimization and added a bandwidth check to sometimes return early. (Also fixed documentation.)
 - IsSeparable: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
 - Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
 - NonlocalGameValue: Now computes classical value of a game quicker, via algorithm of arXiv:2005.13418
