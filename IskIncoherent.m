@@ -81,10 +81,6 @@ function iki = IskIncoherent(X, k)
         return
     end
 
-    % Hierarchy of the sets of k-incoherence states
-    if k >= 2
-        iki = IskIncoherent(X, k-1);
-    end
     if iki == -1
         iki = KIncohSemidefCheck(X, k);
     end
