@@ -6,18 +6,23 @@
 %   IKI = ISKINCOHERENT(X, K) returns 1 if X is k-incoherent, 0 if X is not
 %   k-incoherent, and -1 if the function cannot determine if X is k-incoherent
 %   or not.
-%   
+%
 %   URL: http://www.qetlab.com/IskIncoherent
-%   
+%
 %   References:
 %   [1] Ringbauer, Martin and Bromley, Thomas R. and Cianciaruso, Marco and Lami,
 %       Ludovico and Lau, W. Y. Sarah and Adesso, Gerardo and White, Andrew G. 
 %       and Fedrizzi, Alessandro and Piani, Marco. Certification and Quantification 
 %       of Multilevel Quantum Coherence. Phys. Rev. X, 8.041007, 2018.
+%   [2] N. Johnston, S. Moein, and S. Plosker. The factor width rank of a
+%       matrix. Linear Algebra and its Applications 716 (2025), 32–59.
+%       https://doi.org/10.1016/j.laa.2025.03.016.
 
-%   author: Benjamin Talbot
+%   requires: has_band_k_ordering.m
+%   authors: Benjamin Talbot
+%            Luis M. B. Varona (lm.varona@outlook.com)
 %   package: QETLAB
-%   last updated: August 26, 2024
+%   last updated: July 19, 2025
 
 
 % DOUBLE CHECK FOR THE COHERENCE NUMBER FROM THIS PAPER, MIGHT THROW OFF SOME OF MY ASSUMPTIONS
@@ -58,6 +63,12 @@ function iki = IskIncoherent(X, k)
 
     % [1] (8) (Corollary of Theorem 1)
     if trace(X^2) <= 1/(d-1) % and k > 2
+        iki = 1;
+        return
+    end
+
+    % [2] Theorem 1
+    if has_band_k_ordering(X, k)
         iki = 1;
         return
     end
