@@ -1,7 +1,11 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
-## Changes since v0.9 was released on 2016-01-12
+## Unreleased
+### Added
+- CITATION.bib: For citing QETLAB via BibTeX.
+
+## [1.0] - 2025-07-22
 ### Added
 - CliqueNumber: Bounds the clique number (i.e., maximum size of a clique) of a graph.
 - Concurrence: Computes the concurrence of a 2-qubit state.
@@ -46,7 +50,7 @@ All notable changes to QETLAB will be documented in this file.
 - Entropy: Improved numerical stability so that it no longer frequently returns NaN output.
 - GHZState: Now accepts DIM = 1 and/or Q = 1 as input.
 - IsBlockPositive: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
-- IskIncoherent: Fixed bug with nested CVX optimization and added a bandwidth check to sometimes return early. (Also fixed documentation.)
+- IskIncoherent: Fixed bug with nested CVX optimization and added a bandwidth check to sometimes return early. Also fixed documentation.
 - IsSeparable: Fixed a numerical tolerance error that would sometimes cause incorrect results to be reported.
 - Negativity: Users can now input either a pure state vector or a density matrix (previously, only density matrices were accepted).
 - NonlocalGameValue: Now computes classical value of a game quicker, via algorithm of arXiv:2005.13418
