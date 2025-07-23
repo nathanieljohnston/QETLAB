@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
+## Unreleased
+### Added
+- CITATION.bib: For citing QETLAB via BibTeX.
+
 ## [1.0] - 2025-07-22
 ### Added
 - CliqueNumber: Bounds the clique number (i.e., maximum size of a clique) of a graph.
