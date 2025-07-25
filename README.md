@@ -18,4 +18,4 @@ QETLAB is a MATLAB toolbox for exploring and manipulating quantum entanglement.
 * [QETLAB homepage](http://www.qetlab.com/)
 
 ## Citing
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.14186.svg)](http://dx.doi.org/10.5281/zenodo.14186)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.44637.svg)](https://doi.org/10.5281/zenodo.44637)
