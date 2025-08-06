@@ -40,9 +40,7 @@
 %             
 %   author: Nathaniel Johnston (nathaniel@njohnston.ca)
 %   package: QETLAB
-%   last updated: November 14, 2014
-
-%% WHEN UPDATING FOR NON-HERMITIAN, ALSO UPDATE HOW IT'S USED IN SKOPERATORNORM
+%   last updated: August 6, 2025
 
 function [Sk,v] = sk_iterate(X,varargin)
 
@@ -81,8 +79,8 @@ if(max(size(v0)) > 1)
         warning('sk_iterate:SchmidtRankMismatch','The Schmidt rank of the initial vector v0 is %d, which is larger than k=%d. Using a randomly-generated initial vector instead.',sr,k);
     else
         randv0 = 0;
-        vp(:,1) = padarray(reshape(a0*diag(s0),da*sr,1),da*(k-sr),'post');
-        vp(:,2) = padarray(reshape(b0,db*sr,1),db*(k-sr),'post');
+        vp(:,1) = pad_array(reshape(a0*diag(s0),da*sr,1),da*(k-sr),1);
+        vp(:,2) = pad_array(reshape(b0,db*sr,1),db*(k-sr),1);
     end
 end
 if randv0 % generate a random starting vector v0, if appropriate

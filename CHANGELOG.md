@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to QETLAB will be documented in this file.
 
+## Changes since v1.0
+### Changed
+- helpers/sk_iterate: Changed padarray to pad_array so that this function does not rely on MATLAB's image processing toolbox when specifying an initial vector v0.
+
 ## [1.0] - 2025-07-22
 ### Added
 - CliqueNumber: Bounds the clique number (i.e., maximum size of a clique) of a graph.
